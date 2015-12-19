@@ -1,11 +1,11 @@
 import pyshark
+import capture
 
 #!/usr/bin/python
 # -*- coding: utf-8 -*- 
 
 # pyshark docs: https://github.com/KimiNewt/pysharkty
 cap = pyshark.FileCapture('pcap_files/bigger_file.PCAP')
-
 
 # filter ZB NWK https://www.wireshark.org/docs/dfref/z/zbee_nwk.html
 # filter WPAN https://www.wireshark.org/docs/dfref/w/wpan.html
@@ -20,6 +20,12 @@ cap = pyshark.FileCapture('pcap_files/bigger_file.PCAP')
 # Many-to-one routing
 # https://www.digi.com/wiki/developer/index.php/Large_ZigBee_Networks_and_Source_Routing
 
+# RSSI: The received signal strength (energy) can be measured for each received packet. The
+# measured signal energy is quantized to form the received signal strength indicator
+# (RSSI). The RSSI and the time at which the packet was received (timestamp) are
+# available to MAC, NWK, and APL layers for any type of analysis. For example, the
+# simplest way to generate the link quality indicator (LQI) is to use the RSSI as an
+# indication of link quality.
 
 #############################################################
 # TIPO DE PACOTES ZIGBEE 
@@ -67,15 +73,24 @@ cap = pyshark.FileCapture('pcap_files/bigger_file.PCAP')
 
 
 #
-print "CAP0 Complete " + str(cap[0])
-print "wpan.rssi = " + str(cap[0].wpan.rssi)
-print "zbee_nwk.src64 = " + str(cap[0].zbee_nwk.src64)
-print "zbee_nwk.src = " + str(cap[0].zbee_nwk.src)
-print "zbee_nwk.dst = " + str(cap[0].zbee_nwk.dst)
-print "zbee_nwk = " + str(cap[0].zbee_nwk)
+# print "CAP0 Complete " + str(cap[0])
+# print "CAP0 Wpan" + str(cap[0].wpan)
+# print "CAP0 ZB_NWK" + str(cap[0].zbee_nwk)
+# cap[0].zbee_nwk.field_names
+
+# print "wpan.rssi = " + str(cap[0].wpan.rssi)
+# print "zbee_nwk.src64 = " + str(cap[0].zbee_nwk.src64)
+# print "zbee_nwk.src = " + str(cap[0].zbee_nwk.src)
+# print "zbee_nwk.dst = " + str(cap[0].zbee_nwk.dst)
+# print "zbee_nwk = " + str(cap[0].zbee_nwk)
 
 
-print "wpan.rssi = " + str(cap[1].wpan.rssi)
-print "wpan.rssi = " + str(cap[2].wpan.rssi)
-print "wpan.rssi = " + str(cap[3].wpan.rssi)
-print "wpan.rssi = " + str(cap[4].wpan.rssi)
+# print "wpan.rssi = " + str(cap[1].wpan.rssi)
+# print "wpan.rssi = " + str(cap[2].wpan.rssi)
+# print "wpan.rssi = " + str(cap[3].wpan.rssi)
+# print "wpan.rssi = " + str(cap[4].wpan.rssi)
+
+PCAP_FILE = 'pcap_files/bigger_file.PCAP'
+
+cap = capture.capture()
+cap.fileCapture(PCAP_FILE)
