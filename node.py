@@ -11,12 +11,12 @@ class node():
             nwkAdr = 16-bits ZigBee Network Address
             macAdr = 64-bits 802.15.4 Mac Address
             panAdr = 16-bits Wireless PAN Network
-            neighbor = List of Dictionaries including nwkAdr, incoming and outcoming costs of the node's neighbor
+            neighbors = List of Dictionaries including nwkAdr, incoming and outcoming costs of the node's neighbor
         """
         self.nwkAdr = nwkAdr
         self.macAdr = macAdr
         self.panAdr = panAdr
-        self.neighbor = []
+        self.neighbors = []
 
     def setnwkAdr(self, nwkAdr):
         self.nwkAdr = nwkAdr
@@ -24,8 +24,8 @@ class node():
         self.macAdr = macAdr
     def setPanAdr(self, panAdr):
         self.panAdr = panAdr
-    def setNeighbor(self, neighbor):
-        self.neighbor = neighbor
+    def setNeighbors(self, neighbors):
+        self.neighbors = neighbors
 
     def getnwkAdr(self):
         return self.nwkAdr
@@ -33,5 +33,5 @@ class node():
         return self.macAdr
     def getPanAdr(self):
         return self.panAdr
-    def getPanAdr(self):
-        return self.panAdr
+    def getNeighbors(self):
+        return self.neighbors
