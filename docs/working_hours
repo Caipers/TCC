@@ -7,3 +7,4 @@ Log SAMUEL:
 Anteriores à 13/12 -> 30h Desenvolvimento de pre-projeto.
 13/12 -> 4h Estudos para captação dos pacotes PCAP. Encontrado modulo pyshark para manipulação destes arquivos.
 14/12 -> 4h Mais estudos do modulo pyshark e lendo mais sobre o pacote "Link Status" e "Many-to-One Routing"
+19/12 -> 1h Criacao da classe node
