@@ -5,7 +5,7 @@ import capture
 # -*- coding: utf-8 -*- 
 
 # pyshark docs: https://github.com/KimiNewt/pysharkty
-cap = pyshark.FileCapture('pcap_files/bigger_file.PCAP')
+# cap = pyshark.FileCapture('pcap_files/bigger_file.PCAP')
 
 # filter ZB NWK https://www.wireshark.org/docs/dfref/z/zbee_nwk.html
 # filter WPAN https://www.wireshark.org/docs/dfref/w/wpan.html
@@ -91,6 +91,10 @@ cap = pyshark.FileCapture('pcap_files/bigger_file.PCAP')
 # print "wpan.rssi = " + str(cap[4].wpan.rssi)
 
 PCAP_FILE = 'pcap_files/bigger_file.PCAP'
+# PCAP_FILE = 'pcap_files/smaller_file.PCAP'
 
 cap = capture.capture()
-cap.fileCapture(PCAP_FILE)
+nodes = cap.fileCapture(PCAP_FILE)
+
+for node in nodes:
+    print node, '->', nodes[node]
