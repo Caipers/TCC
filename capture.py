@@ -68,7 +68,8 @@ class capture():
 
                 nodes[nwkAdr] = {'node' : tmp_node}
                 if (nwkAdr == "0x5b46"):
-                    print nwkAdr + " neighbors: " + str(neighbors)
+                    # print nwkAdr + " neighbors: " + str(neighbors)
+                    print nodes[nwkAdr]
 
         except:
             print "*******BUG TO CORRECT*******"
