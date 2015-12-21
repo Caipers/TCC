@@ -15,30 +15,30 @@ class capture():
     """
 
     def fileCapture(self, pcapFile):
-        capture = pyshark.FileCapture(pcapFile)
+        capture = pyshark.FileCapture(pcapFile, keep_packets=False)
         
         nodes = {}
 
-        i = 0
         link_counter = 0
+        cap = capture
+        i = 0
 
         # trying to find a bug in the library on pyshark.
         try:
-            for cap in capture:
+            while(cap is not None):
                 try:
                     # test if the zbee_nwk package IS NOT Link Status
                     if (str(cap.zbee_nwk.cmd_id) != "0x08"):
-                        # print str(i) + "The zbee_nwk package IS NOT a Link Status cmd"
+                        cap = capture.next()
                         i += 1
                         continue
 
                     # exception for package that HAS NOT zbee_nwk layer
                 except AttributeError:
-                    # print str(i) + " The package HAS NOT a zbee_nwk's layer "
+                    cap = capture.next()
                     i += 1
                     continue
 
-                # i += 1
                 link_counter += 1
 
                 # recoding basic information
@@ -68,8 +68,9 @@ class capture():
 
                 nodes[nwkAdr] = {'node' : tmp_node}
                 if (nwkAdr == "0x5b46"):
-                    # print nwkAdr + " neighbors: " + str(neighbors)
                     print nodes[nwkAdr]
+
+                cap = capture.next()
 
         except:
             print "*******BUG TO CORRECT*******"

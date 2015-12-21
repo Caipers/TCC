@@ -14,7 +14,7 @@ class node():
             panAdr = 16-bits Wireless PAN Network
             neighbors = List of Dictionaries including nwkAdr, incoming and outcoming costs of the node's neighbor
         """
-        
+
         self.r_nwkAdr = re.compile("0x[0-9a-f][0-9a-f][0-9a-f][0-9a-f]", re.IGNORECASE)
         self.r_panAdr = re.compile("0x[0-9a-f][0-9a-f][0-9a-f][0-9a-f]", re.IGNORECASE)
         self.r_macAdr = re.compile("[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]", re.IGNORECASE)
@@ -48,6 +48,22 @@ class node():
         self.panAdr = panAdr
     def setNeighbors(self, neighbors):
         self.neighbors = neighbors
+
+    def printNeighbors(self):
+        """Print current neighbors in stdout"""
+
+        neighbors = self.getNeighbors()
+
+        print "###########################################"
+        print "Neighbors of", str(self.getnwkAdr()), "->", str(self.getMacAdr())
+        print "panID", str(self.getPanAdr())
+        print "###########################################"
+        print '{:<2}'.format("Num"), '{:<10}'.format("Neighbor"), '{:<3}'.format("in"), '{:<3}'.format("out")
+        k = 1
+        for neighbor in neighbors:
+            print '{:<3}'.format('#' + str(k)), '{:<10}'.format(neighbor['nwkAdr']), '{:<3}'.format(neighbor['in_cost']), '{:<3}'.format(neighbor['out_cost'])
+            k += 1
+
 
     def getnwkAdr(self):
         return self.nwkAdr

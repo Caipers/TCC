@@ -5,9 +5,11 @@
 
 Log SAMUEL:
 Anteriores à 13/12 -> 30h Desenvolvimento de pre-projeto.
-13/12 -> 4h Estudos para captação dos pacotes PCAP. Encontrado modulo pyshark para manipulação destes arquivos.
-14/12 -> 4h Mais estudos do modulo pyshark e lendo mais sobre o pacote "Link Status" e "Many-to-One Routing"
-19/12 -> 4h Criacao da classe node e capture
-20/12 -> 5h Melhoramento da captura dos pacotes. Criado loop que pega todos os dados.
-            Criado algoritmo que captura todos os nos. Um dicionario de um dicionario.
-            Adicionado validacao dos atributos na classe node.
+13/12 -> 4h   Estudos para captação dos pacotes PCAP. Encontrado modulo pyshark para manipulação destes arquivos.
+14/12 -> 4h   Mais estudos do modulo pyshark e lendo mais sobre o pacote "Link Status" e "Many-to-One Routing"
+19/12 -> 4h   Criacao da classe node e capture
+20/12 -> 5h   Melhoramento da captura dos pacotes. Criado loop que pega todos os dados.
+              Criado algoritmo que captura todos os nos. Um dicionario de um dicionario.
+              Adicionado validacao dos atributos na classe node.
+21/12 -> 3h   Criacao da funcao printNeighbors na classe node()
+              Correcao de bug na iteracao entre os pacotes de rede na captacao na classe capture.

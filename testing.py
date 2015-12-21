@@ -90,11 +90,15 @@ import capture
 # print "wpan.rssi = " + str(cap[3].wpan.rssi)
 # print "wpan.rssi = " + str(cap[4].wpan.rssi)
 
-PCAP_FILE = 'pcap_files/bigger_file.PCAP'
-# PCAP_FILE = 'pcap_files/smaller_file.PCAP'
+# PCAP_FILE = 'pcap_files/bigger_file.PCAP'
+PCAP_FILE = 'pcap_files/smaller_file.PCAP'
 
 cap = capture.capture()
 nodes = cap.fileCapture(PCAP_FILE)
 
+
 for node in nodes:
-    print node, '->', nodes[node]
+    """Node is a dictionary of nodes"""
+    nodes[node]['node'].printNeighbors()
+    print ""
+    
