@@ -15,9 +15,9 @@ class capture():
     """
 
     def fileCapture(self, pcapFile):
-        capture = pyshark.FileCapture(pcapFile, keep_packets=False)
+        capture = pyshark.FileCapture(pcapFile, keep_packets = False)
         
-        nodes = {}
+        nodes = [] # list of nodes
 
         link_counter = 0
         cap = capture
@@ -61,19 +61,31 @@ class capture():
                     nei_in = neighbor[24:25]
                     nei_out = neighbor[41:42]
 
-                    neighbors.append({"nwkAdr" : nei_nwk, "in_cost" : nei_in, "out_cost" : nei_out})
+                    neighbors.append({"nwkAdr" : nei_nwk, "in_cost" : int(nei_in), "out_cost" : int(nei_out)})
 
-                tmp_node = node.node(nwkAdr, macAdr, panAdr)
-                tmp_node.setNeighbors(neighbors)
+                
+                index = self.indexNode(nwkAdr, nodes)
+                if (index == -1): # node does not exist
+                    tmp_node = node.node(nwkAdr, macAdr, panAdr)
+                    tmp_node.setCurNeighbors(neighbors)
+                    tmp_node.addNpPreNeighbors()
+                    nodes.append(tmp_node)
+                    print "Node",nwkAdr,"does not exist"
+                else: # node exists
+                    tmp_node = self.findNode(nwkAdr, nodes)
+                    tmp_node.addNpPreNeighbors()
+                    tmp_node.setCurNeighbors(neighbors)
 
-                nodes[nwkAdr] = {'node' : tmp_node}
-                if (nwkAdr == "0x5b46"):
-                    print nodes[nwkAdr]
+                # nodes[nwkAdr] = {'node' : tmp_node}
+                # if (nwkAdr == "0x5b46"):
+                #     print nodes[nwkAdr]
 
                 cap = capture.next()
 
-        except:
-            print "*******BUG TO CORRECT*******"
+        except AttributeError:
+            print "*******BUG IN PYSHARK (AttributeError)*******"
+        except StopIteration:
+            print "*******BUG IN PYSHARK (StopIteration)*******"
 
 
         print "Link Status packages are ", str(link_counter)
@@ -83,3 +95,32 @@ class capture():
 
         capture.close()
         return nodes
+
+    def indexNode(self, nwkAdr, listOfNodes):
+        """
+        Method to find a specific index of a nwkAdr in a list of nodes
+        Return -> Value >= 0 if the nwkAdr is found in the list, -1 otherwise
+        """
+        
+        i = 0
+        for node in listOfNodes: # 
+            if (node.getNwkAdr() == nwkAdr):
+                return i
+
+            i += 1
+
+        return -1
+
+    def findNode(self, nwkAdr, listOfNodes):
+        """
+        Method to find a specific node object of a nwkAdr in a list of nodes
+        Return -> node object if the nwkAdr is found in the list, -1 otherwise
+        """
+        
+        for node in listOfNodes: # 
+            if (node.getNwkAdr() == nwkAdr):
+                return node
+
+        return -1
+
+

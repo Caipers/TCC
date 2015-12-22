@@ -96,9 +96,12 @@ PCAP_FILE = 'pcap_files/smaller_file.PCAP'
 cap = capture.capture()
 nodes = cap.fileCapture(PCAP_FILE)
 
+# print "nodes:", str(nodes)
 
 for node in nodes:
-    """Node is a dictionary of nodes"""
-    nodes[node]['node'].printNeighbors()
+    """Node is a node object"""
+    node.printCurNeighbors()
+    node.processPreNeighbors()
+    print str(node.getHistoricalNeighbors())
     print ""
     

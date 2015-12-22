@@ -13,3 +13,8 @@ Anteriores à 13/12 -> 30h Desenvolvimento de pre-projeto.
               Adicionado validacao dos atributos na classe node.
 21/12 -> 3h   Criacao da funcao printNeighbors na classe node()
               Correcao de bug na iteracao entre os pacotes de rede na captacao na classe capture.
+
+22/12 -> 5h   Ajuste da fila de nodes na classe Capture
+              Melhoramento no tratamento dos Exception na classe Capture.
+              Criacao dos metodos indexNode(...) e findNode(...) na classe Capture para auxiliar no tratamento da fila de nos
+              Desenvolvimento de memoria dos vizinhos de um no. Um historico das informacoes dos vizinhos (ex: quantas vezes o mesmo vizinho foi visto pelo node, qual o custo medio). Criacao de varios metodos para o tratamento deste historico (addNpPreNeighbors, processPreNeighbors, hasNeighbor, indexNeighbor).
