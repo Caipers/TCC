@@ -90,8 +90,8 @@ import capture
 # print "wpan.rssi = " + str(cap[3].wpan.rssi)
 # print "wpan.rssi = " + str(cap[4].wpan.rssi)
 
-# PCAP_FILE = 'pcap_files/bigger_file.PCAP'
-PCAP_FILE = 'pcap_files/smaller_file.PCAP'
+PCAP_FILE = 'pcap_files/bigger_file.PCAP'
+# PCAP_FILE = 'pcap_files/smaller_file.PCAP'
 
 cap = capture.capture()
 nodes = cap.fileCapture(PCAP_FILE)
@@ -100,13 +100,29 @@ nodes = cap.fileCapture(PCAP_FILE)
 
 f = file('nodes.log', 'w')
 
+tot_in = 0
+tot_out = 0
+tot_pkt = 0
+
+print "Following nodes has been processed:"
 for node in nodes:
     """Node is a node object"""
     # node.printCurNeighbors()
-    if (node.getNwkAdr() == '0xd7e7'):
-        print str(node.npPreNeighbors)
-    node.processPreNeighbors()
-    print str(node.getHistoricalNeighbors())
-    print ""
-    f.writelines('Total Link Status for node ' + str(node.getNwkAdr()) + ' is ' + str(node.getPacketTotal()) + '\n')
-    
+    # if (node.getNwkAdr() == '0xd7e7'):
+    #     print str(node.npPreNeighbors)
+
+    t_in, t_out = node.processPreNeighbors()
+    tot_pkt += node.getPacketTotal()
+    tot_in += t_in
+    tot_out += t_out
+
+    print "\t",node.getPacketTotal(),'packets of node =>',node.getNwkAdr(),node.getMacAdr()
+    node.saveHistoricalNeighbors()
+    # print str(node.getHistoricalNeighbors())
+    # print ""
+    # f.writelines('Total Link Status for node ' + str(node.getNwkAdr()) + ' is ' + str(node.getPacketTotal()) + '\n')
+
+
+print "Total of cost of incoming cost of all nodes =", tot_in
+print "Total of cost of outcoming cost of all nodes =", tot_out
+print "Total of packets processed of capturing =", tot_pkt

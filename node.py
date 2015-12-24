@@ -75,6 +75,9 @@ class node():
 
         npNeighbors = self.npPreNeighbors
 
+        total_in = 0
+        total_out = 0
+
         for npList in npNeighbors:
             # npList is a List of Neighbors
             for np in npList:
@@ -82,13 +85,15 @@ class node():
                 nwkAdr = np['nwkAdr']
                 inCost = int(np['in_cost'])
                 outCost = int(np['out_cost'])
+                total_in += inCost
+                total_out += outCost
 
                 if (self.hasNeighbor(nwkAdr, self.pPreNeighbors) == False):
-                    print "Node = ", self.nwkAdr, " has not the neighbor ", nwkAdr
+                    # print "Node = ", self.nwkAdr, " has not the neighbor ", nwkAdr
                     self.pPreNeighbors.append({'nwkAdr' : nwkAdr, 'tot_in_cost' : inCost, 'tot_out_cost' : outCost, 'tot_pkt' : 1})
                 else:
                     index = self.indexNeighbor(nwkAdr,self.pPreNeighbors)
-                    print "Node = ", self.nwkAdr, " has the neighbor ", nwkAdr, "with the index", index
+                    # print "Node = ", self.nwkAdr, " has the neighbor ", nwkAdr, "with the index", index
                     dic = self.pPreNeighbors[index]
 
                     tot_in_cost = dic['tot_in_cost'] + inCost
@@ -98,6 +103,8 @@ class node():
                     self.pPreNeighbors[index] = {'nwkAdr' : nwkAdr, 'tot_in_cost' : int(tot_in_cost), 'tot_out_cost' : int(tot_out_cost), 'tot_pkt' : int(tot_pkt)}
 
         self.npPreNeighbors = []
+
+        return total_in, total_out
 
     def hasNeighbor(self, nwkAdr, listOfDict):
         """
@@ -155,3 +162,11 @@ class node():
         return self.pPreNeighbors
     def getPacketTotal(self):
         return self.packet_total
+
+    def saveHistoricalNeighbors(self):
+        f = file('histnb.log','a')
+
+        for dic in self.pPreNeighbors:
+            f.writelines(self.nwkAdr+';'+dic['nwkAdr']+';'+str(dic['tot_in_cost'])+';'+str(dic['tot_out_cost'])+';'+str(dic['tot_pkt'])+'\n')
+
+        f.close()

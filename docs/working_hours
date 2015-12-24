@@ -18,7 +18,9 @@ Anteriores à 13/12 -> 30h Desenvolvimento de pre-projeto.
               Melhoramento no tratamento dos Exception na classe Capture.
               Criacao dos metodos indexNode(...) e findNode(...) na classe Capture para auxiliar no tratamento da fila de nos
               Desenvolvimento de memoria dos vizinhos de um no. Um historico das informacoes dos vizinhos (ex: quantas vezes o mesmo vizinho foi visto pelo node, qual o custo medio). Criacao de varios metodos para o tratamento deste historico (addNpPreNeighbors, processPreNeighbors, hasNeighbor, indexNeighbor).
-24/12 -> 3h   Testar os algoritmos feitos ate agora, principalmente os criados no dia 22/12 analisar se os valores sao coerentes
+24/12 -> 5h   Testar os algoritmos feitos ate agora, principalmente os criados no dia 22/12 analisar se os valores sao coerentes
               com os do pacote. Pegar algumas amostras e confirmar.
               Checkado quantidade de pacotes link status obtidos, igual ao smaller_file (1015).
               Correcao de bug onde o ultimo pacote de vizinhos nao estava sendo processado para o historico.
+              Conferencia de valores totais de custos dos vizinhos dos pacotes e processados -> OK para ambos arquivos de capture.
+              Adicionado testes de padrao de entrada para o nwk_nei, nei_in, nei_out na classe capture com objetivo de garantir integridade de informacoes.

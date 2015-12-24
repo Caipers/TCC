@@ -3,7 +3,7 @@
 
 import pyshark
 import node
-import time
+import re 
 
 # pyshark docs: https://github.com/KimiNewt/pysharkty
 
@@ -24,6 +24,9 @@ class capture():
         link_counter = 0
         cap = capture
         i = 0
+
+        r_nwkAdr = re.compile("0x[0-9a-f][0-9a-f][0-9a-f][0-9a-f]", re.IGNORECASE)
+        r_nei_cost = re.compile("[01357]")
 
         # trying to find a bug in the library on pyshark.
         try:
@@ -59,9 +62,18 @@ class capture():
 
                 neighbors = []
                 for neighbor in list_neighbors:
+
+       
                     nei_nwk = neighbor[1:7]
                     nei_in = neighbor[24:25]
                     nei_out = neighbor[41:42]
+
+                    if (r_nwkAdr.match(nei_nwk) == None):
+                        raise ValueError('Invalid nwk_adr value')
+                    if (r_nei_cost.match(nei_in) == None):
+                        raise ValueError('Invalid neo_in value')
+                    if (r_nei_cost.match(nei_out) == None):
+                        raise ValueError('Invalid neo_out value')
 
                     neighbors.append({"nwkAdr" : nei_nwk, "in_cost" : int(nei_in), "out_cost" : int(nei_out)})
                     f.writelines(nwkAdr+';'+macAdr+';'+panAdr+';'+str(nei_nwk)+';'+str(nei_in)+';'+str(nei_out)+'\n')
@@ -71,9 +83,9 @@ class capture():
                 if (index == -1): # node does not exist
                     tmp_node = node.node(nwkAdr, macAdr, panAdr)
                     nodes.append(tmp_node)
-                    print "Node",nwkAdr,"does not exist"
+                    # print "Node",nwkAdr,"does not exist"
                 else: # node exists
-                    print "Node",nwkAdr,"exists in index", index
+                    # print "Node",nwkAdr,"exists in index", index
                     tmp_node = self.findNode(nwkAdr, nodes)
 
                 tmp_node.setCurNeighbors(neighbors)
@@ -83,11 +95,11 @@ class capture():
         except AttributeError:
             print "*******BUG IN PYSHARK (AttributeError)*******"
             print str(tmp_node)
-            tmp_node.addNpPreNeighbors()
+            # tmp_node.addNpPreNeighbors()
         except StopIteration:
             print "*******BUG IN PYSHARK (StopIteration)*******"
             print str(tmp_node)
-            tmp_node.addNpPreNeighbors()
+            # tmp_node.addNpPreNeighbors()
 
 
         print "Link Status packages are ", str(link_counter)
