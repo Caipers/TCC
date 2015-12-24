@@ -80,8 +80,8 @@ class node():
             for np in npList:
                 # np is a dictionary
                 nwkAdr = np['nwkAdr']
-                inCost = np['in_cost']
-                outCost = np['out_cost']
+                inCost = int(np['in_cost'])
+                outCost = int(np['out_cost'])
 
                 if (self.hasNeighbor(nwkAdr, self.pPreNeighbors) == False):
                     print "Node = ", self.nwkAdr, " has not the neighbor ", nwkAdr
@@ -95,7 +95,7 @@ class node():
                     tot_out_cost = dic['tot_out_cost'] + outCost
                     tot_pkt = dic['tot_pkt'] + 1
 
-                    self.pPreNeighbors[index] = {'nwkAdr' : nwkAdr, 'tot_in_cost' : tot_in_cost, 'tot_out_cost' : tot_out_cost, 'tot_pkt' : tot_pkt}
+                    self.pPreNeighbors[index] = {'nwkAdr' : nwkAdr, 'tot_in_cost' : int(tot_in_cost), 'tot_out_cost' : int(tot_out_cost), 'tot_pkt' : int(tot_pkt)}
 
         self.npPreNeighbors = []
 
@@ -153,3 +153,5 @@ class node():
         return self.curNeighbors
     def getHistoricalNeighbors(self):
         return self.pPreNeighbors
+    def getPacketTotal(self):
+        return self.packet_total

@@ -17,6 +17,8 @@ class capture():
     def fileCapture(self, pcapFile):
         capture = pyshark.FileCapture(pcapFile, keep_packets = False)
         
+        f = file('aux.log','w') # for debugging reasons
+        tmp_node = None
         nodes = [] # list of nodes
 
         link_counter = 0
@@ -62,37 +64,37 @@ class capture():
                     nei_out = neighbor[41:42]
 
                     neighbors.append({"nwkAdr" : nei_nwk, "in_cost" : int(nei_in), "out_cost" : int(nei_out)})
+                    f.writelines(nwkAdr+';'+macAdr+';'+panAdr+';'+str(nei_nwk)+';'+str(nei_in)+';'+str(nei_out)+'\n')
 
                 
                 index = self.indexNode(nwkAdr, nodes)
                 if (index == -1): # node does not exist
                     tmp_node = node.node(nwkAdr, macAdr, panAdr)
-                    tmp_node.setCurNeighbors(neighbors)
-                    tmp_node.addNpPreNeighbors()
                     nodes.append(tmp_node)
                     print "Node",nwkAdr,"does not exist"
                 else: # node exists
+                    print "Node",nwkAdr,"exists in index", index
                     tmp_node = self.findNode(nwkAdr, nodes)
-                    tmp_node.addNpPreNeighbors()
-                    tmp_node.setCurNeighbors(neighbors)
 
-                # nodes[nwkAdr] = {'node' : tmp_node}
-                # if (nwkAdr == "0x5b46"):
-                #     print nodes[nwkAdr]
-
+                tmp_node.setCurNeighbors(neighbors)
+                tmp_node.addNpPreNeighbors()
                 cap = capture.next()
 
         except AttributeError:
             print "*******BUG IN PYSHARK (AttributeError)*******"
+            print str(tmp_node)
+            tmp_node.addNpPreNeighbors()
         except StopIteration:
             print "*******BUG IN PYSHARK (StopIteration)*******"
+            print str(tmp_node)
+            tmp_node.addNpPreNeighbors()
 
 
         print "Link Status packages are ", str(link_counter)
         print "NOT Link Status packages are ", str(i)
         print "TOTAL ", str(i + link_counter)
 
-
+        f.close()
         capture.close()
         return nodes
 

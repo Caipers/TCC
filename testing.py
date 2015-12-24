@@ -98,10 +98,15 @@ nodes = cap.fileCapture(PCAP_FILE)
 
 # print "nodes:", str(nodes)
 
+f = file('nodes.log', 'w')
+
 for node in nodes:
     """Node is a node object"""
-    node.printCurNeighbors()
+    # node.printCurNeighbors()
+    if (node.getNwkAdr() == '0xd7e7'):
+        print str(node.npPreNeighbors)
     node.processPreNeighbors()
     print str(node.getHistoricalNeighbors())
     print ""
+    f.writelines('Total Link Status for node ' + str(node.getNwkAdr()) + ' is ' + str(node.getPacketTotal()) + '\n')
     
