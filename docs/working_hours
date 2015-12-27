@@ -24,3 +24,8 @@ Anteriores à 13/12 -> 30h Desenvolvimento de pre-projeto.
               Correcao de bug onde o ultimo pacote de vizinhos nao estava sendo processado para o historico.
               Conferencia de valores totais de custos dos vizinhos dos pacotes e processados -> OK para ambos arquivos de capture.
               Adicionado testes de padrao de entrada para o nwk_nei, nei_in, nei_out na classe capture com objetivo de garantir integridade de informacoes.
+26/12 -> 3h   Estudos sobre roteamento ZigBee. Sera possivel fazer previsao de rotas a partir dos pacotes Link Status.
+              Como cada pacote Link Status informa os vizinhos de cada no, e possivel montar um grafo desta rede com as arestas sendo os custos, portanto, para prever que rota um pacote ira fazer de um ponto A para B, seria pegar a rota com menor custo de ida. 
+27/12 -> 5h   Estudos sobre roteamento ZigBee. Cada no possui uma tabela de roteamento.
+              Se o no rementendo nao tem na tabela de roteamento o no destinatario, ele pode solicitar a descoberta de rotas. 
+              O pacote Route Request e o comando 0x01, e se o no destinatario eh encontrado, um Route Reply eh gerado com seu custo. Ha basicamente tres tipos de roteamento: OADV, many-to-one and source routing. Quando solicitado um source routing, um pacote Route Record que registra a rota entre um ponto A e B. E isso pode ser registrado.
