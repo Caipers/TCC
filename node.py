@@ -33,6 +33,7 @@ class node():
         self.curNeighbors = [] # Current Neighbors
         self.npPreNeighbors = [] # Non-processed previous neighbors (List of Neighbors -> List of List of Dictionary)
         self.pPreNeighbors = [] # Non-processed previous neighbors (List of a Dictionary)
+        self.ResetedNode = False
 
     def setNwkAdr(self, nwkAdr):
         if (self.r_nwkAdr.match(nwkAdr) == None):
@@ -162,6 +163,8 @@ class node():
         return self.pPreNeighbors
     def getPacketTotal(self):
         return self.packet_total
+    def isResetedNode(self):
+        return self.ResetedNode
 
     def saveHistoricalNeighbors(self):
         f = file('histnb.log','a')
@@ -170,3 +173,15 @@ class node():
             f.writelines(self.nwkAdr+';'+dic['nwkAdr']+';'+str(dic['tot_in_cost'])+';'+str(dic['tot_out_cost'])+';'+str(dic['tot_pkt'])+'\n')
 
         f.close()
+
+    def resetNode(self):
+        """Clear all previuos data, let node as new one. Set True in resetedNode"""
+
+        self.nwkAdr = None
+        self.macAdr = None
+        self.panAdr = None
+        self.packet_total = 0
+        self.curNeighbors = []
+        self.npPreNeighbors = [] 
+        self.pPreNeighbors = []
+        self.isResetedNode = True

@@ -15,19 +15,21 @@ class capture():
     """
 
     def fileCapture(self, pcapFile):
+        """Capture all Link Status packets. They belong to zbee_nwk Layer which 
+        has zbee_nwk.cmd.id == 0x08 according to ZigBee Specification document"""
+
         capture = pyshark.FileCapture(pcapFile, keep_packets = False)
-        
+
         f = file('aux.log','w') # for debugging reasons
         tmp_node = None
         nodes = [] # list of nodes
-
+        i = 0
         link_counter = 0
         cap = capture
-        i = 0
 
         r_nwkAdr = re.compile("0x[0-9a-f][0-9a-f][0-9a-f][0-9a-f]", re.IGNORECASE)
         r_nei_cost = re.compile("[01357]")
-
+        
         # trying to find a bug in the library on pyshark.
         try:
             while(cap is not None):
@@ -47,11 +49,11 @@ class capture():
                 link_counter += 1
 
                 # recoding basic information
-                nwkAdr = cap.zbee_nwk.src
-                macAdr = cap.zbee_nwk.src64
-                panAdr = cap.wpan.dst_pan
+                nwkAdr = str(cap.zbee_nwk.src)
+                macAdr = str(cap.zbee_nwk.src64)
+                panAdr = str(cap.wpan.dst_pan)
 
-                # recoding neighbouring information
+                # parsing neighbouring information
                 tmp = str(cap.zbee_nwk)
                 cmd = "Command Frame: Link Status"
                 start = tmp.find(cmd) + len(cmd) + 1
@@ -63,7 +65,6 @@ class capture():
                 neighbors = []
                 for neighbor in list_neighbors:
 
-       
                     nei_nwk = neighbor[1:7]
                     nei_in = neighbor[24:25]
                     nei_out = neighbor[41:42]
@@ -83,10 +84,16 @@ class capture():
                 if (index == -1): # node does not exist
                     tmp_node = node.node(nwkAdr, macAdr, panAdr)
                     nodes.append(tmp_node)
-                    # print "Node",nwkAdr,"does not exist"
                 else: # node exists
-                    # print "Node",nwkAdr,"exists in index", index
                     tmp_node = self.findNode(nwkAdr, nodes)
+                    # if node changed its PAN or another radio gets a someone's nwkAdr, 
+                    # it must reset all previous data e start again.
+
+                    if ((tmp_node.getPanAdr() != panAdr) or (tmp_node.getMacAdr() != macAdr)):
+                        tmp_node.resetNode()
+                        tmp_node.setNwkAdr(nwkAdr)
+                        tmp_node.setMacAdr(macAdr)
+                        tmp_node.setPanAdr(panAdr)
 
                 tmp_node.setCurNeighbors(neighbors)
                 tmp_node.addNpPreNeighbors()
@@ -95,11 +102,9 @@ class capture():
         except AttributeError:
             print "*******BUG IN PYSHARK (AttributeError)*******"
             print str(tmp_node)
-            # tmp_node.addNpPreNeighbors()
         except StopIteration:
             print "*******BUG IN PYSHARK (StopIteration)*******"
             print str(tmp_node)
-            # tmp_node.addNpPreNeighbors()
 
 
         print "Link Status packages are ", str(link_counter)

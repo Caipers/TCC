@@ -29,3 +29,5 @@ Anteriores à 13/12 -> 30h Desenvolvimento de pre-projeto.
 27/12 -> 5h   Estudos sobre roteamento ZigBee. Cada no possui uma tabela de roteamento.
               Se o no rementendo nao tem na tabela de roteamento o no destinatario, ele pode solicitar a descoberta de rotas. 
               O pacote Route Request e o comando 0x01, e se o no destinatario eh encontrado, um Route Reply eh gerado com seu custo. Ha basicamente tres tipos de roteamento: OADV, many-to-one and source routing. Quando solicitado um source routing, um pacote Route Record que registra a rota entre um ponto A e B. E isso pode ser registrado.
+31/12 -> 1h   Elaborado logica para controle se um node trocou de PAN ou se o mesmo nwkAdr foi associado a outro radio. Ambos
+              farao que os historicos sejam apagados e recomecado.

@@ -118,6 +118,10 @@ for node in nodes:
 
     print "\t",node.getPacketTotal(),'packets of node =>',node.getNwkAdr(),node.getMacAdr()
     node.saveHistoricalNeighbors()
+
+    if node.isResetedNode() == True:
+        print "Node",node.getNwkAdr,"is a reseted node"
+
     # print str(node.getHistoricalNeighbors())
     # print ""
     # f.writelines('Total Link Status for node ' + str(node.getNwkAdr()) + ' is ' + str(node.getPacketTotal()) + '\n')
