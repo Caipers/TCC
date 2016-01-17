@@ -25,7 +25,9 @@ class capture():
         nodes = [] # list of nodes
         i = 0
         link_counter = 0
-        cap = capture
+        cap = capture.next()
+
+        # print str(cap)
 
         r_nwkAdr = re.compile("0x[0-9a-f][0-9a-f][0-9a-f][0-9a-f]", re.IGNORECASE)
         r_nei_cost = re.compile("[01357]")
@@ -35,7 +37,11 @@ class capture():
             while(cap is not None):
                 try:
                     # test if the zbee_nwk package IS NOT Link Status
-                    if (str(cap.zbee_nwk.cmd_id) != "0x08"):
+                    cmd_id = self.convStrtoFF(cap.zbee_nwk.cmd_id)
+                    if (cmd_id == None):
+                        print "cmd_id is None"
+                    # cmd_id = hex(int(cap.zbee_nwk.cmd_id))
+                    if (cmd_id != "0x08"):
                         cap = capture.next()
                         i += 1
                         continue
@@ -47,11 +53,12 @@ class capture():
                     continue
 
                 link_counter += 1
+                # print "Aqui porra!!!"
 
                 # recoding basic information
-                nwkAdr = str(cap.zbee_nwk.src)
                 macAdr = str(cap.zbee_nwk.src64)
-                panAdr = str(cap.wpan.dst_pan)
+                nwkAdr = self.convStrtoFFFF(cap.zbee_nwk.src)
+                panAdr = self.convStrtoFFFF(cap.wpan.dst_pan)
 
                 # parsing neighbouring information
                 tmp = str(cap.zbee_nwk)
@@ -142,4 +149,47 @@ class capture():
 
         return -1
 
+    def convStrtoFF(self, strVal):
+        """
+        Convert a String with int content to a hex like 0xFF.
+        Return: 0xff string value if OK
+                None otherwise
+        """
+
+        try:
+            intVal = int(strVal)
+        except ValueError:
+            print "String is not a int with base 10"
+
+        hexVal = hex(intVal)
+        if (len(hexVal) == 3):
+            return "0x0"+hexVal[2]
+        if (len(hexVal) == 4):
+            return hexVal
+        else:
+            return None
+
+    def convStrtoFFFF(self, strVal):
+        """
+        Convert a String with int content to a hex like 0xFFFF.
+        Return: 0xffff string value if OK
+                None otherwise
+        """
+
+        try:
+            intVal = int(strVal)
+        except ValueError:
+            print "String is not a int with base 10"
+
+        hexVal = hex(intVal)
+        if (len(hexVal) == 3):
+            return "0x000"+hexVal[2]
+        if (len(hexVal) == 4):
+            return "0x00"+hexVal[2]+hexVal[3]
+        if (len(hexVal) == 5):
+            return "0x0"+hexVal[2]+hexVal[3]+hexVal[4]
+        if (len(hexVal) == 6):
+            return hexVal
+        else:
+            return None
 

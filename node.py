@@ -20,15 +20,24 @@ class node():
         self.r_macAdr = re.compile("[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]", re.IGNORECASE)
         
         if (self.r_nwkAdr.match(nwkAdr) == None):
+            print str(nwkAdr)
             raise ValueError('Incorrect nwkAdr')
         if (self.r_panAdr.match(panAdr) == None):
+            print str(panAdr)
             raise ValueError('Incorrect panAdr')
         if (self.r_macAdr.match(macAdr) == None):
+            print str(macAdr)
             raise ValueError('Incorrect macAdr')
         
         self.nwkAdr = nwkAdr
         self.macAdr = macAdr
         self.panAdr = panAdr
+        
+        if (nwkAdr == "0x0000"):
+            self.coordinator = True
+        else:
+            self.coordinator = False
+
         self.packet_total = 0
         self.curNeighbors = [] # Current Neighbors
         self.npPreNeighbors = [] # Non-processed previous neighbors (List of Neighbors -> List of List of Dictionary)
@@ -165,6 +174,8 @@ class node():
         return self.packet_total
     def isResetedNode(self):
         return self.ResetedNode
+    def isCoordinator(self):
+        return self.coordinator
 
     def saveHistoricalNeighbors(self):
         f = file('histnb.log','a')
@@ -175,7 +186,7 @@ class node():
         f.close()
 
     def resetNode(self):
-        """Clear all previuos data, let node as new one. Set True in resetedNode"""
+        """Clear all previuos data, lets node as new one. Set True in resetedNode"""
 
         self.nwkAdr = None
         self.macAdr = None

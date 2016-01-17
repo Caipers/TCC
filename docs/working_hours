@@ -31,3 +31,8 @@ Anteriores à 13/12 -> 30h Desenvolvimento de pre-projeto.
               O pacote Route Request e o comando 0x01, e se o no destinatario eh encontrado, um Route Reply eh gerado com seu custo. Ha basicamente tres tipos de roteamento: OADV, many-to-one and source routing. Quando solicitado um source routing, um pacote Route Record que registra a rota entre um ponto A e B. E isso pode ser registrado.
 31/12 -> 1h   Elaborado logica para controle se um node trocou de PAN ou se o mesmo nwkAdr foi associado a outro radio. Ambos
               farao que os historicos sejam apagados e recomecado.
+10/01 -> 5h   Escrevendo parte de fundamentação teórica da monografia.
+16/01 -> 2h   Reunião com o Lucas para demonstração de idéias de visualização do projeto. 
+              Ficou definido que iremos usamos as bibliotecas do django programando em Python. Usaremos as bibliotecas do Google Maps e as localizações de cada ponto como ponto de partidas para o desenvolvimento do programa Web. 
+              Samuel irá conseguir a latitude e longitude de cada ponto e fornecerá - junto com outras informações - via padrão JSON as informações.
+              Usaremos o padrão JSON para troca de mensagens entre o programa de Captação e Filtragem e o programa WEB.
