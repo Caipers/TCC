@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*- 
 
 import re
+import json
 
 class node():
     """Class that implements a Zigbee network node"""
@@ -39,6 +40,8 @@ class node():
             self.coordinator = False
 
         self.packet_total = 0
+        self.latitude = 0 # TO BE INCLUDED
+        self.longitude = 0 # TO BE INCLUDED
         self.curNeighbors = [] # Current Neighbors
         self.npPreNeighbors = [] # Non-processed previous neighbors (List of Neighbors -> List of List of Dictionary)
         self.pPreNeighbors = [] # Non-processed previous neighbors (List of a Dictionary)
@@ -99,11 +102,9 @@ class node():
                 total_out += outCost
 
                 if (self.hasNeighbor(nwkAdr, self.pPreNeighbors) == False):
-                    # print "Node = ", self.nwkAdr, " has not the neighbor ", nwkAdr
                     self.pPreNeighbors.append({'nwkAdr' : nwkAdr, 'tot_in_cost' : inCost, 'tot_out_cost' : outCost, 'tot_pkt' : 1})
                 else:
                     index = self.indexNeighbor(nwkAdr,self.pPreNeighbors)
-                    # print "Node = ", self.nwkAdr, " has the neighbor ", nwkAdr, "with the index", index
                     dic = self.pPreNeighbors[index]
 
                     tot_in_cost = dic['tot_in_cost'] + inCost
@@ -124,7 +125,6 @@ class node():
 
         for dic in listOfDict: # dic is a dictionary
             if (dic['nwkAdr'] == nwkAdr):
-                # print "hasNeighbor has found the nwkAdr", nwkAdr, "dic=", dic['']
                 return True
 
         return False
@@ -160,23 +160,6 @@ class node():
             print '{:<3}'.format('#' + str(k)), '{:<10}'.format(neighbor['nwkAdr']), '{:<3}'.format(neighbor['in_cost']), '{:<3}'.format(neighbor['out_cost'])
             k += 1
 
-    def getNwkAdr(self):
-        return self.nwkAdr
-    def getMacAdr(self):
-        return self.macAdr
-    def getPanAdr(self):
-        return self.panAdr
-    def getCurNeighbors(self):
-        return self.curNeighbors
-    def getHistoricalNeighbors(self):
-        return self.pPreNeighbors
-    def getPacketTotal(self):
-        return self.packet_total
-    def isResetedNode(self):
-        return self.ResetedNode
-    def isCoordinator(self):
-        return self.coordinator
-
     def saveHistoricalNeighbors(self):
         f = file('histnb.log','a')
 
@@ -196,3 +179,29 @@ class node():
         self.npPreNeighbors = [] 
         self.pPreNeighbors = []
         self.isResetedNode = True
+
+    def getNwkAdr(self):
+        return self.nwkAdr
+    def getMacAdr(self):
+        return self.macAdr
+    def getPanAdr(self):
+        return self.panAdr
+    def getCurNeighbors(self):
+        return self.curNeighbors
+    def getHistoricalNeighbors(self):
+        return self.pPreNeighbors
+    def getPacketTotal(self):
+        return self.packet_total
+    def getJSONBasics(self):
+        """
+        Return basic information in JSON format about the node which is: nwkAdr, panAdr, macAdr, coordinator
+        """
+        return json.dumps([self.nwkAdr, self.panAdr, self.macAdr, self.coordinator, self.latitude, self.longitude])
+    def getJSONCurNeighbors(self):
+        return json.dumps(self.curNeighbors)
+    def getJSONHistoricalNeighbors(self):
+        return json.dumps(self.pPreNeighbors)
+    def isResetedNode(self):
+        return self.ResetedNode
+    def isCoordinator(self):
+        return self.coordinator

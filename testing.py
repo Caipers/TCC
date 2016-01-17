@@ -1,5 +1,6 @@
 import pyshark
 import capture
+import json
 
 #!/usr/bin/python
 # -*- coding: utf-8 -*- 
@@ -90,8 +91,8 @@ import capture
 # print "wpan.rssi = " + str(cap[3].wpan.rssi)
 # print "wpan.rssi = " + str(cap[4].wpan.rssi)
 
-PCAP_FILE = 'pcap_files/bigger_file.PCAP'
-# PCAP_FILE = 'pcap_files/smaller_file.PCAP'
+# PCAP_FILE = 'pcap_files/bigger_file.PCAP'
+PCAP_FILE = 'pcap_files/smaller_file.PCAP'
 
 cap = capture.capture()
 nodes = cap.fileCapture(PCAP_FILE)
@@ -116,16 +117,21 @@ for node in nodes:
     tot_in += t_in
     tot_out += t_out
 
-    print "\t",node.getPacketTotal(),'packets of node =>',node.getNwkAdr(),node.getMacAdr()
-    node.saveHistoricalNeighbors()
+    # print "\t",node.getPacketTotal(),'packets of node =>',node.getNwkAdr(),node.getMacAdr()
+    # node.saveHistoricalNeighbors()
 
+    # print "Basics of", node.getNwkAdr(),str(node.getJSONBasics())
+    # print "Current neighbors",node.getJSONCurNeighbors()
+    
     if node.isResetedNode() == True:
-        print "Node",node.getNwkAdr,"is a reseted node"
+        print "Node",node.getNwkAdr(),"is a reseted node"
 
-    # print str(node.getHistoricalNeighbors())
-    # print ""
-    # f.writelines('Total Link Status for node ' + str(node.getNwkAdr()) + ' is ' + str(node.getPacketTotal()) + '\n')
+    # curNeig = node.getCurNeighbors()
 
+
+# print str(curNeig)
+# j = json.dumps([node.getNwkAdr(), curNeig])
+# print str(j)
 
 print "Total of cost of incoming cost of all nodes =", tot_in
 print "Total of cost of outcoming cost of all nodes =", tot_out

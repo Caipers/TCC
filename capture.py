@@ -27,8 +27,6 @@ class capture():
         link_counter = 0
         cap = capture.next()
 
-        # print str(cap)
-
         r_nwkAdr = re.compile("0x[0-9a-f][0-9a-f][0-9a-f][0-9a-f]", re.IGNORECASE)
         r_nei_cost = re.compile("[01357]")
         
@@ -40,7 +38,6 @@ class capture():
                     cmd_id = self.convStrtoFF(cap.zbee_nwk.cmd_id)
                     if (cmd_id == None):
                         print "cmd_id is None"
-                    # cmd_id = hex(int(cap.zbee_nwk.cmd_id))
                     if (cmd_id != "0x08"):
                         cap = capture.next()
                         i += 1
@@ -53,7 +50,6 @@ class capture():
                     continue
 
                 link_counter += 1
-                # print "Aqui porra!!!"
 
                 # recoding basic information
                 macAdr = str(cap.zbee_nwk.src64)
@@ -192,4 +188,3 @@ class capture():
             return hexVal
         else:
             return None
-
