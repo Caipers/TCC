@@ -8,6 +8,7 @@ import re
 # pyshark docs: https://github.com/KimiNewt/pysharkty
 
 class capture():
+
     """
     Capture class is responsible for capturing all desarible packages and return a 
     dictionary of unique nodes.
@@ -15,8 +16,14 @@ class capture():
     """
 
     def fileCapture(self, pcapFile):
-        """Capture all Link Status packets. They belong to zbee_nwk Layer which 
-        has zbee_nwk.cmd.id == 0x08 according to ZigBee Specification document"""
+        # When entering in this function, the import of node module disappers. 
+        # I still do not know why.
+        import node
+        
+        """
+        Capture all Link Status packets. They belong to zbee_nwk Layer which 
+        has zbee_nwk.cmd.id == 0x08 according to ZigBee Specification document
+        """
 
         capture = pyshark.FileCapture(pcapFile, keep_packets = False)
 
@@ -53,8 +60,8 @@ class capture():
 
                 # recoding basic information
                 macAdr = str(cap.zbee_nwk.src64)
-                nwkAdr = self.convStrtoFFFF(cap.zbee_nwk.src)
-                panAdr = self.convStrtoFFFF(cap.wpan.dst_pan)
+                nwkAdr = str(self.convStrtoFFFF(cap.zbee_nwk.src))
+                panAdr = str(self.convStrtoFFFF(cap.wpan.dst_pan))
 
                 # parsing neighbouring information
                 tmp = str(cap.zbee_nwk)
@@ -116,6 +123,11 @@ class capture():
 
         f.close()
         capture.close()
+
+        # processing historical nodes
+        for node in nodes:
+            node.processPreNeighbors()
+
         return nodes
 
     def indexNode(self, nwkAdr, listOfNodes):

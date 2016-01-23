@@ -56,7 +56,7 @@ class node():
         if (self.r_macAdr.match(macAdr) == None):
             raise AttributeError('Incorrect macAdr')
 
-        self.macAdr = macAdr
+        self.macAdr = macAdrprocessPreNeighbors
     def setPanAdr(self, panAdr):
         if (self.r_panAdr.match(panAdr) == None):
             raise AttributeError('Incorrect panAdr')
@@ -198,9 +198,9 @@ class node():
         """
         return json.dumps([self.nwkAdr, self.panAdr, self.macAdr, self.coordinator, self.latitude, self.longitude])
     def getJSONCurNeighbors(self):
-        return json.dumps(self.curNeighbors)
+        return json.dumps([self.nwkAdr, self.curNeighbors])
     def getJSONHistoricalNeighbors(self):
-        return json.dumps(self.pPreNeighbors)
+        return json.dumps([self.nwkAdr, self.pPreNeighbors])
     def isResetedNode(self):
         return self.ResetedNode
     def isCoordinator(self):

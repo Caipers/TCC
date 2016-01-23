@@ -1,10 +1,7 @@
-import pyshark
-import capture
-import json
-
 #!/usr/bin/python
 # -*- coding: utf-8 -*- 
 
+# ******************************************************************************************
 # pyshark docs: https://github.com/KimiNewt/pysharkty
 # cap = pyshark.FileCapture('pcap_files/bigger_file.PCAP')
 
@@ -70,26 +67,11 @@ import json
 # do routering table.
 
 # OBS: Implica que o NWK_SRC tem como vizinhos todos esses nos.
+# ******************************************************************************************
 
-
-
-#
-# print "CAP0 Complete " + str(cap[0])
-# print "CAP0 Wpan" + str(cap[0].wpan)
-# print "CAP0 ZB_NWK" + str(cap[0].zbee_nwk)
-# cap[0].zbee_nwk.field_names
-
-# print "wpan.rssi = " + str(cap[0].wpan.rssi)
-# print "zbee_nwk.src64 = " + str(cap[0].zbee_nwk.src64)
-# print "zbee_nwk.src = " + str(cap[0].zbee_nwk.src)
-# print "zbee_nwk.dst = " + str(cap[0].zbee_nwk.dst)
-# print "zbee_nwk = " + str(cap[0].zbee_nwk)
-
-
-# print "wpan.rssi = " + str(cap[1].wpan.rssi)
-# print "wpan.rssi = " + str(cap[2].wpan.rssi)
-# print "wpan.rssi = " + str(cap[3].wpan.rssi)
-# print "wpan.rssi = " + str(cap[4].wpan.rssi)
+import pyshark
+import capture
+import json
 
 # PCAP_FILE = 'pcap_files/bigger_file.PCAP'
 PCAP_FILE = 'pcap_files/smaller_file.PCAP'
@@ -97,9 +79,7 @@ PCAP_FILE = 'pcap_files/smaller_file.PCAP'
 cap = capture.capture()
 nodes = cap.fileCapture(PCAP_FILE)
 
-# print "nodes:", str(nodes)
-
-f = file('nodes.log', 'w')
+# f = file('nodes.log', 'w')
 
 tot_in = 0
 tot_out = 0
@@ -108,14 +88,12 @@ tot_pkt = 0
 print "Following nodes has been processed:"
 for node in nodes:
     """Node is a node object"""
-    # node.printCurNeighbors()
-    # if (node.getNwkAdr() == '0xd7e7'):
-    #     print str(node.npPreNeighbors)
-
-    t_in, t_out = node.processPreNeighbors()
+    print "Processing nodes"
+    
+    # t_in, t_out = node.processPreNeighbors()
     tot_pkt += node.getPacketTotal()
-    tot_in += t_in
-    tot_out += t_out
+    # tot_in += t_in
+    # tot_out += t_out
 
     # print "\t",node.getPacketTotal(),'packets of node =>',node.getNwkAdr(),node.getMacAdr()
     # node.saveHistoricalNeighbors()
@@ -123,16 +101,19 @@ for node in nodes:
     # print "Basics of", node.getNwkAdr(),str(node.getJSONBasics())
     # print "Current neighbors",node.getJSONCurNeighbors()
     
-    if node.isResetedNode() == True:
-        print "Node",node.getNwkAdr(),"is a reseted node"
+    # if node.isResetedNode() == True:
+    #     print "Node",node.getNwkAdr(),"is a reseted node"
 
-    # curNeig = node.getCurNeighbors()
+    # **************************************************
+    # tmp contais a 3D matrix (tmp[node][neighbors])
+    # EXAMPLES
+    # tmp[0] is the network address of this node
+    # tmp[1] is the node's historical neighbors
+    # tmp[1][0] is the first neighbor of the list of neighbors (a dictionary).
+    # tmp[1][0]['nkwAdr'] to access the network address of the first neighbor.
+    tmp = json.loads(node.getJSONHistoricalNeighbors())
+    # ***************************************************
 
-
-# print str(curNeig)
-# j = json.dumps([node.getNwkAdr(), curNeig])
-# print str(j)
-
-print "Total of cost of incoming cost of all nodes =", tot_in
-print "Total of cost of outcoming cost of all nodes =", tot_out
+# print "Total of cost of incoming cost of all nodes =", tot_in
+# print "Total of cost of outcoming cost of all nodes =", tot_out
 print "Total of packets processed of capturing =", tot_pkt
