@@ -40,8 +40,9 @@ class node():
             self.coordinator = False
 
         self.packet_total = 0
-        self.latitude = 0 # TO BE INCLUDED
-        self.longitude = 0 # TO BE INCLUDED
+        self.sn = None
+        self.latitude = None 
+        self.longitude = None 
         self.curNeighbors = [] # Current Neighbors
         self.npPreNeighbors = [] # Non-processed previous neighbors (List of Neighbors -> List of List of Dictionary)
         self.pPreNeighbors = [] # Non-processed previous neighbors (List of a Dictionary)
@@ -62,6 +63,13 @@ class node():
             raise AttributeError('Incorrect panAdr')
 
         self.panAdr = panAdr
+
+    def setLocation(self, latitude, longitude):
+        self.latitude = latitude
+        self.longitude = longitude
+
+    def setSN(self, sn):
+        self.sn = sn
 
     def setCurNeighbors(self, neighbors):
         """Set current neighbors"""
@@ -186,6 +194,10 @@ class node():
         return self.macAdr
     def getPanAdr(self):
         return self.panAdr
+    def getLocation(self):
+        return [self.latitude, self.longitude]
+    def getSN(self):
+        return self.sn
     def getCurNeighbors(self):
         return self.curNeighbors
     def getHistoricalNeighbors(self):
@@ -194,9 +206,10 @@ class node():
         return self.packet_total
     def getJSONBasics(self):
         """
-        Return basic information in JSON format about the node which is: nwkAdr, panAdr, macAdr, coordinator
+        Return basic information in JSON format about the node which is: nwkAdr, panAdr, macAdr, coordinator latitude
+        longitude, serial number
         """
-        return json.dumps([self.nwkAdr, self.panAdr, self.macAdr, self.coordinator, self.latitude, self.longitude])
+        return json.dumps([self.nwkAdr, self.panAdr, self.macAdr, self.coordinator, self.latitude, self.longitude, self.sn])
     def getJSONCurNeighbors(self):
         return json.dumps([self.nwkAdr, self.curNeighbors])
     def getJSONHistoricalNeighbors(self):

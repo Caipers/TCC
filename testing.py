@@ -69,9 +69,12 @@
 # OBS: Implica que o NWK_SRC tem como vizinhos todos esses nos.
 # ******************************************************************************************
 
+
+
 import pyshark
 import capture
 import json
+import lib.geoPositioning
 
 # PCAP_FILE = 'pcap_files/bigger_file.PCAP'
 PCAP_FILE = 'pcap_files/smaller_file.PCAP'
@@ -81,14 +84,28 @@ nodes = cap.fileCapture(PCAP_FILE)
 
 # f = file('nodes.log', 'w')
 
+f = "/home/samuel/TCC/docs/geo_positions.csv"
 tot_in = 0
 tot_out = 0
 tot_pkt = 0
+geo = lib.geoPositioning.geoPositioning(f)
 
 print "Following nodes has been processed:"
 for node in nodes:
     """Node is a node object"""
     print "Processing nodes"
+
+    # print "Setting node positions"
+    values = geo.getValues(node.getMacAdr())
+    # print "Values:",values
+    if (values == None):
+        # print "The Location of node",node.getMacAdr(),"has not been found"
+        pass
+    else:
+        node.setLocation(values["lat"], values["lon"])
+        node.setSN(values["sn"])
+        # print "Node",node.getMacAdr(),"has",node.getLocation(),"and following SN",node.getSN()
+
     
     # t_in, t_out = node.processPreNeighbors()
     tot_pkt += node.getPacketTotal()
@@ -114,6 +131,12 @@ for node in nodes:
     tmp = json.loads(node.getJSONHistoricalNeighbors())
     # ***************************************************
 
+    print json.loads(node.getJSONBasics())
+
 # print "Total of cost of incoming cost of all nodes =", tot_in
 # print "Total of cost of outcoming cost of all nodes =", tot_out
+
+# print "Printing GEO list:\n"
+# geo.printList()
 print "Total of packets processed of capturing =", tot_pkt
+

@@ -8,7 +8,6 @@ import re
 # pyshark docs: https://github.com/KimiNewt/pysharkty
 
 class capture():
-
     """
     Capture class is responsible for capturing all desarible packages and return a 
     dictionary of unique nodes.
