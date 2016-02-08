@@ -20,13 +20,13 @@ class node():
         self.r_panAdr = re.compile("0x[0-9a-f][0-9a-f][0-9a-f][0-9a-f]", re.IGNORECASE)
         self.r_macAdr = re.compile("[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]", re.IGNORECASE)
         
-        if (self.r_nwkAdr.match(nwkAdr) == None):
+        if (self.r_nwkAdr.match(nwkAdr) == None or len(nwkAdr) != 6):
             print str(nwkAdr)
             raise ValueError('Incorrect nwkAdr')
-        if (self.r_panAdr.match(panAdr) == None):
+        if (self.r_panAdr.match(panAdr) == None or len(panAdr) != 6):
             print str(panAdr)
             raise ValueError('Incorrect panAdr')
-        if (self.r_macAdr.match(macAdr) == None):
+        if (self.r_macAdr.match(macAdr) == None or len(macAdr) != 23):
             print str(macAdr)
             raise ValueError('Incorrect macAdr')
         
@@ -49,27 +49,52 @@ class node():
         self.ResetedNode = False
 
     def setNwkAdr(self, nwkAdr):
-        if (self.r_nwkAdr.match(nwkAdr) == None):
-            raise AttributeError('Incorrect nwkAdr')
+        if (self.r_nwkAdr.match(nwkAdr) == None or len(nwkAdr) != 6):
+            raise ValueError('Incorrect nwkAdr')
 
         self.nwkAdr = nwkAdr
     def setMacAdr(self, macAdr):
-        if (self.r_macAdr.match(macAdr) == None):
-            raise AttributeError('Incorrect macAdr')
+        if (self.r_macAdr.match(macAdr) == None or len(macAdr) != 23):
+            raise ValueError('Incorrect macAdr')
 
-        self.macAdr = macAdrprocessPreNeighbors
+        self.macAdr = macAdr
     def setPanAdr(self, panAdr):
-        if (self.r_panAdr.match(panAdr) == None):
-            raise AttributeError('Incorrect panAdr')
+        if (self.r_panAdr.match(panAdr) == None or len(panAdr) != 6):
+            raise ValueError('Incorrect panAdr')
 
         self.panAdr = panAdr
 
     def setLocation(self, latitude, longitude):
-        self.latitude = latitude
-        self.longitude = longitude
+        """
+        Return: 
+            latitude, longitude : float type 
+        """
+        # for Brazilian location both values are negative.
+        if (float(latitude) > 0 or float(longitude) > 0):
+            raise ValueError('Latitude or Longitude are not less than 0')
+
+        # http://stackoverflow.com/questions/11849636/maximum-lat-and-long-bounds-for-the-world-google-maps-api-latlngbounds
+        if (float(latitude) < -85 or float(latitude) > 85):
+            raise ValueError('Latitude has valid range of [-85,85]')
+        if (float(longitude) < -180 or float(longitude) > 180):
+            raise ValueError('Latitude has valid range of [-180,180]')
+
+        self.latitude = float(latitude)
+        self.longitude = float(longitude)
 
     def setSN(self, sn):
-        self.sn = sn
+        """
+        SN has 13 decimal digits
+        Return:
+            SN : int type
+        """        
+        if (len(sn) != 13):
+            raise ValueError('Length of the SN is different of 13')
+
+        if (sn.isdigit() == False):
+            raise ValueError('SN is not a digit')
+
+        self.sn = int(sn)
 
     def setCurNeighbors(self, neighbors):
         """Set current neighbors"""
