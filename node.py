@@ -225,6 +225,8 @@ class node():
         return self.sn
     def getCurNeighbors(self):
         return self.curNeighbors
+    def getNpPreNeighbors(self):
+        return self.npPreNeighbors
     def getHistoricalNeighbors(self):
         return self.pPreNeighbors
     def getPacketTotal(self):

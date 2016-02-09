@@ -53,4 +53,6 @@ Anteriores à 13/12 -> 30h Desenvolvimento de pre-projeto.
 07/02 -> 3h   Escrevendo TCC (Fundamentação Teórica e Requisitos).
 08/02 -> 5h   Ajustando node.py com atualizações de tratamentos de variáveis.
               Criação de um módulo de teste unitário.
-
+09/02 -> 3h   Adicionando novos testes unitários em test_module.py
+              Criado um método getNpPreNeighbors() em node.py
+              Ajustes na identificação de valores válidos de nwKAdr, macAdr e panAdr dos vizinhos no arquivo capture.py

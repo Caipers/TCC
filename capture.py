@@ -78,17 +78,16 @@ class capture():
                     nei_in = neighbor[24:25]
                     nei_out = neighbor[41:42]
 
-                    if (r_nwkAdr.match(nei_nwk) == None):
+                    if (r_nwkAdr.match(nei_nwk) == None or len(nwkAdr) != 6):
                         raise ValueError('Invalid nwk_adr value')
-                    if (r_nei_cost.match(nei_in) == None):
+                    if (r_nei_cost.match(nei_in) == None or len(nei_in) != 1):
                         raise ValueError('Invalid neo_in value')
-                    if (r_nei_cost.match(nei_out) == None):
+                    if (r_nei_cost.match(nei_out) == None or len(nei_out) != 1):
                         raise ValueError('Invalid neo_out value')
 
                     neighbors.append({"nwkAdr" : nei_nwk, "in_cost" : int(nei_in), "out_cost" : int(nei_out)})
                     f.writelines(nwkAdr+';'+macAdr+';'+panAdr+';'+str(nei_nwk)+';'+str(nei_in)+';'+str(nei_out)+'\n')
 
-                
                 index = self.indexNode(nwkAdr, nodes)
                 if (index == -1): # node does not exist
                     tmp_node = node.node(nwkAdr, macAdr, panAdr)

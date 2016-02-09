@@ -1,5 +1,7 @@
 # content of test_class.py
 import pytest
+import sys
+
 from node import node
 
 class TestClass:
@@ -101,5 +103,179 @@ class TestClass:
 		n.setSN("2014030000855")
 		assert 2014030000855 == n.getSN()
 
+	def test_setCurNeighbors(self):
+		neighbors = []
+		n = node("0xfaca", "00:00:00:00:00:00:00:00", "0xffff")
+		
+		nei_nwk = ["0x0001", "0x0002", "0x0003"]
+		nei_in = [7, 5, 3]
+		nei_out = [7, 5, 3]
 
+		for i in range(0,3):
+			neighbors.append({"nwkAdr" : nei_nwk[i], "in_cost" : int(nei_in[i]), "out_cost" : int(nei_out[i])})
+			n.setCurNeighbors(neighbors)
+			curNei = n.getCurNeighbors()
+			r_nei_nwk = curNei[i]["nwkAdr"]
+			r_nei_in = curNei[i]["in_cost"]
+			r_nei_out = curNei[i]["out_cost"]
 
+			assert nei_nwk[i] == r_nei_nwk
+			assert nei_in[i] == r_nei_in
+			assert nei_out[i] == r_nei_out
+
+	def test_addNpPreNeighbors(self):
+		neighbors = []
+		n = node("0xfaca", "00:00:00:00:00:00:00:00", "0xffff")
+		
+		nei_nwk = ["0x0001", "0x0002", "0x0003"]
+		nei_in = [7, 5, 3]
+		nei_out = [7, 5, 3]
+
+		for i in range(0,3):
+			neighbors.append({"nwkAdr" : nei_nwk[i], "in_cost" : int(nei_in[i]), "out_cost" : int(nei_out[i])})
+	
+		n.setCurNeighbors(neighbors)
+		n.addNpPreNeighbors()
+		np_list = n.getNpPreNeighbors()
+
+		for np in np_list:
+			#np is a list of neighbors
+			for dic in np:
+				#dic is a dictionary
+				if (dic["nwkAdr"] == "0x0001"):
+					assert dic["in_cost"] == 7
+					assert dic["out_cost"] == 7
+				elif (dic["nwkAdr"] == "0x0002"):
+					assert dic["in_cost"] == 5
+					assert dic["out_cost"] == 5
+				elif (dic["nwkAdr"] == "0x0003"):
+					assert dic["in_cost"] == 3
+					assert dic["out_cost"] == 3
+
+		nei_nwk = ["0x0004", "0x0005", "0x0006"]
+		nei_in = [1, 3, 5]
+		nei_out = [7, 5, 3]
+
+		for i in range(0,3):
+			neighbors.append({"nwkAdr" : nei_nwk[i], "in_cost" : int(nei_in[i]), "out_cost" : int(nei_out[i])})
+	
+		n.setCurNeighbors(neighbors)
+		n.addNpPreNeighbors()
+		np_list = n.getNpPreNeighbors()
+
+		for np in np_list:
+			#np is a list of neighbors
+			for dic in np:
+				#dic is a dictionary
+				if (dic["nwkAdr"] == "0x0004"):
+					assert dic["in_cost"] == 1
+					assert dic["out_cost"] == 7
+				elif (dic["nwkAdr"] == "0x0005"):
+					assert dic["in_cost"] == 3
+					assert dic["out_cost"] == 5
+				elif (dic["nwkAdr"] == "0x0006"):
+					assert dic["in_cost"] == 5
+					assert dic["out_cost"] == 3
+
+	def test_processPreNeighbors(self):
+		neighbors = []
+		n = node("0xfaca", "00:00:00:00:00:00:00:00", "0xffff")
+		
+		nei_nwk = ["0x0001", "0x0002", "0x0003"]
+		nei_in = [7, 5, 3]
+		nei_out = [7, 5, 3]
+
+		for i in range(0,3):
+			neighbors.append({"nwkAdr" : nei_nwk[i], "in_cost" : int(nei_in[i]), "out_cost" : int(nei_out[i])})
+	
+		nei_nwk = ["0x0001", "0x0002", "0x0003", "0x0004"]
+		nei_in = [1, 3, 5, 1]
+		nei_out = [1, 3, 5, 3]
+
+		for i in range(0,4):
+			neighbors.append({"nwkAdr" : nei_nwk[i], "in_cost" : int(nei_in[i]), "out_cost" : int(nei_out[i])})
+	
+		n.setCurNeighbors(neighbors)
+		n.addNpPreNeighbors()
+		n.processPreNeighbors()
+
+		hist_list = n.getHistoricalNeighbors()
+		for dic in hist_list:
+			#dic is a dict
+			if (dic["nwkAdr"] == "0x0001"):
+				assert dic["tot_in_cost"] == 7+1
+				assert dic["tot_out_cost"] == 7+1
+			if (dic["nwkAdr"] == "0x0002"):
+				assert dic["tot_in_cost"] == 5+3
+				assert dic["tot_out_cost"] == 5+3
+			if (dic["nwkAdr"] == "0x0003"):
+				assert dic["tot_in_cost"] == 3+5
+				assert dic["tot_out_cost"] == 3+5
+			if (dic["nwkAdr"] == "0x0004"):
+				assert dic["tot_in_cost"] == 1
+				assert dic["tot_out_cost"] == 3
+
+	def test_hasNeighbor(self):
+		neighbors = []
+		n = node("0xfaca", "00:00:00:00:00:00:00:00", "0xffff")
+		
+		nei_nwk = ["0x0001", "0x0002", "0x0003"]
+		nei_in = [7, 5, 3]
+		nei_out = [7, 5, 3]
+
+		for i in range(0,3):
+			neighbors.append({"nwkAdr" : nei_nwk[i], "in_cost" : int(nei_in[i]), "out_cost" : int(nei_out[i])})
+	
+		nei_nwk = ["0x0001", "0x0002", "0x0003", "0x0004"]
+		nei_in = [1, 3, 5, 1]
+		nei_out = [1, 3, 5, 3]
+
+		for i in range(0,4):
+			neighbors.append({"nwkAdr" : nei_nwk[i], "in_cost" : int(nei_in[i]), "out_cost" : int(nei_out[i])})
+	
+		n.setCurNeighbors(neighbors)
+		n.addNpPreNeighbors()
+		n.processPreNeighbors()
+
+		assert n.hasNeighbor("0x0001", n.getHistoricalNeighbors()) == True
+		assert n.hasNeighbor("0x0002", n.getHistoricalNeighbors()) == True
+		assert n.hasNeighbor("0x0003", n.getHistoricalNeighbors()) == True
+		assert n.hasNeighbor("0x0004", n.getHistoricalNeighbors()) == True
+		assert n.hasNeighbor("0x0005", n.getHistoricalNeighbors()) == False
+		assert n.hasNeighbor("0x0000", n.getHistoricalNeighbors()) == False
+		assert n.hasNeighbor("0xFFFF", n.getHistoricalNeighbors()) == False
+
+	def test_indexNeighbor(self):
+		neighbors = []
+		n = node("0xfaca", "12:34:56:78:9a:bc:de:ff", "0xffff")
+		
+		nei_nwk = ["0x0001", "0x0002", "0x0003"]
+		nei_in = [7, 5, 3]
+		nei_out = [7, 5, 3]
+
+		for i in range(0,3):
+			neighbors.append({"nwkAdr" : nei_nwk[i], "in_cost" : int(nei_in[i]), "out_cost" : int(nei_out[i])})
+	
+		nei_nwk = ["0x0001", "0x0002", "0x0003", "0x0004"]
+		nei_in = [1, 3, 5, 1]
+		nei_out = [1, 3, 5, 3]
+
+		for i in range(0,4):
+			neighbors.append({"nwkAdr" : nei_nwk[i], "in_cost" : int(nei_in[i]), "out_cost" : int(nei_out[i])})
+	
+		n.setCurNeighbors(neighbors)
+		n.addNpPreNeighbors()
+		n.processPreNeighbors()
+		listOfDicts = n.getHistoricalNeighbors()
+
+		nwk_list = ["0x0001", "0x0002", "0x0003", "0x0004"]
+		for nwkAdr in nwk_list:
+			index = n.indexNeighbor(nwkAdr, listOfDicts)
+			assert index != -1
+			dic = listOfDicts[index]
+			assert dic["nwkAdr"] == nwkAdr 
+
+		nwk_list = ["0x0005", "0x0006", "0xFFFF", "0xFFFE"]
+		for nwkAdr in nwk_list:
+			index = n.indexNeighbor(nwkAdr, listOfDicts)
+			assert index == -1
