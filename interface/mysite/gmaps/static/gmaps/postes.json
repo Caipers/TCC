@@ -1,0 +1,154 @@
+{ "pontos": [
+      
+        {
+            "nome" : "Ponto1",
+            "estado": 1,
+            "desc": "SmartGreen Zigbee transceiver v1",
+            "viz" : 4,
+            "lat" : -25.382825,
+            "lng" : -49.267446
+        },
+        {
+            "nome" : "Ponto2",
+            "estado": 1, 
+            "desc": "SmartGreen Zigbee transceiver v1",
+            "lat" : -25.382913,
+            "viz" : 3, 
+            "lng" : -49.265944
+        },
+        {
+            "nome" : "Ponto3",
+            "estado": 1,
+            "desc": "SmartGreen Zigbee transceiver v1",
+            "viz" : 3,
+            "lat" : -25.383630,
+            "lng" : -49.267424
+        },
+        {
+            "nome" : "Ponto4",
+            "estado": 1,
+            "desc": "SmartGreen Zigbee transceiver v1",
+            "viz" : 2,
+            "lat" : -25.383998,
+            "lng" : -49.267521
+        },
+        {
+            "nome" : "Ponto5",
+            "estado": 1,
+            "desc": "SmartGreen Zigbee transceiver v1",
+            "viz" : 3,
+            "lat" : -25.383533, 
+            "lng" : -49.266073
+        },
+        {
+            "nome" : "Ponto6",
+            "estado": 2,
+            "desc": "SmartGreen Zigbee transceiver v1",
+            "viz" : 1,
+            "lat" : -25.384112, 
+            "lng" :-49.267577
+        },
+        {
+            "nome" : "Ponto7",
+            "estado": 0,
+            "desc": "SmartGreen Zigbee transceiver v1",
+            "viz" : 0,
+            "lat" : -25.383676,
+            "lng" : -49.265699
+        },
+        {
+            "nome" : "Ponto8",
+            "estado": 1,
+            "desc": "SmartGreen Zigbee Concentrador v1",
+            "viz" : 7,
+            "lat" : -25.384212, 
+            "lng" : -49.266212
+        }
+        
+        
+        
+
+    ],
+   "links": [
+   		{
+   			"raiz" : 1,
+   			"destino" : 2,
+   			"intensidade": 4
+   		},
+   		{
+   			"raiz" : 1,
+   			"destino" : 3,
+   			"intensidade": 4
+   		},
+   		{
+   			"raiz" : 1,
+   			"destino" : 5,
+   			"intensidade": 3
+   		},
+   		{
+   			"raiz" : 1,
+   			"destino" : 8,
+   			"intensidade": 8
+   		},
+   		{
+   			"raiz" : 2,
+   			"destino" : 3 ,
+   			"intensidade": 4
+   		},
+   		{
+   			"raiz" : 2,
+   			"destino" : 5,
+   			"intensidade": 6
+   		},
+   		{
+   			"raiz" : 2,
+   			"destino" : 8,
+   			"intensidade": 7
+   		},
+   		{
+   			"raiz" : 3,
+   			"destino" : 5,
+   			"intensidade": 4
+   		},
+   		{
+   			"raiz" : 3,
+   			"destino" : 4,
+   			"intensidade": 8
+   		},
+   		{
+   			"raiz" : 3,
+   			"destino" : 8,
+   			"intensidade": 8
+   		},
+   		{
+   			"raiz" : 4,
+   			"destino" : 3,
+   			"intensidade": 7
+   		},
+   		{
+   			"raiz" : 4,
+   			"destino" : 8,
+   			"intensidade": 7
+   		},
+   		{
+   			"raiz" : 5,
+   			"destino" : 2,
+   			"intensidade": 7
+   		},
+   		{
+   			"raiz" : 5,
+   			"destino" : 3,
+   			"intensidade": 3
+   		},
+   		{
+   			"raiz" : 5,
+   			"destino" : 8,
+   			"intensidade": 3
+   		},
+   		{
+   			"raiz" : 6,
+   			"destino" : 8,
+   			"intensidade": 3
+   		}
+   ]
+}

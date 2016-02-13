@@ -1,0 +1,5 @@
+from django.contrib import admin
+
+drom .models import Question
+
+admin.site.register(Question)

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>ZigMonitor Interface</title>
+    <style>
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        height: 100%;
+      }
+       #legend {
+        font-family: Arial, sans-serif;
+        background: #fff;
+        padding: 10px;
+        margin: 10px;
+        border: 3px solid #000;
+      }
+      #legend h3 {
+        margin-top: 0;
+      }
+      #legend img {
+        vertical-align: middle;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <div id="legend"><h3>Legenda</h3></div>
+    <script>
+
+/*var markers = [
+    ['Lago', -25.384455, -49.266728],
+    ['Poste 1', -25.382825, -49.267446],
+    ['Poste 2', -25.383242, -49.267435],
+    ['Poste 3', -25.383630, -49.267424],
+    ['Poste 4', -25.383998, -49.267521]
+];*/
+
+ /* function setMarkers(map, markers) { 
+    
+     var infowindow = new google.maps.InfoWindow(), marker, i;
+        window.alert(markers.length);
+        for (i = 0; i < markers.length; i++) {  
+          var poste = markers[i];
+
+          var myLatLng1 = new google.maps.LatLng(poste[0], poste[1]);
+          window.alert(myLatLng1)
+          marker = new google.maps.Marker({
+              position: myLatLng1,
+              map: map
+          });
+          google.maps.event.addListener(marker, 'click', (function(marker, i) {
+              return function() {
+                  infowindow.setContent(poste[0]);
+                  infowindow.open(map, marker);
+              }
+          })(marker, i));
+      }
+  }*/
+
+var map;
+
+  var icons = {
+          esta: {
+            name: 'Estável',
+            icon: 'http://i66.tinypic.com/ouys2c.png'
+          },
+          risk: {
+            name: 'Com Risco',
+            icon: 'http://i66.tinypic.com/2djrq5z.png'
+          },
+          inat: {
+            name: 'Inatingível',
+            icon: 'http://i63.tinypic.com/2moefpx.png'
+          }
+        };
+
+
+function setMarker(map) {
+
+    $.getJSON('http://camargod2.pythonanywhere.com/gmaps/api/postes', function(userPos) {
+       var infowindow = new google.maps.InfoWindow(), marker, i;
+       //window.alert(userPos["pontos"].length);
+        window.alert(userPos["pontos"].length);
+      for (var i = 0, length = userPos["pontos"].length; i <  length; i++) {
+        //var data = json[i];
+        //window.alert(userPos["postes"].length);
+
+        userLat = userPos["pontos"][i].lat;
+        userLon = userPos["pontos"][i].lng;
+        var position = new google.maps.LatLng(userLat,userLon);
+        var status;
+       // window.alert(userPos["pontos"][i].estado)
+        if(userPos["pontos"][i].estado == 0 )
+        {
+        status = 'http://i63.tinypic.com/2moefpx.png';
+        }
+        else if(userPos["pontos"][i].estado == 2 )
+        {
+        status = 'http://i66.tinypic.com/2djrq5z.png';
+        }
+        else if(userPos["pontos"][i].estado == 1 )
+        {
+        status = 'http://i66.tinypic.com/ouys2c.png';
+        }
+        
+        //window.alert(position);
+
+        var marker = new google.maps.Marker({
+            position: position,
+            map:map,
+            icon: status
+        });
+         
+                    //window.alert(userPos["pontos"][i].desc);
+                    google.maps.event.addListener(marker, 'click', (function(marker, i) {
+            return function() {
+
+                //infowindow.setContent(userPos["pontos"][i].nome+'<br>'+userPos["pontos"][i].desc);
+                infowindow.setContent('<div id="content">'+
+      '<div id="siteNotice">'+
+      '</div>'+
+      '<p><b>'+userPos["pontos"][i].nome+'</b>'+
+      '<div id="bodyContent">'+
+      '<p><b>Tipo:</b> '+userPos["pontos"][i].desc+'<br> <p><b>Nro de Vizinhos:</b>  ' +userPos["pontos"][i].viz );
+                infowindow.open(map, marker);
+            }
+        })(marker, i));
+
+        // A function that checks if the user has a new position and set marker there
+       } 
+    });
+};
+
+ 
+
+function setLinks(map) {
+
+    $.getJSON('http://camargod2.pythonanywhere.com/gmaps/api/postes', function(userPos) {
+       /*var infowindow = new google.maps.InfoWindow(), marker, i;
+       window.alert(userPos["pontos"].length);*/
+      for (var i = 0, length = userPos["links"].length; i <  length; i++) {
+        //var data = json[i];
+        //window.alert(userPos["links"][i].raiz);
+        j = userPos["links"][i].raiz-1;
+        k = userPos["links"][i].destino-1;
+        //window.alert(userPos["pontos"][j].lat);
+        var coord = [
+        {lat: userPos["pontos"][j].lat, lng: userPos["pontos"][j].lng},
+        {lat: userPos["pontos"][k].lat, lng: userPos["pontos"][k].lng}
+        ];
+        var color;
+        var lineSymbol = {
+          path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+          scale: 2.5
+        };
+
+        if(userPos["links"][i].intensidade >= 7)
+        {
+          color = '#00FF00'
+        }
+        else if(userPos["links"][i].intensidade >= 4 && userPos["links"][i].intensidade < 7)
+        {
+          color = '#FFFF00'
+        }
+        else if(userPos["links"][i].intensidade < 4)
+        {
+          color = '#FF0000'
+        }
+        var link = new google.maps.Polyline({
+          path: coord,
+          geodesic: true,
+          strokeColor: color,
+          strokeOpacity: 1.0,
+          strokeWeight: 2,
+          icons: [{
+          icon: lineSymbol,
+          offset: '45%',
+
+
+          }]
+
+        });
+
+        link.setMap(map);
+
+         google.maps.event.addListener(link, 'click', (function(link, i) {
+            return function() {
+
+                //infowindow.setContent(userPos["pontos"][i].nome+'<br>'+userPos["pontos"][i].desc);
+                window.alert('Intensidade:'+userPos["links"][i].intensidade );
+                //infowindow.setContent('<p><b>Intensidade: </b> '+userPos["links"][i].intensidade );
+                infowindow.open(map,link);
+            }
+        })(link, i));
+
+
+        
+         
+                
+
+        // A function that checks if the user has a new position and set marker there
+       } 
+    });
+};
+   
+
+function initMap() {
+  var myLatLng = {lat: -25.384455, lng: -49.266728};
+
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 18,
+    center: myLatLng
+  });
+     //window.alert(6);
+     //window.alert(postes[0][1]);
+  var legend = document.getElementById('legend');
+        for (var key in icons) {
+          //window.alert(type.icon);
+          var type = icons[key];
+          var name = type.name;
+          var icon = type.icon;
+          var div = document.createElement('div');
+          div.innerHTML = '<img src="' + icon + '"> ' + name;
+          legend.appendChild(div);
+        }
+   map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(legend);
+      
+  setMarker(map);
+  setLinks(map);
+
+   
+}
+
+
+
+/*function setMarkers(map, markers) {   
+     var infowindow = new google.maps.InfoWindow(), marker, i;
+      for (i = 0; i < markers.length; i++) {  
+          marker = new google.maps.Marker({
+              position: new google.maps.LatLng(markers[i][1], markers[i][2]),
+              map: map
+          });
+          google.maps.event.addListener(marker, 'click', (function(marker, i) {
+              return function() {
+                  infowindow.setContent(markers[i][0]);
+                  infowindow.open(map, marker);
+              }
+          })(marker, i));
+      }
+  }*/
+
+    </script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkFvDrpm1qwDYDZFL2hE6lDoH63s6DDeE&signed_in=true&callback=initMap"></script>
+  </body>
+</html>
