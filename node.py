@@ -45,7 +45,7 @@ class node():
         self.longitude = None 
         self.curNeighbors = [] # Current Neighbors
         self.npPreNeighbors = [] # Non-processed previous neighbors (List of Neighbors -> List of List of Dictionary)
-        self.pPreNeighbors = [] # Non-processed previous neighbors (List of a Dictionary)
+        self.pPreNeighbors = [] # processed previous neighbors (List of a Dictionary)
         self.ResetedNode = False
 
     def setNwkAdr(self, nwkAdr):
@@ -240,7 +240,7 @@ class node():
     def getJSONCurNeighbors(self):
         return json.dumps([self.nwkAdr, self.curNeighbors])
     def getJSONHistoricalNeighbors(self):
-        return json.dumps([self.nwkAdr, self.pPreNeighbors])
+        return json.dumps([self.nwkAdr, self.latitude, self.longitude, self.pPreNeighbors])
     def isResetedNode(self):
         return self.ResetedNode
     def isCoordinator(self):
