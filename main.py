@@ -136,7 +136,5 @@ for node in nodes:
 # print "Total of cost of incoming cost of all nodes =", tot_in
 # print "Total of cost of outcoming cost of all nodes =", tot_out
 
-# print "Printing GEO list:\n"
-# geo.printList()
 print "Total of packets processed of capturing =", tot_pkt
 
