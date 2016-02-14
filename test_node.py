@@ -1,4 +1,3 @@
-# content of test_class.py
 import pytest
 import sys
 
@@ -6,7 +5,7 @@ from node import node
 
 class TestClass:
 	"""
-	Unit test for capture and node classes
+	Unit test for node class
 	"""
 	def test_node_init(self):
 		with pytest.raises(ValueError):

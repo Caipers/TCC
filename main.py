@@ -90,6 +90,7 @@ tot_out = 0
 tot_pkt = 0
 geo = lib.geoPositioning.geoPositioning(f)
 
+
 print "Following nodes has been processed:"
 for node in nodes:
     """Node is a node object"""
@@ -131,7 +132,8 @@ for node in nodes:
     tmp = json.loads(node.getJSONHistoricalNeighbors())
     # ***************************************************
 
-    print json.loads(node.getJSONBasics())
+    print json.loads(node.getJSONHistoricalNeighbors())
+
 
 # print "Total of cost of incoming cost of all nodes =", tot_in
 # print "Total of cost of outcoming cost of all nodes =", tot_out

@@ -161,17 +161,26 @@ class capture():
         Return: 0xff string value if OK
                 None otherwise
         """
+        try:
+            if (strVal.isdigit() == True):
+                intVal = int(strVal)
+                hexVal = hex(intVal)
+            elif (strVal[0] == "0" and strVal[1] == "x"):
+                hexVal = strVal
+            else:
+                return None
+        except: 
+            return None
 
         try:
-            intVal = int(strVal)
+            int(hexVal, 16)
         except ValueError:
-            print "String is not a int with base 10"
+            return None
 
-        hexVal = hex(intVal)
         if (len(hexVal) == 3):
-            return "0x0"+hexVal[2]
+            return "0x0"+hexVal[2].lower()
         if (len(hexVal) == 4):
-            return hexVal
+            return hexVal.lower()
         else:
             return None
 
@@ -183,18 +192,28 @@ class capture():
         """
 
         try:
-            intVal = int(strVal)
-        except ValueError:
-            print "String is not a int with base 10"
+            if (strVal.isdigit() == True):
+                intVal = int(strVal)
+                hexVal = hex(intVal)
+            elif (strVal[0] == "0" and strVal[1] == "x"):
+                hexVal = strVal
+            else:
+                return None
+        except: 
+            return None
 
-        hexVal = hex(intVal)
+        try:
+            int(hexVal, 16)
+        except ValueError:
+            return None
+
         if (len(hexVal) == 3):
-            return "0x000"+hexVal[2]
+            return ("0x000"+hexVal[2]).lower()
         if (len(hexVal) == 4):
-            return "0x00"+hexVal[2]+hexVal[3]
+            return ("0x00"+hexVal[2]+hexVal[3]).lower()
         if (len(hexVal) == 5):
-            return "0x0"+hexVal[2]+hexVal[3]+hexVal[4]
+            return ("0x0"+hexVal[2]+hexVal[3]+hexVal[4]).lower()
         if (len(hexVal) == 6):
-            return hexVal
+            return hexVal.lower()
         else:
             return None
