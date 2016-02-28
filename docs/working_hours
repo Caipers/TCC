@@ -56,3 +56,7 @@ Anteriores à 13/12 -> 30h Desenvolvimento de pre-projeto.
 09/02 -> 3h   Adicionando novos testes unitários em test_module.py
               Criado um método getNpPreNeighbors() em node.py
               Ajustes na identificação de valores válidos de nwKAdr, macAdr e panAdr dos vizinhos no arquivo capture.py
+13/02 -> 1h   Pequenos ajustes no códigos solicitados pelo Lucas.
+14/02 -> 1h   Ajustes de bugs no arquivo capture.py e adição de novos casos de testes.
+28/02 -> 1h   Ajustes no arquivo node.py no método getJSONHistoricalNeighbors.
+              Foi incluido o MAC address do nó e a quantidade de pacotes link status o nó teve.

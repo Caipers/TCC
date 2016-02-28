@@ -69,8 +69,6 @@
 # OBS: Implica que o NWK_SRC tem como vizinhos todos esses nos.
 # ******************************************************************************************
 
-
-
 import pyshark
 import capture
 import json

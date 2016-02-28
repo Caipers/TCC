@@ -240,7 +240,16 @@ class node():
     def getJSONCurNeighbors(self):
         return json.dumps([self.nwkAdr, self.curNeighbors])
     def getJSONHistoricalNeighbors(self):
-        return json.dumps([self.nwkAdr, self.latitude, self.longitude, self.pPreNeighbors])
+        """
+        Returns:
+            self.nwkAdr Network Address
+            self.macAdr MAC Address
+            self.packet_total Totals of link status packets this node had.
+            self.latitude Latitude of the node
+            self.longitude Longitude of the node
+            self.pPreNeighbors Processed neighbors (List of dictionaries)
+        """
+        return json.dumps([self.nwkAdr, self.macAdr, self.packet_total, self.latitude, self.longitude, self.pPreNeighbors])
     def isResetedNode(self):
         return self.ResetedNode
     def isCoordinator(self):
