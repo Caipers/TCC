@@ -1,0 +1,58 @@
+###############################
+####### WORKING HOURS #########
+###############################
+
+
+Log SAMUEL:
+Anteriores à 13/12 -> 30h Desenvolvimento de pre-projeto.
+13/12 -> 4h   Estudos para captação dos pacotes PCAP. Encontrado modulo pyshark para manipulação destes arquivos.
+14/12 -> 4h   Mais estudos do modulo pyshark e lendo mais sobre o pacote "Link Status" e "Many-to-One Routing"
+19/12 -> 4h   Criacao da classe node e capture
+20/12 -> 5h   Melhoramento da captura dos pacotes. Criado loop que pega todos os dados.
+              Criado algoritmo que captura todos os nos. Um dicionario de um dicionario.
+              Adicionado validacao dos atributos na classe node.
+21/12 -> 3h   Criacao da funcao printNeighbors na classe node()
+              Correcao de bug na iteracao entre os pacotes de rede na captacao na classe capture.
+
+22/12 -> 5h   Ajuste da fila de nodes na classe Capture
+              Melhoramento no tratamento dos Exception na classe Capture.
+              Criacao dos metodos indexNode(...) e findNode(...) na classe Capture para auxiliar no tratamento da fila de nos
+              Desenvolvimento de memoria dos vizinhos de um no. Um historico das informacoes dos vizinhos (ex: quantas vezes o mesmo vizinho foi visto pelo node, qual o custo medio). Criacao de varios metodos para o tratamento deste historico (addNpPreNeighbors, processPreNeighbors, hasNeighbor, indexNeighbor).
+24/12 -> 5h   Testar os algoritmos feitos ate agora, principalmente os criados no dia 22/12 analisar se os valores sao coerentes
+              com os do pacote. Pegar algumas amostras e confirmar.
+              Checkado quantidade de pacotes link status obtidos, igual ao smaller_file (1015).
+              Correcao de bug onde o ultimo pacote de vizinhos nao estava sendo processado para o historico.
+              Conferencia de valores totais de custos dos vizinhos dos pacotes e processados -> OK para ambos arquivos de capture.
+              Adicionado testes de padrao de entrada para o nwk_nei, nei_in, nei_out na classe capture com objetivo de garantir integridade de informacoes.
+26/12 -> 3h   Estudos sobre roteamento ZigBee. Sera possivel fazer previsao de rotas a partir dos pacotes Link Status.
+              Como cada pacote Link Status informa os vizinhos de cada no, e possivel montar um grafo desta rede com as arestas sendo os custos, portanto, para prever que rota um pacote ira fazer de um ponto A para B, seria pegar a rota com menor custo de ida. 
+27/12 -> 5h   Estudos sobre roteamento ZigBee. Cada no possui uma tabela de roteamento.
+              Se o no rementendo nao tem na tabela de roteamento o no destinatario, ele pode solicitar a descoberta de rotas. 
+              O pacote Route Request e o comando 0x01, e se o no destinatario eh encontrado, um Route Reply eh gerado com seu custo. Ha basicamente tres tipos de roteamento: OADV, many-to-one and source routing. Quando solicitado um source routing, um pacote Route Record que registra a rota entre um ponto A e B. E isso pode ser registrado.
+31/12 -> 1h   Elaborado logica para controle se um node trocou de PAN ou se o mesmo nwkAdr foi associado a outro radio. Ambos
+              farao que os historicos sejam apagados e recomecado.
+10/01 -> 5h   Escrevendo parte de fundamentação teórica da monografia.
+16/01 -> 2h   Reunião com o Lucas para demonstração de idéias de visualização do projeto. 
+              Ficou definido que iremos usamos as bibliotecas do django programando em Python. Usaremos as bibliotecas do Google Maps e as localizações de cada ponto como ponto de partidas para o desenvolvimento do programa Web. 
+              Samuel irá conseguir a latitude e longitude de cada ponto e fornecerá - junto com outras informações - via padrão JSON as informações.
+              Usaremos o padrão JSON para troca de mensagens entre o programa de Captação e Filtragem e o programa WEB.
+              Ficou definido que Samuel irá fornecer um conjunto de requisitos para o programa da WEB.
+17/01 -> 5h   Ajustes do programa de Captação e Filtragem para nova versão do Python+Tshark+PyShark. 
+              O pyShark (ou os programa que ele depende) mudaram a forma que manipulam os dados do pacote. No ambiente Mint (com versões mais antigas de todos esses software) alguns dados (ex: nwkAdr e panAdr) vinham como hexadecimal em String. Agora os dados estavam vindo com inteiros em String. Foi necessário então a criação de duas funções (convStrtoFFFF e convStrtoFF) que convertem esses inteiros em String para hexadecimal em String seguindo formatação anterior. A formatação anterior tinha 0xFF para dados de 8 bits e 0xFFFF para dados de 16 bits OBRIGATÓRIAMENTE.
+              Foi adicionado o atributo Coordinator e a função isCoordinator na classe Node. Ambas informam se o Node é um Coordenador ou não.
+              Desenvolvimento dos primeiros requisitos para a Web App para que o Lucas comece a investigar se as ferramentas que vamos optar é possível de serem desenvolvidas.
+              Desenvolvido retornos em JSON.
+              Adicionado dois atributos (latitude e longitude) na classe Node para localização geográfica de cada nó. Será fornecido para a Web App. 
+18/01 -> 2h   Escrevendo TCC (Fundamentação Teórica).
+23/01 -> 3h   Ajustando códigos.
+24/01 -> 5h   Escrevendo TCC (Fundamentação Teórica).
+30/01 -> 3h   Adicionando ao programa a biblioteca geoPositioning que fornece os dados de latitude e longitude dos pontos.
+              Além disso, foi ajustado outros arquivos para que possam usar e fornecer esses dados.
+31/01 -> 4h   Escrevendo TCC (Fundamentação Teórica).
+06/02 -> 3h   Escrevendo TCC (Fundamentação Teórica).
+07/02 -> 3h   Escrevendo TCC (Fundamentação Teórica e Requisitos).
+08/02 -> 5h   Ajustando node.py com atualizações de tratamentos de variáveis.
+              Criação de um módulo de teste unitário.
+09/02 -> 3h   Adicionando novos testes unitários em test_module.py
+              Criado um método getNpPreNeighbors() em node.py
+              Ajustes na identificação de valores válidos de nwKAdr, macAdr e panAdr dos vizinhos no arquivo capture.py

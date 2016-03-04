@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>ZigMonitor Interface</title>
+    <style>
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      
+
+      #map {
+        height: 100%;
+        
+      }
+       #legend {
+        font-family: Arial, sans-serif;
+        background: #fff;
+        padding: 10px;
+        margin: 10px;
+        border: 3px solid #000;
+      }
+      #legend h3 {
+        margin-top: 0;
+      }
+      #legend img {
+        vertical-align: middle;
+      }
+
+
+    
+
+      #closeButton {
+    float:right;
+    display:inline-block;
+    padding:2px 5px;
+    background:#ccc;
+}
+       
+    </style>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    
+  </head>
+  <body>
+   
+    <div id="map"></div>
+
+
+    <a class="fragment">
+    <button id="closeButton">X</button>
+     <div id="table_div"> </div>
+     </a>
+
+    <div id="legend"><h3>Legenda</h3></div>
+    <script>
+     document.getElementById('closeButton').addEventListener('click', function(e) {
+    e.preventDefault();
+    this.parentNode.style.display = 'none';
+}, false);
+
+
+    google.charts.load('current', {'packages':['table']});
+    var flagdraw =0;
+    var arrayLine =[];
+    var overviewMarkers = [];
+    var infowindows = [];
+    var infowindowsM = [];
+    var distances = [];
+    var macs = [];
+  var cont;
+    var map;
+    var oLat, oLng;
+    var icons = {
+          esta: {
+            name: 'Estável',
+            icon: 'http://i65.tinypic.com/34i0nlf.png'
+          },
+          risk: {
+            name: 'Com Risco',
+            icon: 'http://i67.tinypic.com/4jurcz.png'
+          },
+          inat: {
+            name: 'Inatingível',
+            icon: 'http://i63.tinypic.com/sqkvpf.png'
+          }
+      };
+
+
+
+
+/*Execução*/
+
+function setMarker(map) {
+    map.addListener('dblclick', function() {
+      setLines(null); 
+      setWindowM(null);
+      setWindow(null);
+  });
+
+    $.getJSON('http://localhost:8000/gmaps/api/postes', function(userPos) {
+          var infowindow = new google.maps.InfoWindow(), marker, i;
+          var infowindow1 = new google.maps.InfoWindow(), link, i;
+          var cont=0;
+          //window.alert(userPos["pontos"].length);
+          //window.alert(userPos.length);
+          //window.alert(userPos[0][3].length);
+
+          for (var i = 0, length = userPos.length; i <  length; i++) {
+              
+              //var data = json[i];
+              //window.alert(userPos["postes"].length);
+              //window.alert('i: '+i);
+              
+              userLat = userPos[i][3];
+              userLon = userPos[i][4];
+              var position = new google.maps.LatLng(userLat,userLon);
+              var status;
+
+              //var flag = 0,j=0;
+
+              /* status do icone */
+             
+             // window.alert(userPos["pontos"][i].estado)
+             //window.alert(userPos[i][3].length);
+              if(userPos[i][5].length == 0 )
+              {
+              status = 'http://i63.tinypic.com/sqkvpf.png';
+              }
+              else if(userPos[i][5].length >= 5 && userPos[i][5].length <= 9 )
+              {
+              status = 'http://i67.tinypic.com/4jurcz.png';
+              }
+              else if(userPos[i][5].length > 9 )
+              {
+              status = 'http://i65.tinypic.com/34i0nlf.png';
+              }
+              
+              //window.alert(position);
+
+              var marker = new google.maps.Marker({
+                  position: position,
+                  map:map,
+                  icon: status
+              });
+          
+
+          overviewMarkers.push(marker);
+
+
+
+
+        google.maps.event.addListener(marker, 'click', (function (marker, i) {
+            return function () {
+                if(flagdraw == 1)
+                {
+                  drawChart(i);
+                }
+                setLines(null); 
+                setWindow(null); 
+                var node = document.getElementById('table_div');
+
+              $(document).ready(function(){
+              
+              //$("#table_div").hide();
+             
+              });
+
+                var originPoint = this.getPosition();
+                var oLat = parseFloat(this.getPosition().lat());
+                var oLng = parseFloat(this.getPosition().lng());
+                var cont1 =0;
+                for (var k = 0, length = userPos[i][5].length; k < length ; k++) {
+                for (var j = 0; j<userPos.length ; j++){
+                
+                    if(userPos[i][5][k].nwkAdr==userPos[j][0])
+                  {
+                     cont1+=1;
+
+                    //window.alert(userPos[i][3][k].nwkAdr);
+                    //window.alert(userPos[j][0]);
+                     var coord = [
+                    
+                    {lat: userPos[i][3], lng: userPos[i][4]},
+                    {lat: userPos[j][3], lng: userPos[j][4]}
+                    ];
+
+                    
+                    
+
+                    var color;
+
+                    var out1 = (userPos[i][5][k].tot_out_cost/userPos[i][5][k].tot_pkt).toFixed(2);
+                    var in1 = (userPos[i][5][k].tot_in_cost/userPos[i][5][k].tot_pkt).toFixed(2);            
+
+                    if (in1 < out1)
+                      men = out1;
+                    else if (in1 >= out1)
+                      men = in1;
+
+                    if(men > 5)
+                      color =  '#FF0000';
+                    else if((men > 3) && (men <= 5))
+                      color = '#FFFF00';
+                    else if (men <= 3)
+                      color = '#00FF00'
+
+
+                    var lineSymbol = {
+                      path: google.maps.SymbolPath.CIRCLE,
+                            scale: 2.5
+                          };
+                           var link = new google.maps.Polyline({
+                        path: coord,
+                        geodesic: true,
+                        strokeColor: color,
+                        strokeOpacity: 1.0,
+                        strokeWeight: 4.3,
+                        icons: [{
+                        icon: lineSymbol,
+                        scale: 40,
+                        offset: '50%'
+
+
+                        }]
+
+                      });
+
+                link.setMap(map);
+
+
+
+                    arrayLine.push(link);
+
+
+
+                    google.maps.event.addListener(link, 'click', (function(link, i, k, j) {
+                    return function() {
+                      setWindow(null); 
+                        //cont = 0;
+                        /* Calculate the distance between two points */
+                        var R = 36000; // metres
+                        var p1 = userPos[i][3] * Math.PI /180;
+                        var p2 = userPos[j][3]* Math.PI /180;
+
+                        //window.alert(p1);
+                        
+                        var vp = (userPos[j][3]-userPos[i][3]) * Math.PI;
+                        var vl = (userPos[j][4]-userPos[i][4]) * Math.PI;
+
+                        var a = Math.sin(vp/2) * Math.sin(vp/2) +
+                                Math.cos(p1) * Math.cos(p2) *
+                                Math.sin(vl/2) * Math.sin(vl/2);
+                        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+                        var distance = R * c;
+                        //infowindow.setContent(userPos["pontos"][i].nome+'<br>'+userPos["pontos"][i].desc);
+                        infowindow1.setContent('Distância: '+ distance.toFixed(0) + '<br>Custo de saída: '+ (userPos[i][5][k].tot_out_cost/userPos[i][5][k].tot_pkt).toFixed(2) + '<br>Custo de entrada: ' + (userPos[i][5][k].tot_in_cost/userPos[i][5][k].tot_pkt).toFixed(2) );
+                        //infowindow.setContent('<p><b>Intensidade: </b> '+userPos["links"][i].intensidade );
+                        //window.alert('pos1:'+userPos[i][1]+'pos2'+userPos[j][1]+'div'+(userPos[i][1] + userPos[j][1])/2);
+                          mLat = (userPos[i][3]+userPos[j][3])/2;
+                          mLon = (userPos[i][4]+userPos[j][4])/2;
+                          var position1 = new google.maps.LatLng(mLat,mLon);
+                        infowindow1.setPosition(position1);
+                        infowindow1.open(map);
+                        
+                        // contagem provisória de vizinhos
+                        cont1 = cont1 + 1;
+                        //
+                        infowindows.push(infowindow1);
+                        //infowindowsM.push(infowindow1);
+                        //drawChart(link);
+                          }
+                      })(link, i, k, j));
+                        }
+                        }
+              }
+                infowindow.setContent('Network Adress: ' + userPos[i][0] + '<br>' +'Mac Adress: ' + userPos[i][1] + '<br>' + ' Número de vizinhos: ' + cont1 +'<br>' + "<a href='javascript:drawChart("+i+");'>Lista de Vizinhos</a>");
+                infowindow.open(map, marker);
+                infowindowsM.push(infowindow);
+                  };
+                    })(marker, i));
+                /*
+              */
+
+           }
+            
+          });
+        }       
+
+
+        function drawChart(i) {
+          $.getJSON('http://localhost:8000/gmaps/api/postes', function(userPos) {
+              flagdraw=1;
+              //window.alert(userPos["pontos"].length);
+              //window.alert(userPos.length);
+              //window.alert(userPos[0][3].length);
+                 // Create the data table.
+                          //window.alert('oi');
+
+
+               
+
+                var data = new google.visualization.DataTable();
+               data.addColumn('string', 'Network Address');
+               data.addColumn('string', 'Mac Adress');
+               data.addColumn('number', 'Average In Cost');
+               data.addColumn('number', 'Average Out Cost');
+               data.addColumn('number', 'Distance');
+              //window.alert(userPos[i][3].length);
+              //var l = 0
+              distances = [];
+              macs = [];
+              /*for (var k = 0, length = userPos[i][5].length; k < length ; k++) {
+                for (var j = 0; j < userPos.length ; j++){    
+
+
+                      //data.addColumn('boolean', 'Full Time Employee');
+                      //window.alert(userPos[i][3][k].nwkAdr);
+                      if(userPos[i][5][k].nwkAdr==userPos[j][0])
+                      {
+                          var R = 36000; // metres
+                          var p1 = userPos[i][3] * Math.PI /180;
+                          var p2 = userPos[j][3]* Math.PI /180;
+
+                          //window.alert(p1);
+                          
+                          var vp = (userPos[j][3]-userPos[i][3]) * Math.PI;
+                          var vl = (userPos[j][4]-userPos[i][4]) * Math.PI;
+
+                          var a = Math.sin(vp/2) * Math.sin(vp/2) +
+                                  Math.cos(p1) * Math.cos(p2) *
+                                  Math.sin(vl/2) * Math.sin(vl/2);
+                          var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+                          var distance = R * c;
+                        
+                          distances.push(distance);
+                          macs.push(userPos[j][1])
+                         //window.alert(userPos[j][1]);
+                          //l = l + 1; 
+                      }
+                  }
+                }*/
+
+              for (var k = 0, length = userPos[i][5].length; k < length ; k++) {
+                
+                  for (var j = 0; j < userPos.length ; j++){    
+
+
+                      //data.addColumn('boolean', 'Full Time Employee');
+                      //window.alert(userPos[i][3][k].nwkAdr);
+                      if(userPos[i][5][k].nwkAdr==userPos[j][0])
+                      {
+                          var R = 36000; // metres
+                          var p1 = userPos[i][3] * Math.PI /180;
+                          var p2 = userPos[j][3]* Math.PI /180;
+
+                          //window.alert(p1);
+                          
+                          var vp = (userPos[j][3]-userPos[i][3]) * Math.PI;
+                          var vl = (userPos[j][4]-userPos[i][4]) * Math.PI;
+
+                          var a = Math.sin(vp/2) * Math.sin(vp/2) +
+                                  Math.cos(p1) * Math.cos(p2) *
+                                  Math.sin(vl/2) * Math.sin(vl/2);
+                          var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+                          var distance = R * c;
+                        
+                          distances.push(distance);
+                          macs.push(userPos[j][1])
+                         //window.alert(userPos[j][1]);
+                         data.addRow([
+                          userPos[i][5][k].nwkAdr, userPos[j][1] , userPos[i][5][k].tot_in_cost/userPos[i][5][k].tot_pkt, userPos[i][5][k].tot_out_cost/userPos[i][5][k].tot_pkt, distance
+                          ]);
+
+                          //l = l + 1; 
+                      }
+                  }
+                   
+
+                    
+                   
+
+                  //}
+                }
+                 var infoWindow  = new google.maps.InfoWindow();
+                    var node        = document.getElementById('table_div');
+                    var table = new google.visualization.Table(node);
+                   
+                    
+                          table.draw(data, {showRowNumber: true, width: '100%', height: '30%'});
+                          Lat1 = -25.384553;
+                          Lon1 = -49.263350;
+                          var position1 = new google.maps.LatLng(Lat1,Lon1);
+                          infoWindow.setPosition(position1);
+                          infoWindow.setContent(node);
+                          infoWindow.open(map);
+                          tables.push(node);
+                          $("#table_div").show();
+
+                          map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(node);
+              });
+            }
+              /*
+              function myclick(i) {
+
+                var info = new google.maps.InfoWindow(),i;
+                //removeWindow();
+                 //window.alert(i);
+                  //IMPORTANTEEEEE google.maps.event.trigger(overviewMarkers[i+1], "click");
+
+                 info.setContent('<table><tr><td>1.1</td><td>1.2</td></tr><tr><td>2.1</td><td>2.2</td></tr></table>');
+                 Lat1 = -25.384553;
+                 Lon1 = -49.263350;
+                 var position1 = new google.maps.LatLng(mLat,mLon);
+                 info.setPosition(position1);
+                 info.open(map);
+                 infowindows.push(info);
+                 setWindow();
+                 
+              } */
+
+
+
+                var arrayLine = [];
+                var originPoint = [new google.maps.LatLng(oLat, oLng)];
+                
+               /* var lineSymbol = {
+                    path: google.maps.SymbolPath.FORWARD_OPEN_ARROW
+                };*/
+
+                function addLine() {
+                    setLines(map);
+                    // alert(parseFloat(oLat));
+                }
+
+                google.maps.event.addDomListener(window, 'load', setMarkers);
+
+                function setLines(map) {
+                    for (var i = 0; i < arrayLine.length; i++) {
+                        arrayLine[i].setMap(map);
+                    }
+                }
+                function removeLine() {
+                   setLines(null);   
+                }
+                function setWindow() {
+                   for (var i = 0; i < infowindows.length; i++) {
+                        infowindows[i].setMap(map);
+                    } 
+                }
+                function removeWindow() {
+                   setWindow(null);   
+                }
+                function setWindowM() {
+                   for (var i = 0; i < infowindowsM.length; i++) {
+                        infowindowsM[i].setMap(map);
+                    } 
+                }
+                function removeWindowM() {
+                   setWindowM(null);   
+                }
+                
+
+
+
+          
+                    //window.alert('cont: '+ cont);
+     
+
+ 
+/*
+function setLinks(map) {
+
+    $.getJSON('http://localhost:8000/gmaps/api/postes', function(userPos) {
+       /*var infowindow = new google.maps.InfoWindow(), marker, i;
+       window.alert(userPos["pontos"].length);
+      for (var i = 0, length = userPos["links"].length; i <  length; i++) {
+        //var data = json[i];
+        //window.alert(userPos["links"][i].raiz);
+        j = userPos["links"][i].raiz-1;
+        k = userPos["links"][i].destino-1;
+        //window.alert(userPos["pontos"][j].lat);
+        var coord = [
+        {lat: userPos["pontos"][j].lat, lng: userPos["pontos"][j].lng},
+        {lat: userPos["pontos"][k].lat, lng: userPos["pontos"][k].lng}
+        ];
+        var color;
+        var lineSymbol = {
+          path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+          scale: 2.5
+        };
+
+        if(userPos["links"][i].intensidade >= 7)
+        {
+          color = '#00FF00'
+        }
+        else if(userPos["links"][i].intensidade >= 4 && userPos["links"][i].intensidade < 7)
+        {
+          color = '#FFFF00'
+        }
+        else if(userPos["links"][i].intensidade < 4)
+        {
+          color = '#FF0000'
+        }
+        var link = new google.maps.Polyline({
+          path: coord,
+          geodesic: true,
+          strokeColor: color,
+          strokeOpacity: 1.0,
+          strokeWeight: 2,
+          icons: [{
+          icon: lineSymbol,
+          offset: '45%',
+
+
+          }]
+
+        });
+
+        link.setMap(map);
+
+         google.maps.event.addListener(link, 'click', (function(link, i) {
+            return function() {
+
+                //infowindow.setContent(userPos["pontos"][i].nome+'<br>'+userPos["pontos"][i].desc);
+                window.alert('Intensidade:'+userPos["links"][i].intensidade );
+                //infowindow.setContent('<p><b>Intensidade: </b> '+userPos["links"][i].intensidade );
+                infowindow.open(map,link);
+            }
+        })(link, i));
+
+
+        
+         
+                
+
+        // A function that checks if the user has a new position and set marker there
+       } 
+    });
+};*/
+   
+
+function initMap() {
+  var myLatLng = {lat: -25.384455, lng: -49.266728};
+
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 17,
+    center: myLatLng
+  });
+     //window.alert(6);
+     //window.alert(postes[0][1]);
+  var legend = document.getElementById('legend');
+        for (var key in icons) {
+          //window.alert(type.icon);
+          var type = icons[key];
+          var name = type.name;
+          var icon = type.icon;
+          var div = document.createElement('div');
+          div.innerHTML = '<img src="' + icon + '"> ' + name;
+          legend.appendChild(div);
+        }
+   map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(legend);
+
+ 
+
+      
+  setMarker(map);
+  //setLinks(map);
+
+   
+}
+
+
+
+/*function setMarkers(map, markers) {   
+     var infowindow = new google.maps.InfoWindow(), marker, i;
+      for (i = 0; i < markers.length; i++) {  
+          marker = new google.maps.Marker({
+              position: new google.maps.LatLng(markers[i][1], markers[i][2]),
+              map: map
+          });
+          google.maps.event.addListener(marker, 'click', (function(marker, i) {
+              return function() {
+                  infowindow.setContent(markers[i][0]);
+                  infowindow.open(map, marker);
+              }
+          })(marker, i));
+      }
+  }*/
+
+    </script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkFvDrpm1qwDYDZFL2hE6lDoH63s6DDeE&signed_in=true&callback=initMap"></script> 
+  </body>
+</html>

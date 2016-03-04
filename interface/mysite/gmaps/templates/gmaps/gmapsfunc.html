@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>ZigMonitor Interface</title>
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+
+var markers = [
+    ['Lago', -25.384455, -49.266728],
+    ['Poste 1', -25.382825, -49.267446],
+    ['Poste 2', -25.383242, -49.267435],
+    ['Poste 3', -25.383630, -49.267424],
+    ['Poste 4', -25.383998, -49.267521]
+];
+
+function initMap() {
+  var myLatLng = {lat: -25.384455, lng: -49.266728};
+
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 16,
+    center: myLatLng
+  });
+
+   var infowindow = new google.maps.InfoWindow(), marker, i;
+    for (i = 0; i < markers.length; i++) {  
+        marker = new google.maps.Marker({
+            position: new google.maps.LatLng(markers[i][1], markers[i][2]),
+            map: map
+        });
+        google.maps.event.addListener(marker, 'click', (function(marker, i) {
+            return function() {
+                infowindow.setContent(markers[i][0]);
+                infowindow.open(map, marker);
+            }
+        })(marker, i));
+    }
+}
+
+    </script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkFvDrpm1qwDYDZFL2hE6lDoH63s6DDeE&signed_in=true&callback=initMap"></script>
+  </body>
+</html>

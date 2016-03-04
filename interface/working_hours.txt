@@ -1,0 +1,41 @@
+###############################
+####### WORKING HOURS #########
+###############################
+
+
+Log LUCAS:
+anteriores à 20/12 -> 30 h desenvolvimento do pré-projeto
+21/12 -> 4 h pesquisa sobre redes zigbee, e desenvilvimento web usando python
+22/12 -> 3 h pesquisa sobre o uso do web framework Django
+24/12 -> 3 h estudo sobre possíveis ferramentas para amostragem de grafos online
+26/12 -> 2 h estudo de implementação django, realização de tutorial
+08/01 -> 3 h estabilização de um servidor local e início de implementação com o uso do d3.js
+09/01 -> 4 h criação de exemplos de amostragem de grafos utilizando bokeh d3.js e d3.py
+11/01 -> 2 h pesquisa de implementação utilizando html e json
+13/01 -> 4 h implementação de um grafo-exemplo para amostragem, implementação utilizando model.py e views.py
+16/01 -> 3 h finalização do exemplo criado e 
+			 Reunião com Samuel para demonstração de idéias de visualização do projeto. 
+             Ficou definido que iremos usamos as bibliotecas do django programando em Python. Usaremos as bibliotecas do Google Maps e as localizações de cada ponto como ponto de partidas para o desenvolvimento do programa Web. 
+             Samuel irá conseguir a latitude e longitude de cada ponto e fornecerá - junto com outras informações - via padrão JSON as informações.
+             Usaremos o padrão JSON para troca de mensagens entre o programa de Captação e Filtragem e o programa WEB.
+             Ficou definido que Samuel irá fornecer um conjunto de requisitos para o programa da WEB.
+17/01 -> 3 h pesquisa sobre a utilização do google maps em conjunto com o django, aprofundamento da pesquisa
+			 sobre javascript
+19/01 -> 2 h definição dos requisitos necessários para a implementação da interface utilizando a api do google
+21/01 -> 4 h criação da nova versão da interface utilizando a api do google maps em javascript, definição de um 
+			 arquivo .json passado para o javascript através da views.py utilizando o método Jsonresponse
+23/01 -> 4 h Criação dos método setMarker para amostragem dos nós do grafo a partir de coordenadas geográficas, 			 utilizando geoposition
+24/01 -> 5 h Estudo da utilização de templates para customização do google maps, utilização de CSS 
+26/01 -> 4 h definição da função InfoWindow (display de informação dos nós), adição ddddda estrutura de 
+			 classificação e amostragem do estado dos nós
+27/01 -> 3 h criação da função setLinks que estabelece as ligações entre os nós, criação de um template de 
+			 flecha para a amostragem de ligações direcionais entre os nós
+30/01 -> 3 h atualização das imagens utilizadas para a representação dos nós, definição da legenda
+02/02 -> 3 h estudo de como hospedar a esboço da interface (em python, django) em um endereço online e criação
+			 de um repositório github, estudo sobre PythonAnywhere
+04/02 -> 4 h implementação da primeira versão online da interface, correção de bugs
+07/02 -> 3 h implementação da segunda versão online da interface, atualização de templates e correção de bugs
+09/02 -> 4 h reparação dos últimos problemas com a hospedaem online e reunião com o Samuel, foi definido que o
+			 próximo passo será o entendimento do algoritmo desenvolvido para a captação dos dados da rede ZigBee, ligação e adequação com a interface desenvolvida.
+10/02 -> 3 h estudo do algoritmo desenvolvido e de como integrá-lo com a inteface (formato do json gerado e 
+			 etc...)

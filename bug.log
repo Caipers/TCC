@@ -1,0 +1,111 @@
+*******BUG IN PYSHARK (StopIteration)*******
+<node.node instance at 0x7f9afb48f8c0>
+Link Status packages are  1015
+NOT Link Status packages are  14665
+TOTAL  15680
+Following nodes has been processed:
+Processing nodes
+[u'0xd7e7', u'0xb01a', u'00:0d:6f:00:02:3b:42:9d', False, -25.387752, -49.266755, 2014030000784]
+Processing nodes
+[u'0xec5c', u'0xb01a', u'00:0d:6f:00:02:3e:c1:6e', False, None, None, None]
+Processing nodes
+[u'0x51a2', u'0xb01a', u'00:0d:6f:00:02:3b:42:a6', False, -25.385345, -49.267493, 2014030000713]
+Processing nodes
+[u'0xcb8c', u'0xb01a', u'00:0d:6f:00:02:3e:bf:d6', False, None, None, None]
+Processing nodes
+[u'0x5b46', u'0xb01a', u'00:0d:6f:00:02:3b:42:99', False, -25.38623, -49.267407, 2014030000752]
+Processing nodes
+[u'0x3fda', u'0xb01a', u'00:0d:6f:00:02:3e:bf:c8', False, -25.386348, -49.266122, 2014030000908]
+Processing nodes
+[u'0x69a8', u'0xb01a', u'00:0d:6f:00:02:3e:84:f9', False, -25.387831, -49.266117, 2014030000802]
+Processing nodes
+[u'0x11ac', u'0xb01a', u'00:0d:6f:00:02:3e:96:4d', False, -25.385644, -49.265882, 2014030000811]
+Processing nodes
+[u'0xd3b4', u'0xb01a', u'00:0d:6f:00:02:3e:96:67', False, -25.387379, -49.266719, 2014030000897]
+Processing nodes
+[u'0x008a', u'0xb01a', u'00:0d:6f:00:02:3e:bf:8d', False, -25.387697, -49.266605, 2014030000725]
+Processing nodes
+[u'0x1c5e', u'0xb01a', u'00:0d:6f:00:02:3e:85:3f', False, None, None, None]
+Processing nodes
+[u'0x29f9', u'0xb01a', u'00:0d:6f:00:02:3e:c1:72', False, -25.387438, -49.266429, 2014030000906]
+Processing nodes
+[u'0xe826', u'0xb01a', u'00:0d:6f:00:02:3b:42:b0', False, None, None, None]
+Processing nodes
+[u'0x4769', u'0xb01a', u'00:0d:6f:00:02:3e:bf:a9', False, -25.38365, -49.267356, 2014030000797]
+Processing nodes
+[u'0xde20', u'0xb01a', u'00:0d:6f:00:02:3e:c1:6b', False, -25.383515, -49.267343, 2014030000730]
+Processing nodes
+[u'0x9f4d', u'0xb01a', u'00:0d:6f:00:02:3e:bf:7e', False, -25.385597, -49.267513, 2014030000790]
+Processing nodes
+[u'0x6662', u'0xb01a', u'00:0d:6f:00:02:3e:96:a6', False, None, None, None]
+Processing nodes
+[u'0x5d13', u'0xb01a', u'00:0d:6f:00:02:3e:bf:75', False, -25.387856, -49.266511, 2014030000759]
+Processing nodes
+[u'0xc35b', u'0xb01a', u'00:0d:6f:00:02:3e:96:59', False, -25.38275, -49.265292, 2014030000911]
+Processing nodes
+[u'0x577a', u'0xb01a', u'00:0d:6f:00:02:3e:bf:74', False, -25.383355, -49.267334, 2014030000805]
+Processing nodes
+[u'0x3ec3', u'0xb01a', u'00:0d:6f:00:00:e4:7b:4f', False, None, None, None]
+Processing nodes
+[u'0x22c8', u'0xb01a', u'00:0d:6f:00:02:3b:40:d7', False, -25.384079, -49.267466, 2014030000807]
+Processing nodes
+[u'0xcfa6', u'0xb01a', u'00:0d:6f:00:02:3b:42:bf', False, None, None, None]
+Processing nodes
+[u'0xef07', u'0xb01a', u'00:0d:6f:00:02:3e:96:a4', False, -25.387879, -49.265932, 2014030000856]
+Processing nodes
+[u'0xbd2a', u'0xb01a', u'00:0d:6f:00:02:3e:bf:b8', False, -25.385422, -49.265302, 2014030000899]
+Processing nodes
+[u'0x2c2c', u'0xb01a', u'00:0d:6f:00:02:3e:96:76', False, -25.386373, -49.267352, 2014030000788]
+Processing nodes
+[u'0x715e', u'0xb01a', u'00:0d:6f:00:02:7e:81:dd', False, None, None, None]
+Processing nodes
+[u'0x4648', u'0xb01a', u'00:0d:6f:00:02:3b:44:53', False, -25.384234, -49.267509, 2014030000763]
+Processing nodes
+[u'0x4630', u'0xb01a', u'00:0d:6f:00:02:3b:42:b2', False, None, None, None]
+Processing nodes
+[u'0x4644', u'0xb01a', u'00:0d:6f:00:02:3e:96:ae', False, -25.386042, -49.266095, 2014030000682]
+Processing nodes
+[u'0x3090', u'0xb01a', u'00:0d:6f:00:02:3e:85:53', False, None, None, None]
+Processing nodes
+[u'0x2d2d', u'0xb01a', u'00:0d:6f:00:02:3b:40:dd', False, -25.385722, -49.266077, 2014030000761]
+Processing nodes
+[u'0x0df3', u'0xb01a', u'00:0d:6f:00:02:3e:96:5c', False, -25.386485, -49.266154, 2014030000891]
+Processing nodes
+[u'0x6120', u'0xb01a', u'00:0d:6f:00:02:3b:42:c2', False, None, None, None]
+Processing nodes
+[u'0x5bff', u'0xb01a', u'00:0d:6f:00:02:3b:40:cc', False, -25.387199, -49.267301, 2014030000875]
+Processing nodes
+[u'0xb56d', u'0xb01a', u'00:0d:6f:00:02:3e:85:60', False, -25.387119, -49.266535, 2014030000799]
+Processing nodes
+[u'0x7a76', u'0xb01a', u'00:0d:6f:00:02:3b:41:01', False, -25.38734, -49.267345, 2014030000921]
+Processing nodes
+[u'0x1616', u'0xb01a', u'00:0d:6f:00:02:3e:bf:d1', False, -25.38272, -49.264884, 2014030000909]
+Processing nodes
+[u'0x41d6', u'0xb01a', u'00:0d:6f:00:02:3b:42:c1', False, -25.387722, -49.26592, 2014030000924]
+Processing nodes
+[u'0xe7e2', u'0xb01a', u'00:0d:6f:00:02:3e:96:52', False, -25.386924, -49.26704, 2014030000729]
+Processing nodes
+[u'0xc1f2', u'0xb01a', u'00:0d:6f:00:02:3b:42:af', False, -25.382775, -49.26541, 2014030000842]
+Processing nodes
+[u'0xfdca', u'0xb01a', u'00:0d:6f:00:02:3e:96:5b', False, -25.382434, -49.267237, 2014030000783]
+Processing nodes
+[u'0x9f2e', u'0xb01a', u'00:0d:6f:00:02:3e:85:40', False, -25.38685, -49.26713, 2014030000760]
+Processing nodes
+[u'0x73c0', u'0xb01a', u'00:0d:6f:00:02:3e:96:d2', False, -25.385976, -49.267484, 2014030000826]
+Processing nodes
+[u'0x8e83', u'0xb01a', u'00:0d:6f:00:02:3e:96:55', False, -25.387577, -49.266264, 2014030000858]
+Processing nodes
+[u'0x6ada', u'0xb01a', u'00:0d:6f:00:02:3e:bf:90', False, -25.385281, -49.265967, 2014030000791]
+Processing nodes
+[u'0xa110', u'0xb01a', u'00:0d:6f:00:02:3e:c1:71', False, -25.381711, -49.266636, 2014030000812]
+Processing nodes
+[u'0x0b61', u'0xb01a', u'00:0d:6f:00:02:3e:c1:1d', False, -25.382722, -49.265028, 2014030000724]
+Processing nodes
+[u'0x708d', u'0xb01a', u'00:0d:6f:00:02:3b:40:eb', False, -25.387698, -49.266064, 2014030000767]
+Processing nodes
+[u'0xc410', u'0xb01a', u'00:0d:6f:00:02:3e:85:34', False, -25.386505, -49.267306, 2014030000728]
+Processing nodes
+[u'0xf4ca', u'0xb01a', u'00:0d:6f:00:02:3e:96:6d', False, None, None, None]
+Processing nodes
+[u'0x0dda', u'0xb01a', u'00:0d:6f:00:02:3e:84:f4', False, None, None, None]
+Total of packets processed of capturing = 1015
