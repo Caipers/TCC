@@ -75,10 +75,15 @@ import json
 import lib.geoPositioning
 
 # PCAP_FILE = 'pcap_files/bigger_file.PCAP'
-PCAP_FILE = 'pcap_files/smaller_file.PCAP'
+# PCAP_FILE = 'pcap_files/smaller_file.PCAP'
+PCAP_FILE = 'pcap_files/entire_park_05_03.PCAP'
 
 cap = capture.capture()
 nodes = cap.fileCapture(PCAP_FILE)
+
+print "Printing counters:"
+print str(cap.getCounters())
+
 
 # f = file('nodes.log', 'w')
 
@@ -92,7 +97,6 @@ geo = lib.geoPositioning.geoPositioning(f)
 print "Following nodes has been processed:"
 for node in nodes:
     """Node is a node object"""
-    print "Processing nodes"
 
     # print "Setting node positions"
     values = geo.getValues(node.getMacAdr())
@@ -130,8 +134,9 @@ for node in nodes:
     tmp = json.loads(node.getJSONHistoricalNeighbors())
     # ***************************************************
 
-    print json.loads(node.getJSONHistoricalNeighbors())
+    # print json.loads(node.getJSONHistoricalNeighbors())
 
+print "Nodes has been processed"
 
 # print "Total of cost of incoming cost of all nodes =", tot_in
 # print "Total of cost of outcoming cost of all nodes =", tot_out
