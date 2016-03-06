@@ -1,0 +1,82 @@
+
+        
+
+         /* Info Windows */
+         /*  //window.alert(userPos["pontos"][i].desc);
+        google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+
+                  //infowindow.setContent(userPos["pontos"][i].nome+'<br>'+userPos["pontos"][i].desc);
+                  infowindow.setContent('<div id="content">'+
+                  '<div id="siteNotice">'+
+                  '</div>'+
+                  '<p><b>'+userPos["pontos"][i].nome+'</b>'+
+                  '<div id="bodyContent">'+
+                  '<p><b>Tipo:</b> '+userPos["pontos"][i].desc+'<br> <p><b>Nro de Vizinhos:</b>  ' +userPos["pontos"][i].viz );
+                  infowindow.open(map, marker);
+                          
+                          }
+        })(marker, i));*/
+
+
+          //set links
+
+          /*
+         var cont1=0
+         for (var k = 0, length = userPos[0][3].length; k < length ; k++) {
+          for (j = 0; j<32 ; j++)
+          {
+
+            //window.alert('j:'+j);
+            if(userPos[0][3][k].nwkAdr==userPos[j][0])
+            {
+              //cont1+=1;
+
+              //window.alert(userPos[i][3][k].nwkAdr);
+              //window.alert(userPos[j][0]);
+               var coord = [
+              
+              {lat: userPos[i][1], lng: userPos[i][2]},
+              {lat: userPos[j][1], lng: userPos[j][2]}
+              ];
+              //var color;
+              var lineSymbol = {
+                path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+                      scale: 2.5
+                    };
+                     var link = new google.maps.Polyline({
+                  path: coord,
+                  geodesic: true,
+                  //strokeColor: color,
+                  strokeOpacity: 1.0,
+                  strokeWeight: 2,
+                  icons: [{
+                  icon: lineSymbol,
+                  offset: '45%',
+
+
+                  }]
+
+                });
+
+                link.setMap(map);
+
+                 /*google.maps.event.addListener(link, 'click', (function(link, i) {
+                    return function() {
+
+                        //infowindow.setContent(userPos["pontos"][i].nome+'<br>'+userPos["pontos"][i].desc);
+                        window.alert('Intensidade:'+userPos["links"][i].intensidade );
+                        //infowindow.setContent('<p><b>Intensidade: </b> '+userPos["links"][i].intensidade );
+                        infowindow.open(map,link);
+                    }
+                })(link, i));*/
+
+
+             /*
+            break;
+            }
+            
+          }*
+        }*/
+       // window.alert(cont1)
+        // A function that checks if the user has a new position and set marker there
