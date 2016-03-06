@@ -48,6 +48,60 @@ class node():
         self.pPreNeighbors = [] # processed previous neighbors (List of a Dictionary)
         self.ResetedNode = False
 
+        # for route request command
+        self.routeRequestCounter = 0
+        self.routeRequestList = []
+
+        # for reply request command
+        self.routeReplyCounter = 0
+        self.routeReplyList = []
+
+    def addRouteRequest(self, dstAdr):
+        """
+        Count total of RouteRequest of this node and its destinations.
+        """
+
+        self.routeRequestCounter += 1
+        self.packet_total += 1
+
+        routeRequestList = self.routeRequestList
+        for rr in routeRequestList:
+            # rr is a dict -> key = dstAdr, value = counter
+            if (rr.has_key(dstAdr) == True):
+                rr[dstAdr] += 1
+                return
+
+        # if there is not a dstAdr in the list, so append it
+        routeRequestList.append({dstAdr : 1})
+
+    def addRouteReply(self, oriAdr):
+        """
+        Count total of RouteReply of this node and its originator.
+        The responder is this node.
+        """
+
+        self.routeReplyCounter += 1
+        self.packet_total += 1
+
+        routeReplyList = self.routeReplyList
+        for rr in routeReplyList:
+            # rr is a dict -> key = oriAdr, value = counter
+            if (rr.has_key(oriAdr) == True):
+                rr[oriAdr] += 1
+                return
+
+        # if there is not a oriAdr in the list, so append it
+        routeReplyList.append({oriAdr : 1})
+
+    def addNpPreNeighbors(self):
+        """
+        Add to non-processed previous neighbors of the node.
+        List of Neighbor which is a List of List of a Dictionary
+        """
+
+        self.npPreNeighbors.append(self.getCurNeighbors())
+
+
     def setNwkAdr(self, nwkAdr):
         if (self.r_nwkAdr.match(nwkAdr) == None or len(nwkAdr) != 6):
             raise ValueError('Incorrect nwkAdr')
@@ -102,13 +156,7 @@ class node():
         self.curNeighbors = neighbors
         self.packet_total += 1
 
-    def addNpPreNeighbors(self):
-        """
-        Add to non-processed previous neighbors of the node.
-        List of Neighbor which is a List of List of a Dictionary
-        """
-
-        self.npPreNeighbors.append(self.getCurNeighbors())
+    
 
     def processPreNeighbors(self):
         """
@@ -177,6 +225,10 @@ class node():
 
         return -1
 
+    def isResetedNode(self):
+        return self.ResetedNode
+    def isCoordinator(self):
+        return self.coordinator
 
     def printCurNeighbors(self):
         """Print current neighbors in stdout"""
@@ -193,14 +245,7 @@ class node():
             print '{:<3}'.format('#' + str(k)), '{:<10}'.format(neighbor['nwkAdr']), '{:<3}'.format(neighbor['in_cost']), '{:<3}'.format(neighbor['out_cost'])
             k += 1
 
-    def saveHistoricalNeighbors(self):
-        f = file('histnb.log','a')
-
-        for dic in self.pPreNeighbors:
-            f.writelines(self.nwkAdr+';'+dic['nwkAdr']+';'+str(dic['tot_in_cost'])+';'+str(dic['tot_out_cost'])+';'+str(dic['tot_pkt'])+'\n')
-
-        f.close()
-
+    
     def resetNode(self):
         """Clear all previuos data, lets node as new one. Set True in resetedNode"""
 
@@ -212,6 +257,8 @@ class node():
         self.npPreNeighbors = [] 
         self.pPreNeighbors = []
         self.isResetedNode = True
+        self.routeRequestCounter = 0
+        self.routeRequestList = []
 
     def getNwkAdr(self):
         return self.nwkAdr
@@ -231,6 +278,18 @@ class node():
         return self.pPreNeighbors
     def getPacketTotal(self):
         return self.packet_total
+    def getRouteRequest(self):
+        """
+        Return total counter and a list of destinations and its counters.
+        """
+
+        return self.routeRequestCounter, self.routeRequestList
+    def getRouteReply(self):
+        """
+        Return total counter and a list of originators and its counters.
+        """
+
+        return self.routeReplyCounter, self.routeReplyList
     def getJSONBasics(self):
         """
         Return basic information in JSON format about the node which is: nwkAdr, panAdr, macAdr, coordinator latitude
@@ -250,7 +309,11 @@ class node():
             self.pPreNeighbors Processed neighbors (List of dictionaries)
         """
         return json.dumps([self.nwkAdr, self.macAdr, self.packet_total, self.latitude, self.longitude, self.pPreNeighbors])
-    def isResetedNode(self):
-        return self.ResetedNode
-    def isCoordinator(self):
-        return self.coordinator
+    
+    def saveHistoricalNeighbors(self):
+        f = file('histnb.log','a')
+
+        for dic in self.pPreNeighbors:
+            f.writelines(self.nwkAdr+';'+dic['nwkAdr']+';'+str(dic['tot_in_cost'])+';'+str(dic['tot_out_cost'])+';'+str(dic['tot_pkt'])+'\n')
+
+        f.close()

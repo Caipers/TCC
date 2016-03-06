@@ -1,32 +1,21 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*- 
 
+# pyshark docs: https://github.com/KimiNewt/pysharkty
 import pyshark
 import node
-import re 
-
-# pyshark docs: https://github.com/KimiNewt/pysharkty
-
-
-######## TODO ############################
-# TOTAL OF PACKETS
-# TOTAL, % OF EACH KIND OF NWK PACKETS
-# 
-
-# frame.time_epoch for TimeStamp.
-
-
-# cmd.id == 0x01 -> Route Resquest
-# got them by route ID
+import re
 
 class capture():
     """
     Capture class is responsible for capturing all desarible packages and return a 
     dictionary of unique nodes.
-    PS: So far, only nwk_layer's link status command package is considered in this class. 
+    So far, Route Request (0x01), Route Reply (0x02) and Link Status (0x08) command package are considered in this class. 
     """
 
     def __init__(self):
+        self.DEBUG_MODE = 0
+        # self.DEBUG_MODE = 1
 
         # CMD_IDs #
         # 0x01 -> Route request
@@ -40,7 +29,7 @@ class capture():
         # 0x09 -> Network report
         # 0x0a -> Network update
 
-        # counters
+        # counters of all packages
         self.pkt_total               = 0
         self.nwk_cmd_pkt_total       = 0
         self.route_request_counter   = 0
@@ -55,6 +44,25 @@ class capture():
         self.nwk_upd_counter         = 0
         self.reserved_counter        = 0
 
+        # counters of processed packages
+        self.p_pkt_total               = 0
+        self.p_route_request_counter   = 0
+        self.p_route_reply_counter     = 0
+        self.p_nwk_status_counter      = 0
+        self.p_leave_counter           = 0
+        self.p_route_record_counter    = 0
+        self.p_rejoin_request_counter  = 0
+        self.p_rejoin_responde_counter = 0
+        self.p_link_status_counter     = 0
+        self.p_nwk_report_counter      = 0
+        self.p_nwk_upd_counter         = 0
+        self.p_reserved_counter        = 0
+
+        # list of Route ID for Route Request packets
+        self.requestRouteID = []
+        # list of Route ID for Route Reply packets
+        self.routeReplyID = []
+
     def fileCapture(self, pcapFile):
         # When entering in this function, the import of node module disappers. 
         # I still do not know why.
@@ -64,6 +72,7 @@ class capture():
         Capture all nwk command packets. They belong to zbee_nwk Layer which 
         has zbee_nwk.cmd.id == 0x0[1-a] according to ZigBee Specification document
         """
+        print "Starting reading of a captured file... "
 
         capture = pyshark.FileCapture(pcapFile, keep_packets = False)
         cap = capture.next()
@@ -71,7 +80,6 @@ class capture():
         aux_node = None
         nodes = [] # list of nodes
 
-        
         # trying to find a bug in the library on pyshark.
         try:
             while(cap is not None):
@@ -94,42 +102,170 @@ class capture():
                     cap = capture.next()
                     continue
 
+                self.nwk_cmd_pkt_total += 1
+
                 # recoding basic information
                 macAdr = str(cap.zbee_nwk.src64)
                 nwkAdr = str(self.convStrtoFFFF(cap.zbee_nwk.src))
                 panAdr = str(self.convStrtoFFFF(cap.wpan.dst_pan))
 
-                self.nwk_cmd_pkt_total += 1
+                # finds a node if exists, or create a new node, or reset a node if node changes its PAN.
+                index = self.indexNode(nwkAdr, nodes)
+                if (index == -1): # node does not exist
+                    aux_node = node.node(nwkAdr, macAdr, panAdr)
+                    nodes.append(aux_node)
+                else: # node exists
+                    aux_node = self.findNode(nwkAdr, nodes)
+                    # if node changed its PAN or another radio gets a someone's nwkAdr, 
+                    # it must reset all previous data e start again.
+
+                    if ((aux_node.getPanAdr() != panAdr) or (aux_node.getMacAdr() != macAdr)):
+                        aux_node.resetNode()
+                        aux_node.setNwkAdr(nwkAdr)
+                        aux_node.setMacAdr(macAdr)
+                        aux_node.setPanAdr(panAdr)
+
+                #################################################################################
+                # Route Request
                 if (cmd_id == "0x01"):
                     self.route_request_counter += 1
-                    # TODO
+                    
+                    # parsing request RouteID
+                    tmp = str(cap.zbee_nwk)
+                    cmd = "Route ID:"
+                    start = tmp.find(cmd) + len(cmd) + 1
+                    end = start + 5 # until 5 caracteres
+                    rID = tmp[start:end].splitlines()[0] # gets until finds the first new line caracter.
 
+                    # parsing destination
+                    # must be the fourth "Destination:" of the string
+                    cmd = "Destination:"
+                    fst_start = tmp.find(cmd) + len(cmd) + 1
+                    snd_start = tmp.find(cmd, fst_start) + len(cmd) + 1
+                    thd_start = tmp.find(cmd, snd_start) + len(cmd) + 1
+                    start = tmp.find(cmd, thd_start) + len(cmd) + 1
+                    end = start + 6
+                    dstAdr = tmp[start:end]
+
+                    if (self.requestRouteID.__contains__(rID) == False):
+                        self.p_route_request_counter += 1
+                        self.p_pkt_total += 1
+
+                        self.requestRouteID.append(rID)
+                        aux_node.addRouteRequest(str(dstAdr))
+
+                #################################################################################
+                # Route Reply
                 elif (cmd_id == "0x02"):
                     self.route_reply_counter += 1
-                    # TODO
+                    
+                    # parsing reply RouteID
+                    tmp = str(cap.zbee_nwk)
+                    cmd = "Route ID:"
+                    start = tmp.find(cmd) + len(cmd) + 1
+                    end = start + 5 # until 5 caracteres
+                    rID = tmp[start:end].splitlines()[0] # gets until finds the first new line caracter.
 
+                    # parsing originator
+                    cmd = "Originator:"
+                    start = tmp.find(cmd) + len(cmd) + 1
+                    end = start + 6
+                    oriAdr = tmp[start:end]
+                    # print "oriAdr =", str(oriAdr)
+
+                    # parsing responder
+                    # must be the second "Responder:" of the string
+                    cmd = "Responder:"
+                    fst_start = tmp.find(cmd) + len(cmd) + 1
+                    snd_start = tmp.find(cmd, fst_start) + len(cmd) + 1
+                    start = tmp.find(cmd, snd_start) + len(cmd) + 1
+                    end = start + 6
+                    resAdr = tmp[start:end]
+
+                    # parsing extended originator
+                    # must be the second "Extended Originator:" and after a "(" of the string
+                    cmd = "Extended Originator:"
+                    fst_start = tmp.find(cmd) + len(cmd) + 1
+                    snd_start = tmp.find(cmd, fst_start) + len(cmd) + 1
+                    start = tmp.find("(", snd_start) + 1
+                    end = start + 23
+                    extOriAdr = tmp[start:end]
+
+                    # parsing extended responder
+                    # must be the second "Extended Responder:" and after a "(" of the string
+                    cmd = "Extended Responder:"
+                    fst_start = tmp.find(cmd) + len(cmd) + 1
+                    snd_start = tmp.find(cmd, fst_start) + len(cmd) + 1
+                    start = tmp.find("(", snd_start) + 1
+                    end = start + 23
+                    extResAdr = tmp[start:end]
+
+                    ###################################################################
+                    # WARNING: For Route Reply, usually the originator and responder
+                    # are not srcAdr nor dstAdr, and is necessary to check if the 
+                    # responder is already created. The responder is the generetor of
+                    # this command, so its resAdr is used as nwkAdr of the node.
+                    ###################################################################
+
+                    #finds a node if exists, or create a new node, or reset a node if node changes its PAN.
+                    index = self.indexNode(resAdr, nodes)
+                    if (index == -1): # node does not exist
+                        aux_node = node.node(resAdr, extResAdr, panAdr)
+                        nodes.append(aux_node)
+                    else: # node exists
+                        aux_node = self.findNode(resAdr, nodes)
+                        # if node changed its PAN or another radio gets a someone's resAdr, 
+                        # it must reset all previous data e start again.
+
+                        if ((aux_node.getPanAdr() != panAdr) or (aux_node.getMacAdr() != extResAdr)):
+                            aux_node.resetNode()
+                            aux_node.setNwkAdr(resAdr)
+                            aux_node.setMacAdr(extResAdr)
+                            aux_node.setPanAdr(panAdr)
+
+                    if (self.routeReplyID.__contains__(rID) == False):
+                        self.p_route_reply_counter += 1
+                        self.p_pkt_total += 1
+
+                        self.routeReplyID.append(rID)
+                        aux_node.addRouteReply(str(oriAdr))
+
+                #################################################################################
+                # Network status
                 elif (cmd_id == "0x03"):
                     self.nwk_status_counter += 1
                     # TODO
 
+                #################################################################################
+                # Leave
                 elif (cmd_id == "0x04"):
                     self.leave_counter += 1
                     # TODO
 
+                #################################################################################
+                # Route record
                 elif (cmd_id == "0x05"):
                     self.route_record_counter += 1
                     # TODO
 
+                #################################################################################
+                # Rejoin responde
                 elif (cmd_id == "0x06"):
                     self.rejoin_request_counter += 1
                     # TODO
 
+                # Rejoin request
+                #################################################################################
                 elif (cmd_id == "0x07"):
                     self.rejoin_responde_counter += 1
                     # TODO
 
+                #################################################################################
+                # Link Status
                 elif (cmd_id == "0x08"):
                     self.link_status_counter += 1
+                    self.p_link_status_counter += 1
+                    self.p_pkt_total += 1
 
                     # regular expressions
                     r_nwkAdr     = re.compile("0x[0-9a-f][0-9a-f][0-9a-f][0-9a-f]", re.IGNORECASE)
@@ -160,41 +296,28 @@ class capture():
 
                         neighbors.append({"nwkAdr" : nei_nwk, "in_cost" : int(nei_in), "out_cost" : int(nei_out)})
 
-                    index = self.indexNode(nwkAdr, nodes)
-                    if (index == -1): # node does not exist
-                        aux_node = node.node(nwkAdr, macAdr, panAdr)
-                        nodes.append(aux_node)
-                    else: # node exists
-                        aux_node = self.findNode(nwkAdr, nodes)
-                        # if node changed its PAN or another radio gets a someone's nwkAdr, 
-                        # it must reset all previous data e start again.
-
-                        if ((aux_node.getPanAdr() != panAdr) or (aux_node.getMacAdr() != macAdr)):
-                            aux_node.resetNode()
-                            aux_node.setNwkAdr(nwkAdr)
-                            aux_node.setMacAdr(macAdr)
-                            aux_node.setPanAdr(panAdr)
-
                     aux_node.setCurNeighbors(neighbors)
                     aux_node.addNpPreNeighbors()
 
+                #################################################################################
+                # Network report
                 elif (cmd_id == "0x09"):
                     self.nwk_report_counter += 1
                     # TODO
 
+                #################################################################################
+                # Network update
                 elif (cmd_id == "0x0a"):
                     self.nwk_upd_counter += 1
                     # TODO
-                    
+                
                 cap = capture.next()
 
         except AttributeError:
             print "*******BUG IN PYSHARK (AttributeError)*******"
-            print str(aux_node)
+            print self.printCounters()
         except StopIteration:
-            print "******* (StopIteration) *******"
-            print str(aux_node)
-
+            print "Reading has finished"
 
         # self.printCounters()
         capture.close()
@@ -202,6 +325,27 @@ class capture():
         # processing historical nodes
         for node in nodes:
             node.processPreNeighbors()
+
+        if (self.DEBUG_MODE == 1):
+            # print requestRouteID
+            print "requestRouteID List:"
+            print str(self.requestRouteID)
+            print ""
+
+            # print replyResquestID
+            print "replyResquestID List:"
+            print str(self.routeReplyID)
+            print ""
+
+            # print totals
+            print "Printing Counters:"
+            self.printCounters()
+            print ""
+
+            # print processed totals
+            print "Printing Processed Counters:"
+            self.printPCounters()
+            print ""
 
         return nodes
 
@@ -309,6 +453,20 @@ class capture():
         print "Reserved packages =",            str(self.reserved_counter)
         print "TOTAL OF NETWORK CMD PACKAGES",  str(self.nwk_cmd_pkt_total)
         print "TOTAL OF PACKAGES",              str(self.pkt_total)
+
+    def printPCounters(self):
+        print "Processed Route request packages =",       str(self.p_route_request_counter)
+        print "Processed Route reply packages =",         str(self.p_route_reply_counter)
+        print "Processed Network status packages =",      str(self.p_nwk_status_counter)
+        print "Processed Leave packages =",               str(self.p_leave_counter)
+        print "Processed Route record packages =",        str(self.p_route_record_counter)
+        print "Processed Rejoin request packages =",      str(self.p_rejoin_request_counter)
+        print "Processed Rejoin response packages =",     str(self.p_rejoin_responde_counter)
+        print "Processed Link Status packages =",         str(self.p_link_status_counter)
+        print "Processed Network report packages =",      str(self.p_nwk_report_counter)
+        print "Processed Network update packages =",      str(self.p_nwk_upd_counter)
+        print "Processed Reserved packages =",            str(self.p_reserved_counter)
+        print "TOTAL OF PROCESSED PACKAGES =",            str(self.p_pkt_total)
 
     def getCounters(self):
         """

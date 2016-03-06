@@ -81,40 +81,40 @@ PCAP_FILE = 'pcap_files/entire_park_05_03.PCAP'
 cap = capture.capture()
 nodes = cap.fileCapture(PCAP_FILE)
 
-print "Printing counters:"
-print str(cap.getCounters())
-
-
-# f = file('nodes.log', 'w')
 
 f = "/home/samuel/TCC/docs/geo_positions.csv"
-tot_in = 0
-tot_out = 0
+
 tot_pkt = 0
 geo = lib.geoPositioning.geoPositioning(f)
 
 
-print "Following nodes has been processed:"
+print "Processing nodes..."
 for node in nodes:
     """Node is a node object"""
 
-    # print "Setting node positions"
     values = geo.getValues(node.getMacAdr())
-    # print "Values:",values
     if (values == None):
         # print "The Location of node",node.getMacAdr(),"has not been found"
         pass
     else:
         node.setLocation(values["lat"], values["lon"])
         node.setSN(values["sn"])
-        # print "Node",node.getMacAdr(),"has",node.getLocation(),"and following SN",node.getSN()
 
     
-    # t_in, t_out = node.processPreNeighbors()
     tot_pkt += node.getPacketTotal()
-    # tot_in += t_in
-    # tot_out += t_out
+    # route request counter 
+    # rrc, rrl = node.getRouteRequest()
+    # if (node.getNwkAdr() == "0x0000"):
+    #     print "Node",node.getNwkAdr(),"route requested",str(rrc),"times"
+    #     print "Destinations:"
+    #     print str(rrl)
 
+    # if (cap.DEBUG_MODE == 1):
+    #     rrc, rrl = node.getRouteReply()
+    #     print "Node",node.getNwkAdr(),"reply requested",str(rrc),"times"
+    #     print "Destinations:"
+    #     print str(rrl)
+        
     # print "\t",node.getPacketTotal(),'packets of node =>',node.getNwkAdr(),node.getMacAdr()
     # node.saveHistoricalNeighbors()
 
@@ -131,15 +131,14 @@ for node in nodes:
     # tmp[1] is the node's historical neighbors
     # tmp[1][0] is the first neighbor of the list of neighbors (a dictionary).
     # tmp[1][0]['nkwAdr'] to access the network address of the first neighbor.
-    tmp = json.loads(node.getJSONHistoricalNeighbors())
     # ***************************************************
 
-    # print json.loads(node.getJSONHistoricalNeighbors())
+    # if (cap.DEBUG_MODE == 1):
+    #     tmp = json.loads(node.getJSONHistoricalNeighbors())
+    #     print json.loads(node.getJSONHistoricalNeighbors())
 
-print "Nodes has been processed"
+print "Processed"
 
-# print "Total of cost of incoming cost of all nodes =", tot_in
-# print "Total of cost of outcoming cost of all nodes =", tot_out
-
-print "Total of packets processed of capturing =", tot_pkt
+# if (cap.DEBUG_MODE == 1):
+#     print "Total of packets processed of capturing =", tot_pkt
 

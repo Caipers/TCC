@@ -60,3 +60,14 @@ Anteriores à 13/12 -> 30h Desenvolvimento de pre-projeto.
 14/02 -> 1h   Ajustes de bugs no arquivo capture.py e adição de novos casos de testes.
 28/02 -> 1h   Ajustes no arquivo node.py no método getJSONHistoricalNeighbors.
               Foi incluido o MAC address do nó e a quantidade de pacotes link status o nó teve.
+05/03 -> 6h   Captura de novo arquivo PCAP agora com o parque são lourenço inteiro.
+              Re-estruturação do arquivo capture.py para leitura de vários outros tipos de comandos de dados.
+06/03 -> 6h   Em capture.py:
+              Escrita para dissecação e dados de dois novos comandos de rede: route_request e route_reply.
+              Criação de listas e contadores de pacotes totais e processados.
+              Criação de dois novos métodos: printCounters e printPCounters.
+              Em node.py:
+              Criação de listas e contadores de pacotes para routeRequest e RouteReply.
+              Criação de quatro novos métodos: addRouteRequest(), addRouteReply(), getRouteRequest() e getRouteReply() para atender novos requisitos de captação.
+
+
