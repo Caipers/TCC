@@ -34,7 +34,7 @@
 
 
     
-
+      #table_div{}
       #closeButton {
     float:right;
     display:inline-block;
@@ -59,8 +59,10 @@
     <div id="legend"><h3>Legenda</h3></div>
     <script>
      document.getElementById('closeButton').addEventListener('click', function(e) {
-    e.preventDefault();
-    this.parentNode.style.display = 'none';
+    /*e.preventDefault();
+    this.parentNode.style.display = 'none';*/
+    $('#table_div').slideUp();
+    $('#closeButton').hide();
 }, false);
 
 
@@ -83,13 +85,25 @@
             icon: 'http://i65.tinypic.com/34i0nlf.png'
           },
           risk: {
-            name: 'Com Risco',
+            name: 'Médio Risco',
             icon: 'http://i67.tinypic.com/4jurcz.png'
           },
           inat: {
-            name: 'Inatingível',
+            name: 'Alto Risco',
             icon: 'http://i63.tinypic.com/sqkvpf.png'
-          }
+          },
+          lineg: {
+            name: 'Baixo Custo',
+            icon: 'http://i65.tinypic.com/207v02x.png'
+          },
+          liney: {
+            name: 'Médio Custo',
+            icon: 'http://i64.tinypic.com/s321jb.png'
+          },
+          liner: {
+            name: 'Alto Custo',
+            icon: 'http://i67.tinypic.com/2vhzpj6.png'
+          }         
       };
 
 
@@ -98,7 +112,7 @@
 /*Execução*/
 
 function setMarker(map) {
-   
+   $('#closeButton').hide();
 
     $.getJSON('http://localhost:8000/gmaps/api/postes', function(userPos) {
 
@@ -107,12 +121,17 @@ function setMarker(map) {
             setWindowM(null);
             setWindow(null);
             setaniMarkers(null);
+            $('#table_div').slideUp();
+            $('#closeButton').hide();
+            map.setZoom(17);
+            var myLatLng = {lat: -25.384455, lng: -49.266728};
+            map.setCenter(myLatLng);
              for (var l = 0, length = userPos.length; l <  length; l++) {
-                        if(userPos[l][5].length == 0 )
+                        if(userPos[l][5].length < 4 )
                         {
                         status = 'http://i63.tinypic.com/sqkvpf.png';
                         }
-                        else if(userPos[l][5].length >= 5 && userPos[l][5].length <= 9 )
+                        else if(userPos[l][5].length >= 4 && userPos[l][5].length <= 9 )
                         {
                         status = 'http://i67.tinypic.com/4jurcz.png';
                         }
@@ -148,7 +167,7 @@ function setMarker(map) {
              
              // window.alert(userPos["pontos"][i].estado)
              //window.alert(userPos[i][3].length);
-              if(userPos[i][5].length == 0 )
+              if(userPos[i][5].length < 4 )
               {
               status = 'http://i63.tinypic.com/sqkvpf.png';
               }
@@ -180,6 +199,7 @@ function setMarker(map) {
                 if(flagdraw == 1)
                 {
                   drawChart(i);
+
                 }
                 setLines(null); 
                 setWindow(null); 
@@ -187,11 +207,11 @@ function setMarker(map) {
                 //setMarkers1(null); 
                 
                 for (var l = 0, length = userPos.length; l <  length; l++) {
-                  if(userPos[l][5].length == 0 )
+                  if(userPos[l][5].length < 4 )
                   {
                   status = 'http://i63.tinypic.com/sqkvpf.png';
                   }
-                  else if(userPos[l][5].length >= 5 && userPos[l][5].length <= 9 )
+                  else if(userPos[l][5].length >= 4 && userPos[l][5].length <= 9 )
                   {
                   status = 'http://i67.tinypic.com/4jurcz.png';
                   }
@@ -209,8 +229,27 @@ function setMarker(map) {
               //$("#table_div").hide();
              
               });*/
+                  
 
-                var newIcon1 = {url: marker.getIcon(), scaledSize: new google.maps.Size(65,65),};
+                     
+                  for (var j = 0; j<userPos.length ; j++){
+                    var contv= 0;
+                    for (var k = 0, length = userPos[i][5].length; k < length ; k++) {
+                      //window.alert("length" + userPos[i][5].length +"contv"+ contv );
+                      if(userPos[j][0]==userPos[i][5][k].nwkAdr){
+                        contv++;
+                      }
+                      if(k == userPos[i][5].length -1 && contv == 0 && i != j){
+                        var newIcon = {url: 'http://i64.tinypic.com/34srt6g.png', scaledSize: new google.maps.Size(50,50),};
+                        //window.alert(overviewMarkers[j].getIcon());
+                        overviewMarkers[j].setIcon(newIcon);
+                      }
+                    }
+                  }
+
+
+
+                var newIcon1 = {url: marker.getIcon(), scaledSize: new google.maps.Size(68,68),};
                 marker.setIcon(newIcon1);
 
 
@@ -281,7 +320,7 @@ function setMarker(map) {
 
 
 
-                      status1 = 'http://i63.tinypic.com/sqkvpf.png';
+                      /*status1 = 'http://i63.tinypic.com/sqkvpf.png';
 
 
                       var icon1 = {
@@ -302,10 +341,8 @@ function setMarker(map) {
 
                       
                       markers.push(marker1);*/
-                    
-                      var newIcon = {url: overviewMarkers[j].getIcon(), scaledSize: new google.maps.Size(65,65),};
-                     //window.alert(overviewMarkers[j].getIcon());
-                      overviewMarkers[j].setIcon(newIcon);
+                      
+                      
 
 
 
@@ -350,9 +387,12 @@ function setMarker(map) {
                       }
                       })(link, i, k, j));
                     }
-
+                    
+                 
+                  
 
                   }
+                 
                 }
                 infowindow.setContent('Network Adress: ' + userPos[i][0] + '<br>' +'Mac Adress: ' + userPos[i][1] + '<br>' + ' Número de vizinhos: ' + cont1 +'<br>' + "<a href='javascript:drawChart("+i+");'>Lista de Vizinhos</a>");
                 infowindow.open(map, marker);
@@ -370,6 +410,8 @@ function setMarker(map) {
 
         function drawChart(i) {
           $.getJSON('http://localhost:8000/gmaps/api/postes', function(userPos) {
+            $('#table_div').slideDown();
+            $('#closeButton').show();
               flagdraw=1;
               //window.alert(userPos["pontos"].length);
               //window.alert(userPos.length);
@@ -467,11 +509,12 @@ function setMarker(map) {
 
                   //}
                 }
-                 var infoWindow  = new google.maps.InfoWindow();
+                    var infoWindow  = new google.maps.InfoWindow();
                     var node        = document.getElementById('table_div');
                     var table = new google.visualization.Table(node);
                     var selflag = 0;
                     var valueold = [];
+
                           function selectHandler() {
                           var selectedItem = table.getSelection()[0];
                           setaniMarkers(null);
@@ -497,15 +540,9 @@ function setMarker(map) {
                           // the user selects something on the chart.
                           google.visualization.events.addListener(table, 'select', selectHandler);
 
-                          table.draw(data, {showRowNumber: true, width: '100%', height: '30%'});
-                          Lat1 = -25.384553;
-                          Lon1 = -49.263350;
-                          var position1 = new google.maps.LatLng(Lat1,Lon1);
-                          infoWindow.setPosition(position1);
-                          infoWindow.setContent(node);
-                          infoWindow.open(map);
-                          tables.push(node);
-                          $("#table_div").show();
+                          table.draw(data, { width: '100%', height: '30%'});
+
+                          
 
                           map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(node);
               });
@@ -671,7 +708,8 @@ function initMap() {
 
   var map = new google.maps.Map(document.getElementById('map'), {
     zoom: 17,
-    center: myLatLng
+    center: myLatLng,
+    disableDoubleClickZoom: true
   });
      //window.alert(6);
      //window.alert(postes[0][1]);
