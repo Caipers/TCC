@@ -2,7 +2,6 @@
 ####### WORKING HOURS #########
 ###############################
 
-
 Log SAMUEL:
 Anteriores à 13/12 -> 30h Desenvolvimento de pre-projeto.
 13/12 -> 4h   Estudos para captação dos pacotes PCAP. Encontrado modulo pyshark para manipulação destes arquivos.
@@ -69,5 +68,11 @@ Anteriores à 13/12 -> 30h Desenvolvimento de pre-projeto.
               Em node.py:
               Criação de listas e contadores de pacotes para routeRequest e RouteReply.
               Criação de quatro novos métodos: addRouteRequest(), addRouteReply(), getRouteRequest() e getRouteReply() para atender novos requisitos de captação.
+12/03  -> 5h  Em capture.py:
+              Escrita para dissecação e dados novo comandos de rede: route_request.
+              Em node.py:
+              Criação de listas e contadores de pacotes para routeRequest e RouteReply.
+              Criação de dois novos métodos: addRouteRecord() e getRouteRecord() para atender novos requisitos de captação.
+              
 
 
