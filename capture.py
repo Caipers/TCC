@@ -14,8 +14,8 @@ class capture():
     """
 
     def __init__(self):
-        self.DEBUG_MODE = 0
-        # self.DEBUG_MODE = 1
+        # self.DEBUG_MODE = 0
+        self.DEBUG_MODE = 1
 
         # CMD_IDs #
         # 0x01 -> Route request
@@ -232,29 +232,94 @@ class capture():
 
                 #################################################################################
                 # Network status
+                # Not implemented because lack of packets for testing.
                 elif (cmd_id == "0x03"):
                     self.nwk_status_counter += 1
                     # TODO
 
                 #################################################################################
                 # Leave
+                # Not implemented because lack of packets for testing.
                 elif (cmd_id == "0x04"):
                     self.leave_counter += 1
                     # TODO
 
                 #################################################################################
-                # Route record
+                # Route record:
+                # The route record command allows the route taken by a unicast packet through the
+                # network to be recorded in the command payload and delivered to the destination
+                # device.
+                # The destination will know the complete path when the packet arrives from the
+                # source. So it records in the destination node the path from the source. For
+                # each complete route path for the destination, it appends a list.
                 elif (cmd_id == "0x05"):
                     self.route_record_counter += 1
-                    # TODO
+                    relayList = []
+
+                    dstAdr = str(self.convStrtoFFFF(cap.zbee_nwk.dst))
+                    srcAdr = str(self.convStrtoFFFF(cap.zbee_nwk.src))
+                    wpanDstAdr = str(self.convStrtoFFFF(cap.wpan.dst16))
+
+                    # only process a packet if the destination of the packets is the same
+                    # of the destination of the message.
+                    if (str(wpanDstAdr) == dstAdr):
+                        self.p_route_record_counter += 1
+
+                        tmp = str(cap.zbee_nwk)
+
+                        # parsing MAC of destination
+                        cmd = "Destination:"
+                        fst_start = tmp.find(cmd) + len(cmd) + 1
+                        start = tmp.find("(", fst_start) + 1
+                        end = start + 23
+                        macAdr = tmp[start:end]
+
+                        # parsing relay count
+                        cmd = "Relay Count:"
+                        start = tmp.find(cmd) + len(cmd) + 1
+                        end = start + 2
+                        relayCount = int(tmp[start:end].splitlines()[0]) # gets until finds the first new line caracter.
+
+                        # parsing relay devices 
+                        for i in range(1, relayCount + 1):
+                            cmd = "Relay Device "+str(i)+":"
+                            start = tmp.find(cmd) + len(cmd) + 1
+                            end = start + 6
+                            relayList.append(tmp[start:end])
+
+                        ######################################################################################
+                        # In Route Record, the processing node is not srcAdr, instead is when 
+                        # wpan.dst16 == zbee_nwk.dst so it's necessary to find it.
+                        ######################################################################################
+
+                        # finds a node if exists, or create a new node, or reset a node if node changes its PAN.
+                        index = self.indexNode(dstAdr, nodes)
+                        if (index == -1): # node does not exist
+                            aux_node = node.node(dstAdr, macAdr, panAdr)
+                            nodes.append(aux_node)
+                        else: # node exists
+                            aux_node = self.findNode(dstAdr, nodes)
+                            # if node changed its PAN or another radio gets a someone's nwkAdr, 
+                            # it must reset all previous data e start again.
+
+                            if ((aux_node.getPanAdr() != panAdr) or (aux_node.getMacAdr() != macAdr)):
+                                aux_node.resetNode()
+                                aux_node.setNwkAdr(dstAdr)
+                                aux_node.setMacAdr(macAdr)
+                                aux_node.setPanAdr(panAdr)
+
+                        aux_node.addRouteRecord(srcAdr, relayCount, relayList)
+
 
                 #################################################################################
                 # Rejoin responde
+                # Not implemented because lack of packets for testing.
                 elif (cmd_id == "0x06"):
                     self.rejoin_request_counter += 1
                     # TODO
 
                 # Rejoin request
+                # Not implemented because lack of packets for testing.
                 #################################################################################
                 elif (cmd_id == "0x07"):
                     self.rejoin_responde_counter += 1
@@ -300,6 +365,7 @@ class capture():
                     aux_node.addNpPreNeighbors()
 
                 #################################################################################
+                # Not implemented because lack of packets for testing.
                 # Network report
                 elif (cmd_id == "0x09"):
                     self.nwk_report_counter += 1
@@ -307,6 +373,7 @@ class capture():
 
                 #################################################################################
                 # Network update
+                # Not implemented because lack of packets for testing.
                 elif (cmd_id == "0x0a"):
                     self.nwk_upd_counter += 1
                     # TODO
@@ -319,7 +386,6 @@ class capture():
         except StopIteration:
             print "Reading has finished"
 
-        # self.printCounters()
         capture.close()
 
         # processing historical nodes
@@ -382,6 +448,7 @@ class capture():
         Return: 0xff string value if OK
                 None otherwise
         """
+        
         try:
             if (strVal.isdigit() == True):
                 intVal = int(strVal)

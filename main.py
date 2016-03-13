@@ -102,6 +102,13 @@ for node in nodes:
 
     
     tot_pkt += node.getPacketTotal()
+
+    # route record
+    rrc, rrl = node.getRouteRecord()
+    if (rrc != 0):
+        print node.getNwkAdr()+"s packet counter:", rrc
+        print str(rrl)
+
     # route request counter 
     # rrc, rrl = node.getRouteRequest()
     # if (node.getNwkAdr() == "0x0000"):

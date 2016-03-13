@@ -50,11 +50,26 @@ class node():
 
         # for route request command
         self.routeRequestCounter = 0
-        self.routeRequestList = []
+        self.routeRequestList = [] # list of dicts.
 
         # for reply request command
         self.routeReplyCounter = 0
-        self.routeReplyList = []
+        self.routeReplyList = [] # list of dicts.
+
+        # for route record command
+        self.routeRecordCounter = 0
+        self.routeRecordList = [] # list of dicts.
+
+    def addRouteRecord(self, originator, relayCount, relayList):
+        """
+        Count how much route record and store a list.
+        """
+
+        self.routeRecordCounter += 1
+        self.packet_total += 1
+
+        routeRecordEntry = {"originator" : originator, "relayCount" : relayCount, "relayList" : relayList}
+        self.routeRecordList.append(routeRecordEntry)
 
     def addRouteRequest(self, dstAdr):
         """
@@ -101,17 +116,18 @@ class node():
 
         self.npPreNeighbors.append(self.getCurNeighbors())
 
-
     def setNwkAdr(self, nwkAdr):
         if (self.r_nwkAdr.match(nwkAdr) == None or len(nwkAdr) != 6):
             raise ValueError('Incorrect nwkAdr')
 
         self.nwkAdr = nwkAdr
+
     def setMacAdr(self, macAdr):
         if (self.r_macAdr.match(macAdr) == None or len(macAdr) != 23):
             raise ValueError('Incorrect macAdr')
 
         self.macAdr = macAdr
+
     def setPanAdr(self, panAdr):
         if (self.r_panAdr.match(panAdr) == None or len(panAdr) != 6):
             raise ValueError('Incorrect panAdr')
@@ -123,6 +139,7 @@ class node():
         Return: 
             latitude, longitude : float type 
         """
+
         # for Brazilian location both values are negative.
         if (float(latitude) > 0 or float(longitude) > 0):
             raise ValueError('Latitude or Longitude are not less than 0')
@@ -141,7 +158,8 @@ class node():
         SN has 13 decimal digits
         Return:
             SN : int type
-        """        
+        """
+
         if (len(sn) != 13):
             raise ValueError('Length of the SN is different of 13')
 
@@ -227,6 +245,7 @@ class node():
 
     def isResetedNode(self):
         return self.ResetedNode
+
     def isCoordinator(self):
         return self.coordinator
 
@@ -262,28 +281,45 @@ class node():
 
     def getNwkAdr(self):
         return self.nwkAdr
+
     def getMacAdr(self):
         return self.macAdr
+
     def getPanAdr(self):
         return self.panAdr
+
     def getLocation(self):
         return [self.latitude, self.longitude]
+
     def getSN(self):
         return self.sn
+
     def getCurNeighbors(self):
         return self.curNeighbors
+
     def getNpPreNeighbors(self):
         return self.npPreNeighbors
+
     def getHistoricalNeighbors(self):
         return self.pPreNeighbors
+
     def getPacketTotal(self):
         return self.packet_total
+
+    def getRouteRecord(self):
+        """
+        Return total counter and a list of destinations and its counters.
+        """
+        
+        return self.routeRecordCounter, self.routeRecordList
+
     def getRouteRequest(self):
         """
         Return total counter and a list of destinations and its counters.
         """
-
+        
         return self.routeRequestCounter, self.routeRequestList
+
     def getRouteReply(self):
         """
         Return total counter and a list of originators and its counters.
@@ -295,9 +331,11 @@ class node():
         Return basic information in JSON format about the node which is: nwkAdr, panAdr, macAdr, coordinator latitude
         longitude, serial number
         """
+        
         return json.dumps([self.nwkAdr, self.panAdr, self.macAdr, self.coordinator, self.latitude, self.longitude, self.sn])
     def getJSONCurNeighbors(self):
         return json.dumps([self.nwkAdr, self.curNeighbors])
+
     def getJSONHistoricalNeighbors(self):
         """
         Returns:
@@ -308,6 +346,7 @@ class node():
             self.longitude Longitude of the node
             self.pPreNeighbors Processed neighbors (List of dictionaries)
         """
+
         return json.dumps([self.nwkAdr, self.macAdr, self.packet_total, self.latitude, self.longitude, self.pPreNeighbors])
     
     def saveHistoricalNeighbors(self):
