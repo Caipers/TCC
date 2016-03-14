@@ -336,6 +336,15 @@ class node():
     def getJSONCurNeighbors(self):
         return json.dumps([self.nwkAdr, self.curNeighbors])
 
+    def getJSONRouteRequest(self):
+        return json.dumps(self.getNwkAdr(), self.getRouteRequest())
+
+    def getJSONRouteReply(self):
+        return json.dumps(self.getNwkAdr(), self.getRouteReply())
+
+    def getJSONRouteRecord(self):
+        return json.dumps(self.getNwkAdr(), self.getRouteRecord())
+
     def getJSONHistoricalNeighbors(self):
         """
         Returns:

@@ -73,6 +73,9 @@ Anteriores à 13/12 -> 30h Desenvolvimento de pre-projeto.
               Em node.py:
               Criação de listas e contadores de pacotes para routeRequest e RouteReply.
               Criação de dois novos métodos: addRouteRecord() e getRouteRecord() para atender novos requisitos de captação.
-              
+13/03  -> 1h  Em capture.py:
+              Criação de métodos getPCounters(), getJSONCounters(), getJSONPCounters().
+              Em node.py:
+              Criação de métodos getJSONRouteRequest(), getJSONRouteReply(), getJSONRouteRecord().
 
 

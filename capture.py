@@ -5,6 +5,7 @@
 import pyshark
 import node
 import re
+import json
 
 class capture():
     """
@@ -548,17 +549,49 @@ class capture():
         "0x08" -> Link status
         "0x09" -> Network report
         "0x0a" -> Network update
-        "0xff"
+        "0xff" -> Reserved
         "nwk_cmd_tot" -> Total of network cmd packages
         "tot" -> Total of packages
         """
 
-        dic = {"0x01" : self.route_request_counter, "0x02" : self.route_reply_counter,
-               "0x03" : self.nwk_status_counter, "0x04" : self.leave_counter, 
-               "0x05" : self.route_record_counter, "0x06" : self.rejoin_request_counter,
-               "0x07" : self.rejoin_responde_counter, "0x08" : self.link_status_counter,
-               "0x09" : self.nwk_report_counter, "0x0a" : self.nwk_upd_counter,
-               "0xff" : self.reserved_counter, "nwk_cmd_tot" : self.nwk_cmd_pkt_total,
-               "tot"  :  self.pkt_total}
+        dic = {"0x01" : self.route_request_counter,     "0x02"        : self.route_reply_counter,
+               "0x03" : self.nwk_status_counter,        "0x04"        : self.leave_counter, 
+               "0x05" : self.route_record_counter,      "0x06"        : self.rejoin_request_counter,
+               "0x07" : self.rejoin_responde_counter,   "0x08"        : self.link_status_counter,
+               "0x09" : self.nwk_report_counter,        "0x0a"        : self.nwk_upd_counter,
+               "0xff" : self.reserved_counter,          "nwk_cmd_tot" : self.nwk_cmd_pkt_total,
+               "tot"  : self.pkt_total}
 
         return dic
+
+    def getPCounters(self):
+        """
+        Return a dictionary of total of processed, in this patter:
+        "0x01" -> Route request
+        "0x02" -> Route reply
+        "0x03" -> Network status
+        "0x04" -> Leave
+        "0x05" -> Route record
+        "0x06" -> Rejoin request
+        "0x07" -> Rejoin responde
+        "0x08" -> Link status
+        "0x09" -> Network report
+        "0x0a" -> Network update
+        "0xff" -> Reserved
+        "tot" -> Total of packages
+        """
+
+        dic = {"0x01" : self.p_route_request_counter,   "0x02" : self.p_route_reply_counter,
+               "0x03" : self.p_nwk_status_counter,      "0x04" : self.p_leave_counter, 
+               "0x05" : self.p_route_record_counter,    "0x06" : self.p_rejoin_request_counter,
+               "0x07" : self.p_rejoin_responde_counter, "0x08" : self.p_link_status_counter,
+               "0x09" : self.p_nwk_report_counter,      "0x0a" : self.p_nwk_upd_counter,
+               "0xff" : self.p_reserved_counter,        "tot"  : self.p_pkt_total}
+
+        return dic
+
+    def getJSONCounters(self):
+        return json.dumps(self.getCounters())
+
+    def getJSONPCounters(self):
+        return json.dumps(self.getPCounters())

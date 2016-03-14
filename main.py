@@ -81,6 +81,9 @@ PCAP_FILE = 'pcap_files/entire_park_05_03.PCAP'
 cap = capture.capture()
 nodes = cap.fileCapture(PCAP_FILE)
 
+print "Capture JSONs"
+print str(cap.getJSONCounters())
+print str(cap.getJSONPCounters())
 
 f = "/home/samuel/TCC/docs/geo_positions.csv"
 
@@ -102,6 +105,10 @@ for node in nodes:
 
     
     tot_pkt += node.getPacketTotal()
+
+    node.getJSONRouteRequest()
+    node.getJSONRouteRecord()
+    node.getJSONRouteReply()
 
     # route record
     rrc, rrl = node.getRouteRecord()
