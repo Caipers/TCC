@@ -58,6 +58,15 @@
 
     <div id="legend"><h3>Legenda</h3></div>
     <script>
+    //botao para voltar ao estado inicial
+
+
+
+
+
+
+
+    //botao para fechar a tabela
      document.getElementById('closeButton').addEventListener('click', function(e) {
     /*e.preventDefault();
     this.parentNode.style.display = 'none';*/
@@ -79,42 +88,128 @@
     var cont;
     var map;
     var oLat, oLng;
+    var flagmark=0;
+    var divlegs = [];
     var icons = {
-          esta: {
-            name: 'Estável',
-            icon: 'http://i65.tinypic.com/34i0nlf.png'
+          0: {
+            name: 'Disponibilidade Alta',
+            icon: 'http://i68.tinypic.com/30cyt53.png'
           },
-          risk: {
-            name: 'Médio Risco',
-            icon: 'http://i67.tinypic.com/4jurcz.png'
+          1: {
+            name: 'Disponibilidade Regular',
+            icon: 'http://i68.tinypic.com/10zqzhh.jpg'
           },
-          inat: {
-            name: 'Alto Risco',
-            icon: 'http://i63.tinypic.com/sqkvpf.png'
+          2: {
+            name: 'Disponibilidade Baixa',
+            icon: 'http://i63.tinypic.com/mj8kz4.png'
           },
-          lineg: {
+          3: {
+            name: 'Indisponível',
+            icon: 'http://i63.tinypic.com/2dloubl.png'
+          },
+          4: {
             name: 'Baixo Custo',
-            icon: 'http://i65.tinypic.com/207v02x.png'
+            icon: 'http://i66.tinypic.com/rkugw9.png'
           },
-          liney: {
+          5: {
             name: 'Médio Custo',
-            icon: 'http://i64.tinypic.com/s321jb.png'
+            icon: 'http://i63.tinypic.com/ao98o3.png'
           },
-          liner: {
+          6: {
             name: 'Alto Custo',
-            icon: 'http://i67.tinypic.com/2vhzpj6.png'
+            icon: 'http://i68.tinypic.com/a9w8m1.png'
           }         
       };
 
 
 
+function CenterControl(controlDiv, map) {
+  $.getJSON('http://localhost:8000/gmaps/api/postes', function(userPos) {
+                // Set CSS for the control border.
+                var controlUI = document.createElement('div');
+                controlUI.style.backgroundColor = '#fff';
+                controlUI.style.border = '2px solid #fff';
+                controlUI.style.borderRadius = '3px';
+                controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
+                controlUI.style.cursor = 'pointer';
+                controlUI.style.marginBottom = '22px';
+                controlUI.style.textAlign = 'center';
+                controlUI.title = 'Clique para voltar ao estado inicial';
+                controlDiv.appendChild(controlUI);
 
+                // Set CSS for the control interior.
+                var controlText = document.createElement('div');
+                controlText.style.color = 'rgb(25,25,25)';
+                controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
+                controlText.style.fontSize = '16px';
+                controlText.style.lineHeight = '38px';
+                controlText.style.paddingLeft = '5px';
+                controlText.style.paddingRight = '5px';
+                controlText.innerHTML = 'Estado Inicial';
+                controlUI.appendChild(controlText);
+
+                // Setup the click event listeners: simply set the map to Chicago.
+                controlUI.addEventListener('click', function() {
+                      setLines(null); 
+                      setWindowM(null);
+                      setWindow(null);
+                      setaniMarkers(null);
+                      $('#table_div').slideUp();
+                      $('#closeButton').hide();
+                      map.setZoom(17);
+                      var myLatLng = {lat: -25.384455, lng: -49.266728};
+                      map.setCenter(myLatLng);
+
+                      //reseta a legenda
+
+                      for (var i = 5; i<=7;i++) {
+                        
+                        {
+                          
+                     
+                        legend.removeChild(legend.childNodes[(5)]);
+                         
+                        }
+                        
+                      }
+                      flagmark = 0;
+                      flagdraw = 0;
+                    
+              //map.setCenter(myLatLng);
+                      for (var l = 0, length = userPos.length; l <  length; l++) {
+                          if(userPos[l][5].length < 1 )
+                          {
+                          status = 'http://i63.tinypic.com/2dloubl.png';
+                          }
+                          if(userPos[l][5].length >= 1 &&  userPos[l][5].length < 3)
+                          {
+                          status = 'http://i63.tinypic.com/mj8kz4.png';
+                          }
+                          else if(userPos[l][5].length >= 3 && userPos[l][5].length < 9 )
+                          {
+                          status = 'http://i68.tinypic.com/10zqzhh.jpg';
+                          }
+                          else if(userPos[l][5].length > 9 )
+                          {
+                          status = 'http://i68.tinypic.com/30cyt53.png';
+                          }
+
+                          overviewMarkers[l].setIcon(status);
+                }
+                            
+                });
+            });
+          }
 /*Execução*/
 
 function setMarker(map) {
    $('#closeButton').hide();
 
     $.getJSON('http://localhost:8000/gmaps/api/postes', function(userPos) {
+
+
+            
+
 
            map.addListener('dblclick', function() {
             setLines(null); 
@@ -123,21 +218,41 @@ function setMarker(map) {
             setaniMarkers(null);
             $('#table_div').slideUp();
             $('#closeButton').hide();
-            map.setZoom(17);
+            //map.setZoom(17);
             var myLatLng = {lat: -25.384455, lng: -49.266728};
-            map.setCenter(myLatLng);
+
+            //reseta a legenda
+
+                    for (var i = 5; i<=7;i++) {
+                      
+                      {
+                        
+                   
+                      legend.removeChild(legend.childNodes[(5)]);
+                       
+                      }
+                      
+                    }
+                    flagmark = 0;
+                    flagdraw = 0;
+                  
+            //map.setCenter(myLatLng);
              for (var l = 0, length = userPos.length; l <  length; l++) {
-                        if(userPos[l][5].length < 4 )
+                        if(userPos[l][5].length < 1 )
                         {
-                        status = 'http://i63.tinypic.com/sqkvpf.png';
+                        status = 'http://i63.tinypic.com/2dloubl.png';
                         }
-                        else if(userPos[l][5].length >= 4 && userPos[l][5].length <= 9 )
+                        if(userPos[l][5].length >= 1 &&  userPos[l][5].length < 3)
                         {
-                        status = 'http://i67.tinypic.com/4jurcz.png';
+                        status = 'http://i63.tinypic.com/mj8kz4.png';
+                        }
+                        else if(userPos[l][5].length >= 3 && userPos[l][5].length < 9 )
+                        {
+                        status = 'http://i68.tinypic.com/10zqzhh.jpg';
                         }
                         else if(userPos[l][5].length > 9 )
                         {
-                        status = 'http://i65.tinypic.com/34i0nlf.png';
+                        status = 'http://i68.tinypic.com/30cyt53.png';
                         }
 
                         overviewMarkers[l].setIcon(status);
@@ -167,21 +282,25 @@ function setMarker(map) {
              
              // window.alert(userPos["pontos"][i].estado)
              //window.alert(userPos[i][3].length);
-              if(userPos[i][5].length < 4 )
+              if(userPos[i][5].length < 1 )
               {
-              status = 'http://i63.tinypic.com/sqkvpf.png';
+              status = 'http://i63.tinypic.com/2dloubl.png';
               }
-              else if(userPos[i][5].length >= 5 && userPos[i][5].length <= 9 )
+              if(userPos[i][5].length >= 1 &&  userPos[i][5].length < 3)
               {
-              status = 'http://i67.tinypic.com/4jurcz.png';
+              status = 'http://i63.tinypic.com/mj8kz4.png';
+              }
+              else if(userPos[i][5].length >= 3 && userPos[i][5].length < 9 )
+              {
+              status = 'http://i68.tinypic.com/10zqzhh.jpg';
               }
               else if(userPos[i][5].length > 9 )
               {
-              status = "http://i65.tinypic.com/34i0nlf.png";
+              status = 'http://i68.tinypic.com/30cyt53.png';
               }
               
               //window.alert(position);
-              var icon = {url: status, scaledSize: new google.maps.Size(50,50),};
+              var icon = {url: status};
               var marker = new google.maps.Marker({
                   position: position,
                   map:map,
@@ -195,7 +314,30 @@ function setMarker(map) {
 
 
         google.maps.event.addListener(marker, 'click', (function (marker, i) {
+         
+          
             return function () {
+                 //ATUALIZA A LEGENDA
+                if(flagmark == 0){
+                    flagmark = 1;
+                   
+                    for (var key in icons) {
+                      if(key >  3)
+                      {
+                        
+                        var type = icons[key];
+                        var name = type.name;
+                        var icon = type.icon;
+                        var div = document.createElement('div');
+                        div.innerHTML = '<img src="' + icon + '"> ' + name;
+                        legend.appendChild(div);
+                        
+                      }
+                      
+                    }
+                  }
+
+
                 if(flagdraw == 1)
                 {
                   drawChart(i);
@@ -207,17 +349,21 @@ function setMarker(map) {
                 //setMarkers1(null); 
                 
                 for (var l = 0, length = userPos.length; l <  length; l++) {
-                  if(userPos[l][5].length < 4 )
+                  if(userPos[l][5].length < 1 )
                   {
-                  status = 'http://i63.tinypic.com/sqkvpf.png';
+                  status = 'http://i63.tinypic.com/2dloubl.png';
                   }
-                  else if(userPos[l][5].length >= 4 && userPos[l][5].length <= 9 )
+                  if(userPos[l][5].length >= 1 &&  userPos[l][5].length < 3)
                   {
-                  status = 'http://i67.tinypic.com/4jurcz.png';
+                  status = 'http://i63.tinypic.com/mj8kz4.png';
+                  }
+                  else if(userPos[l][5].length >= 3 && userPos[l][5].length < 9 )
+                  {
+                  status = 'http://i68.tinypic.com/10zqzhh.jpg';
                   }
                   else if(userPos[l][5].length > 9 )
                   {
-                  status = 'http://i65.tinypic.com/34i0nlf.png';
+                  status = 'http://i68.tinypic.com/30cyt53.png';
                   }
 
                   overviewMarkers[l].setIcon(status);
@@ -243,13 +389,14 @@ function setMarker(map) {
                         var newIcon = {url: 'http://i64.tinypic.com/34srt6g.png', scaledSize: new google.maps.Size(50,50),};
                         //window.alert(overviewMarkers[j].getIcon());
                         overviewMarkers[j].setIcon(newIcon);
+                        //overviewMarkers[j].setVisible(false);
                       }
                     }
                   }
 
 
 
-                var newIcon1 = {url: marker.getIcon(), scaledSize: new google.maps.Size(68,68),};
+                var newIcon1 = {url: marker.getIcon(), scaledSize: new google.maps.Size(18,65),};
                 marker.setIcon(newIcon1);
 
 
@@ -294,14 +441,14 @@ function setMarker(map) {
 
                       var lineSymbol = {
                       path: google.maps.SymbolPath.CIRCLE,
-                      scale: 2.5
+                      scale: 4.5
                       };
                       var link = new google.maps.Polyline({
                       path: coord,
                       geodesic: true,
                       strokeColor: color,
                       strokeOpacity: 1.0,
-                      strokeWeight: 4.3,
+                      strokeWeight: 7.5,
                       icons: [{
                       icon: lineSymbol,
                       scale: 40,
@@ -309,12 +456,10 @@ function setMarker(map) {
                       }]
 
                       });
-
-                      link.setMap(map);
-
-
-
-                      arrayLine.push(link);
+                      
+                        link.setMap(map);
+                        arrayLine.push(link);
+           
 
                       //REALÇA AS MARKERS CONECTADAS COM O VIZINHO
 
@@ -368,8 +513,25 @@ function setMarker(map) {
                       var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 
                       var distance = R * c;
+                      var cs = 0;
+                      var ce = 0;
                       //infowindow.setContent(userPos["pontos"][i].nome+'<br>'+userPos["pontos"][i].desc);
-                      infowindow1.setContent('Distância: '+ distance.toFixed(0) + '<br>Custo de saída: '+ (userPos[i][5][k].tot_out_cost/userPos[i][5][k].tot_pkt).toFixed(2) + '<br>Custo de entrada: ' + (userPos[i][5][k].tot_in_cost/userPos[i][5][k].tot_pkt).toFixed(2) );
+                      if(userPos[i][5][k].tot_out_cost == 0 && userPos[i][5][k].tot_in_cost > 0)
+                      {
+                        //window.alert(userPos[i][5][k].tot_out_cost);
+                        infowindow1.setContent('Distância: ' + distance.toFixed(0) + ' <br>Custo de entrada: ' + (userPos[i][5][k].tot_in_cost/userPos[i][5][k].tot_pkt).toFixed(2) + '<br>Custo de saída: -');
+                      }
+                      else if (userPos[i][5][k].tot_out_cost > 0 && userPos[i][5][k].tot_in_cost > 0)
+                      {
+                        //window.alert(userPos[i][5][k].tot_out_cost);
+                        infowindow1.setContent('Distância: '+ distance.toFixed(0) + '<br>Custo de entrada: ' + (userPos[i][5][k].tot_in_cost/userPos[i][5][k].tot_pkt).toFixed(2)+ '<br>Custo de saída: '+ (userPos[i][5][k].tot_out_cost/userPos[i][5][k].tot_pkt).toFixed(2));
+                      }
+                      else if(userPos[i][5][k].tot_in_cost == 0 && userPos[i][5][k].tot_out_cost > 0)
+                        infowindow1.setContent('Distância: '+ distance.toFixed(0)  + '<br>Custo de entrada: - '+ '<br>Custo de saída: '+ (userPos[i][5][k].tot_out_cost/userPos[i][5][k].tot_pkt).toFixed(2));
+                     
+                      
+
+                      //infowindow1.setContent('Distância: '+ distance.toFixed(0) + '<br>Custo de saída: '+ (cs).toFixed(2) + '<br>Custo de entrada: ' + (ce).toFixed(2));
                       //infowindow.setContent('<p><b>Intensidade: </b> '+userPos["links"][i].intensidade );
                       //window.alert('pos1:'+userPos[i][1]+'pos2'+userPos[j][1]+'div'+(userPos[i][1] + userPos[j][1])/2);
                       mLat = (userPos[i][3]+userPos[j][3])/2;
@@ -409,6 +571,7 @@ function setMarker(map) {
 
 
         function drawChart(i) {
+
           $.getJSON('http://localhost:8000/gmaps/api/postes', function(userPos) {
             $('#table_div').slideDown();
             $('#closeButton').show();
@@ -425,9 +588,10 @@ function setMarker(map) {
                 var data = new google.visualization.DataTable();
                data.addColumn('string', 'Network Address');
                data.addColumn('string', 'Mac Adress');
-               data.addColumn('number', 'Average In Cost');
-               data.addColumn('number', 'Average Out Cost');
-               data.addColumn('number', 'Distance');
+               data.addColumn('string', 'Average In Cost');
+               data.addColumn('string', 'Average Out Cost');
+               data.addColumn('number', 'Presence Freq. (%)');
+               data.addColumn('number', 'Distance (m)');
               //window.alert(userPos[i][3].length);
               //var l = 0
               distances = [];
@@ -495,9 +659,26 @@ function setMarker(map) {
                           distances.push(distance);
                           macs.push(userPos[j][1])
                          //window.alert(userPos[j][1]);
-                         data.addRow([
-                          userPos[i][5][k].nwkAdr, userPos[j][1] , userPos[i][5][k].tot_in_cost/userPos[i][5][k].tot_pkt, userPos[i][5][k].tot_out_cost/userPos[i][5][k].tot_pkt, distance
+                         //window.alert('tot'+userPos[i][2]);
+                         //window.alert('pkt'+userPos[i][5][k].tot_pkt);
+                          if(userPos[i][5][k].tot_out_cost == 0 && userPos[i][5][k].tot_in_cost > 0)
+                          {
+                            //window.alert(userPos[i][5][k].tot_out_cost);
+                              data.addRow([
+                            userPos[i][5][k].nwkAdr, userPos[j][1] , String((userPos[i][5][k].tot_in_cost/userPos[i][5][k].tot_pkt).toFixed(2)), '-',100*userPos[i][5][k].tot_pkt/userPos[i][2], distance
+                            ]);
+                          }
+                          else if (userPos[i][5][k].tot_out_cost > 0 && userPos[i][5][k].tot_in_cost > 0)
+                          { 
+                            data.addRow([
+                          userPos[i][5][k].nwkAdr, userPos[j][1] , String((userPos[i][5][k].tot_in_cost/userPos[i][5][k].tot_pkt).toFixed(2)), String((userPos[i][5][k].tot_out_cost/userPos[i][5][k].tot_pkt).toFixed(2)),100*userPos[i][5][k].tot_pkt/userPos[i][2], distance
                           ]);
+                          }
+                          else if(userPos[i][5][k].tot_in_cost == 0 && userPos[i][5][k].tot_out_cost > 0)
+                              data.addRow([
+                            userPos[i][5][k].nwkAdr, userPos[j][1] , '-', String((userPos[i][5][k].tot_out_cost/userPos[i][5][k].tot_pkt).toFixed(2)),100*userPos[i][5][k].tot_pkt/userPos[i][2], distance
+                            ]);
+                           
 
                           //l = l + 1; 
                       }
@@ -546,6 +727,8 @@ function setMarker(map) {
 
                           map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(node);
               });
+
+                    window.scrollTo(0,200);
             }
               /*
               function myclick(i) {
@@ -713,17 +896,30 @@ function initMap() {
   });
      //window.alert(6);
      //window.alert(postes[0][1]);
+
+
+    var centerControlDiv = document.createElement('div');
+    var centerControl = new CenterControl(centerControlDiv, map);
+
+    //centerControlDiv.index = 1;
+    map.controls[google.maps.ControlPosition.LEFT_TOP].push(centerControlDiv);
+ 
   var legend = document.getElementById('legend');
         for (var key in icons) {
-          //window.alert(type.icon);
-          var type = icons[key];
-          var name = type.name;
-          var icon = type.icon;
-          var div = document.createElement('div');
-          div.innerHTML = '<img src="' + icon + '"> ' + name;
-          legend.appendChild(div);
+          //window.alert(key);
+          if(key <=3){
+                    var type = icons[key];
+                    var name = type.name;
+                    var icon = type.icon;
+                    var div = document.createElement('div');
+                    div.innerHTML = '<img src="' + icon + '"> ' + name;
+                    legend.appendChild(div);
+                  }
         }
    map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(legend);
+
+  
+
 
  
 
