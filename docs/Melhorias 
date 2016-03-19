@@ -1,0 +1,93 @@
+MELHORIAS --> 12/03
+
+MAPA:
+
+-> Quando clicado duas vezes no mapa, deixar o zoom atual mas desceleciona o nó.
+-> Mudar padrão das cores dos nós:
+	Azul 		x >= 10 vizinhos
+	Amarelo 	3 <= x < 9 viz
+	Vermelho 	1 <= x < 3
+	Preto		x == 0
+-> Mudar label das legendas dos nós:
+	Estável 	--> Disponibilidade Alta  
+	Médio risco --> Disponibilidade Regular
+	Alto risco 	--> Disponibilidade Baixa
+	----	   	--> Indisponível
+-> Mudar padrão das cores das arestas:
+	Azul 		>= 10 vizinhos
+	Amarelo 	3 <= x < 9 viz
+	Vermelho 	< 3
+-> Desconsiderar os valores zero (0) dos custos de entrada e saída.
+-> Quando os dois valores de custos foram zero, não considerar o vizinho como visinho válido.
+-> Colocar botão para voltar ao estado inicial do zoom.
+-> Aumentar a bolinha de seleção da aresta.
+
+
+LISTA:
+-> Quando clicado no mapa "Lista de vizinhos", dar um destaque inicial na lista para mostrar ao usuário onde ela está
+-> No label da distância informar que a unidade de medida é metro (m)
+-> Frequencia de presença em %.
+
+
+MELHORIAS --> 19/03
+
+**************************
+* Nova tela de Estatísticas.
+**************************
+
+Um botão deve ser inserido na tela de mapas para acessar essas informações.
+
+Deve-se ter uma TABELA e um GRÁFICO PIZZA para os contadores de pacotes em Capture.py:
+1) capture.getJSONCounters()
+2) capture.getJSONPCounters()
+
+
+Em node.py:
+1) Route Request: Para determinado nó, quantas solicitações de "Route Resquest"
+   				  solicitadas. 
+   	MENSAGEM:
+   	QUANDO HOUVE SOLICITACAO :: [SOLICITANTE, [TOTAL_GERAL, [{VIZINHO : QUANTIDADE}]]]:
+   	[u'0x0000', [155, [{u'0xfffc': 124}, {u'0xe681': 1}, {u'0xf682': 2}, {u'0x9125': 2}, {u'0x0e68': 1}, {u'0xfa5c': 1}, {u'0x8267': 1}, {u'0xc0b0': 1}, {u'0x4a61': 2}, {u'0x539c': 1}, {u'0x3cf0': 1}, {u'0x418d': 1}, {u'0x811c': 1}, {u'0x343c': 2}, {u'0xd4eb': 1}, {u'0xd0a2': 1}, {u'0xaee8': 1}, {u'0xeb3b': 1}, {u'0xfa81': 1}, {u'0xdb98': 1}, {u'0x9c29': 1}, {u'0xb4cc': 1}, {u'0xac13': 1}, {u'0x4908': 1}, {u'0x8f0d': 1}, {u'0x497d': 1}, {u'0x1e29': 1}, {u'0xe805': 1}]]]
+   	QUANDO NÃO HOUVE
+   	[u'0x0687', [0, []]]
+
+    O QUE FAZER:
+    Ter um quadro "Route Request" onde você pode informar +- nessa estrutura quando houver solicitação. Vamos ver como fica.
+
+
+
+2) Route Record: Route Record grava o caminho que ele faz do "Originator" até o Destinatário. Neste caso, este pacote está
+				 associado ao nwkAdr do dstAdr, e não do srcAdr.
+    MENSAGEM:
+    QUANDO HOUVE GRAVAÇÃO :: [DESTINATOR, [TOTAL_GERAL, [{ORIGINADOR : ENDERECO, QTD_SALTOS : NUMERO, LISTA DE NOS DO SALTO : [LISTA]}], ... ]].
+    [u'0x0000', [19, [{u'originator': u'0x75cf', u'relayCount': 3, u'relayList': [u'0x7209', u'0xef31', u'0xc0b4']}, {u'originator': u'0x0e68', u'relayCount': 3, u'relayList': [u'0xdc1e', u'0x91ba', u'0x1c8d']}, {u'originator': u'0xfa5c', u'relayCount': 1, u'relayList': [u'0xc0b4']}, {u'originator': u'0xc0b0', u'relayCount': 8, u'relayList': [u'0x882d', u'0x1e29', u'0x8a13', u'0x75cf', u'0xe759', u'0xaee8', u'0x9164', u'0xc0b4']}, {u'originator': u'0xc0b0', u'relayCount': 7, u'relayList': [u'0x0521', u'0x1e29', u'0x8a13', u'0xe759', u'0xaee8', u'0x9164', u'0xc0b4']}, {u'originator': u'0xc0b0', u'relayCount': 7, u'relayList': [u'0x0521', u'0x1e29', u'0x8a13', u'0xe759', u'0xaee8', u'0x9164', u'0xc0b4']}, {u'originator': u'0xc0b0', u'relayCount': 7, u'relayList': [u'0x0521', u'0x1e29', u'0x8a13', u'0xe759', u'0xaee8', u'0x9164', u'0xc0b4']}, {u'originator': u'0xc0b0', u'relayCount': 7, u'relayList': [u'0x0521', u'0x1e29', u'0x8a13', u'0xe759', u'0xaee8', u'0x9164', u'0xc0b4']}, {u'originator': u'0x50b8', u'relayCount': 3, u'relayList': [u'0x5946', u'0xeb3b', u'0xd38b']}, {u'originator': u'0xf5cd', u'relayCount': 2, u'relayList': [u'0xa242', u'0xf954']}, {u'originator': u'0xd4eb', u'relayCount': 3, u'relayList': [u'0x7068', u'0xf902', u'0xd38b']}, {u'originator': u'0xd4eb', u'relayCount': 3, u'relayList': [u'0x7068', u'0xf902', u'0xd38b']}, {u'originator': u'0xd4eb', u'relayCount': 3, u'relayList': [u'0x7068', u'0xf902', u'0xd38b']}, {u'originator': u'0x6aa3', u'relayCount': 5, u'relayList': [u'0x359c', u'0x27a3', u'0xd41b', u'0x2fdd', u'0xe208']}, {u'originator': u'0x6aa3', u'relayCount': 5, u'relayList': [u'0x359c', u'0x27a3', u'0xd41b', u'0x2fdd', u'0xe208']}, {u'originator': u'0x66e5', u'relayCount': 3, u'relayList': [u'0xe681', u'0x2fdd', u'0xe208']}, {u'originator': u'0x4908', u'relayCount': 8, u'relayList': [u'0xbb49', u'0xac13', u'0xd6e1', u'0xf3d2', u'0xc4ca', u'0xf5cd', u'0xa242', u'0xf954']}, {u'originator': u'0x8f0d', u'relayCount': 7, u'relayList': [u'0x1baf', u'0x230f', u'0xf3d2', u'0xc4ca', u'0xf5cd', u'0xa242', u'0xf954']}, {u'originator': u'0xea25', u'relayCount': 9, u'relayList': [u'0x039c', u'0xbb49', u'0xac13', u'0xd6e1', u'0xf3d2', u'0xc4ca', u'0xf5cd', u'0xa242', u'0xf954']}]]]
+
+    QUANDO NAO HOUVER:
+    [u'0x18bf', [0, []]]
+
+    O QUE FAZER:
+    Ter um quadro "Route Record" onde você pode informar +- nessa estrutura quando houver solicitação. Vamos ver como fica.
+
+
+
+    3) Route Reply: Responde a um "Route Request".
+    MENSAGEM:
+    QUANDO HOUVE GRAVAÇÃO :: [ORIGEM, [TOTAL_GERAL, [{DESTINATARIO : QTD}]]]
+    [u'0xdb98', [1, [{u'0x0000': 1}]]]
+
+    QUANDO NÃO:
+    [u'0x7579', [0, []]]
+
+    O QUE FAZER:
+    Ter um quadro "Route Reply" onde você pode informar +- nessa estrutura quando houver solicitação. Vamos ver como fica.
+
+
+
+
+
+
+
+
+
+
+

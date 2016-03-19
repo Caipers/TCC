@@ -106,15 +106,16 @@ for node in nodes:
     
     tot_pkt += node.getPacketTotal()
 
-    node.getJSONRouteRequest()
-    node.getJSONRouteRecord()
-    node.getJSONRouteReply()
+    # print str(json.loads(node.getJSONRouteRequest()))
+    # print str(json.loads(node.getJSONRouteRecord()))
+    print str(json.loads(node.getJSONRouteReply()))
+    
 
-    # route record
-    rrc, rrl = node.getRouteRecord()
-    if (rrc != 0):
-        print node.getNwkAdr()+"s packet counter:", rrc
-        print str(rrl)
+    # # route record
+    # rrc, rrl = node.getRouteRecord()
+    # if (rrc != 0):
+    #     print node.getNwkAdr()+"s packet counter:", rrc
+    #     print str(rrl)
 
     # route request counter 
     # rrc, rrl = node.getRouteRequest()
@@ -122,6 +123,7 @@ for node in nodes:
     #     print "Node",node.getNwkAdr(),"route requested",str(rrc),"times"
     #     print "Destinations:"
     #     print str(rrl)
+    print 
 
     # if (cap.DEBUG_MODE == 1):
     #     rrc, rrl = node.getRouteReply()
