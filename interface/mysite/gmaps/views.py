@@ -15,8 +15,8 @@ import lib.geoPositioning
 
 #########################################
 script_dir = os.path.dirname(__file__)
+# PCAP_FILE = os.path.join(script_dir,'pcap_files/smaller_file.PCAP')
 PCAP_FILE = os.path.join(script_dir,'pcap_files/entire_park_05_03.PCAP')
-
 
 cap = capture.capture()
 nodes = cap.fileCapture(PCAP_FILE)

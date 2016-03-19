@@ -77,8 +77,9 @@ import json
 import lib.geoPositioning
 import os
 
-PCAP_FILE = 'pcap_files/smaller_file.PCAP'
+# PCAP_FILE = 'pcap_files/smaller_file.PCAP'
 # PCAP_FILE = 'pcap_files/bigger_file.PCAP'
+PCAP_FILE = 'pcap_files/entire_park_05_03.PCAP'
 
 cap = capture.capture()
 nodes = cap.fileCapture(PCAP_FILE)
