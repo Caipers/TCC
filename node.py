@@ -359,9 +359,13 @@ class node():
         return json.dumps([self.nwkAdr, self.macAdr, self.packet_total, self.latitude, self.longitude, self.pPreNeighbors])
     
     def saveHistoricalNeighbors(self):
-        f = file('histnb.log','a')
+        # f = file('histnb.log','a')
+
+        f = ""
 
         for dic in self.pPreNeighbors:
-            f.writelines(self.nwkAdr+';'+dic['nwkAdr']+';'+str(dic['tot_in_cost'])+';'+str(dic['tot_out_cost'])+';'+str(dic['tot_pkt'])+'\n')
+            # f.writelines(self.nwkAdr+';'+dic['nwkAdr']+';'+str(dic['tot_in_cost'])+';'+str(dic['tot_out_cost'])+';'+str(dic['tot_pkt'])+'\n')
+            f += str(self.nwkAdr+';'+dic['nwkAdr']+';'+str(dic['tot_in_cost'])+';'+str(dic['tot_out_cost'])+';'+str(dic['tot_pkt'])+'\n')
 
-        f.close()
+        # f.close()
+        return f

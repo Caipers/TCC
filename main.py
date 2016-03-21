@@ -76,85 +76,89 @@ import lib.geoPositioning
 
 # PCAP_FILE = 'pcap_files/bigger_file.PCAP'
 # PCAP_FILE = 'pcap_files/smaller_file.PCAP'
-PCAP_FILE = 'pcap_files/entire_park_05_03.PCAP'
+# PCAP_FILE = 'pcap_files/entire_park_05_03.PCAP'
+PCAP_FILE = '/home/samuel/Downloads/telit-sniffer/bin/capture.pcap'
 
 cap = capture.capture()
-nodes = cap.fileCapture(PCAP_FILE)
-
-print "Capture JSONs"
-print str(cap.getJSONCounters())
-print str(cap.getJSONPCounters())
-
-f = "/home/samuel/TCC/docs/geo_positions.csv"
-
-tot_pkt = 0
-geo = lib.geoPositioning.geoPositioning(f)
+# nodes = cap.fileCapture(PCAP_FILE)
+cap.pseudoLiveCapture(PCAP_FILE)
 
 
-print "Processing nodes..."
-for node in nodes:
-    """Node is a node object"""
 
-    values = geo.getValues(node.getMacAdr())
-    if (values == None):
-        # print "The Location of node",node.getMacAdr(),"has not been found"
-        pass
-    else:
-        node.setLocation(values["lat"], values["lon"])
-        node.setSN(values["sn"])
+# print "Capture JSONs"
+# print str(cap.getJSONCounters())
+# print str(cap.getJSONPCounters())
+
+# f = "/home/samuel/TCC/docs/geo_positions.csv"
+
+# tot_pkt = 0
+# geo = lib.geoPositioning.geoPositioning(f)
+
+
+# print "Processing nodes..."
+# for node in nodes:
+#     """Node is a node object"""
+
+#     values = geo.getValues(node.getMacAdr())
+#     if (values == None):
+#         # print "The Location of node",node.getMacAdr(),"has not been found"
+#         pass
+#     else:
+#         node.setLocation(values["lat"], values["lon"])
+#         node.setSN(values["sn"])
 
     
-    tot_pkt += node.getPacketTotal()
+#     tot_pkt += node.getPacketTotal()
 
-    # print str(json.loads(node.getJSONRouteRequest()))
-    # print str(json.loads(node.getJSONRouteRecord()))
-    print str(json.loads(node.getJSONRouteReply()))
+#     # print str(json.loads(node.getJSONRouteRequest()))
+#     # print str(json.loads(node.getJSONRouteRecord()))
+#     print str(json.loads(node.getJSONRouteReply()))
     
 
-    # # route record
-    # rrc, rrl = node.getRouteRecord()
-    # if (rrc != 0):
-    #     print node.getNwkAdr()+"s packet counter:", rrc
-    #     print str(rrl)
+#     # # route record
+#     # rrc, rrl = node.getRouteRecord()
+#     # if (rrc != 0):
+#     #     print node.getNwkAdr()+"s packet counter:", rrc
+#     #     print str(rrl)
 
-    # route request counter 
-    # rrc, rrl = node.getRouteRequest()
-    # if (node.getNwkAdr() == "0x0000"):
-    #     print "Node",node.getNwkAdr(),"route requested",str(rrc),"times"
-    #     print "Destinations:"
-    #     print str(rrl)
-    print 
+#     # route request counter 
+#     # rrc, rrl = node.getRouteRequest()
+#     # if (node.getNwkAdr() == "0x0000"):
+#     #     print "Node",node.getNwkAdr(),"route requested",str(rrc),"times"
+#     #     print "Destinations:"
+#     #     print str(rrl)
+#     print 
 
-    # if (cap.DEBUG_MODE == 1):
-    #     rrc, rrl = node.getRouteReply()
-    #     print "Node",node.getNwkAdr(),"reply requested",str(rrc),"times"
-    #     print "Destinations:"
-    #     print str(rrl)
+#     # if (cap.DEBUG_MODE == 1):
+#     #     rrc, rrl = node.getRouteReply()
+#     #     print "Node",node.getNwkAdr(),"reply requested",str(rrc),"times"
+#     #     print "Destinations:"
+#     #     print str(rrl)
         
-    # print "\t",node.getPacketTotal(),'packets of node =>',node.getNwkAdr(),node.getMacAdr()
-    # node.saveHistoricalNeighbors()
+#     # print "\t",node.getPacketTotal(),'packets of node =>',node.getNwkAdr(),node.getMacAdr()
+#     # node.saveHistoricalNeighbors()
 
-    # print "Basics of", node.getNwkAdr(),str(node.getJSONBasics())
-    # print "Current neighbors",node.getJSONCurNeighbors()
+#     # print "Basics of", node.getNwkAdr(),str(node.getJSONBasics())
+#     # print "Current neighbors",node.getJSONCurNeighbors()
     
-    # if node.isResetedNode() == True:
-    #     print "Node",node.getNwkAdr(),"is a reseted node"
+#     # if node.isResetedNode() == True:
+#     #     print "Node",node.getNwkAdr(),"is a reseted node"
 
-    # **************************************************
-    # tmp contais a 3D matrix (tmp[node][neighbors])
-    # EXAMPLES
-    # tmp[0] is the network address of this node
-    # tmp[1] is the node's historical neighbors
-    # tmp[1][0] is the first neighbor of the list of neighbors (a dictionary).
-    # tmp[1][0]['nkwAdr'] to access the network address of the first neighbor.
-    # ***************************************************
+#     # **************************************************
+#     # tmp contais a 3D matrix (tmp[node][neighbors])
+#     # EXAMPLES
+#     # tmp[0] is the network address of this node
+#     # tmp[1] is the node's historical neighbors
+#     # tmp[1][0] is the first neighbor of the list of neighbors (a dictionary).
+#     # tmp[1][0]['nkwAdr'] to access the network address of the first neighbor.
+#     # ***************************************************
 
-    # if (cap.DEBUG_MODE == 1):
-    #     tmp = json.loads(node.getJSONHistoricalNeighbors())
-    #     print json.loads(node.getJSONHistoricalNeighbors())
+#     # if (cap.DEBUG_MODE == 1):
+#     #     tmp = json.loads(node.getJSONHistoricalNeighbors())
+#     #     print json.loads(node.getJSONHistoricalNeighbors())
 
-print "Processed"
+# print "Processed"
 
-# if (cap.DEBUG_MODE == 1):
-#     print "Total of packets processed of capturing =", tot_pkt
+# # if (cap.DEBUG_MODE == 1):
+# #     print "Total of packets processed of capturing =", tot_pkt
 
