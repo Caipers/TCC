@@ -391,8 +391,13 @@ class capture():
         capture.close()
 
         # processing historical nodes
+        output = "**BEGIN**"
         for node in nodes:
             node.processPreNeighbors()
+            output += node.saveHistoricalNeighbors()
+        output += "**END**"
+        print "output:"
+        print output
 
         if (self.DEBUG_MODE == 1):
             # print requestRouteID
@@ -448,15 +453,14 @@ class capture():
         f = file(filePath, "w")
 
         while True:
-            f.truncate(0)
-            output = "**BEGIN**\n"
+            # f.truncate(0)
+            # output = "**BEGIN**\n"
             # print "Outter while"
             capture = pyshark.FileCapture(pcapFile)
 
             while True:
                 # print "Inner while"
                 aux_node = None
-
                 try:
                     # cap = capture[pktCounter]
                     # pktCounter += 1
@@ -474,6 +478,11 @@ class capture():
                                 cmd_id != "0x0a"):
                                 self.nwk_cmd_pkt_total += 1
                                 self.reserved_counter += 1
+
+                                # just testing, remove after.
+                                # if (pktCounter % 25 == 0):
+                                #     raise StopIteration("Testing")
+
                                 cap = capture[pktCounter]
                                 pktCounter += 1
                                 print "Not a valid command...",
@@ -749,6 +758,7 @@ class capture():
 
                             aux_node.setCurNeighbors(neighbors)
                             aux_node.addNpPreNeighbors()
+                            # aux_node.processPreNeighbors()
 
                         #################################################################################
                         # Not implemented because lack of packets for testing.
@@ -773,9 +783,13 @@ class capture():
                     print self.printCounters()
                     break
                 except StopIteration:
+                    print "*******StopIteration*******"
                     # processing historical nodes
+                    f.truncate(0)
+                    output = "**BEGIN**\n"
                     for node in nodes:
-                        node.processPreNeighbors()
+                        totin, totout = node.processPreNeighbors()
+                        print "processPre in and out",totin, totout
                         output += node.saveHistoricalNeighbors()
                     output += "**END**\n"
                     f.write(output)
@@ -786,11 +800,19 @@ class capture():
                     time.sleep(15)
                     break
                 except KeyError:
+                    print "*******KeyError*******"
+                    f.seek(0)
+                    f.truncate()
+                    output = "**BEGIN**\n"
                     for node in nodes:
-                        print node.getNwkAdr()
-                        node.processPreNeighbors()
+                        # print node.getNwkAdr()
+                        totin, totout = node.processPreNeighbors()
+                        # print "processPre in and out",totin, totout
                         output += node.saveHistoricalNeighbors()
                     output += "**END**\n"
+                    print "output"
+                    print str(output)
+                    print "len output = ",len(output)
                     f.write(output)
                     f.flush()
                     # f.close()

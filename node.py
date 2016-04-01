@@ -268,16 +268,16 @@ class node():
     def resetNode(self):
         """Clear all previuos data, lets node as new one. Set True in resetedNode"""
 
-        self.nwkAdr = None
-        self.macAdr = None
-        self.panAdr = None
-        self.packet_total = 0
-        self.curNeighbors = []
-        self.npPreNeighbors = [] 
-        self.pPreNeighbors = []
-        self.isResetedNode = True
-        self.routeRequestCounter = 0
-        self.routeRequestList = []
+        self.nwkAdr                 = None
+        self.macAdr                 = None
+        self.panAdr                 = None
+        self.packet_total           = 0
+        self.curNeighbors           = []
+        self.npPreNeighbors         = [] 
+        self.pPreNeighbors          = []
+        self.isResetedNode          = True
+        self.routeRequestCounter    = 0
+        self.routeRequestList       = []
 
     def getNwkAdr(self):
         return self.nwkAdr
@@ -359,13 +359,9 @@ class node():
         return json.dumps([self.nwkAdr, self.macAdr, self.packet_total, self.latitude, self.longitude, self.pPreNeighbors])
     
     def saveHistoricalNeighbors(self):
-        # f = file('histnb.log','a')
-
         f = ""
 
         for dic in self.pPreNeighbors:
-            # f.writelines(self.nwkAdr+';'+dic['nwkAdr']+';'+str(dic['tot_in_cost'])+';'+str(dic['tot_out_cost'])+';'+str(dic['tot_pkt'])+'\n')
             f += str(self.nwkAdr+';'+dic['nwkAdr']+';'+str(dic['tot_in_cost'])+';'+str(dic['tot_out_cost'])+';'+str(dic['tot_pkt'])+'\n')
 
-        # f.close()
         return f

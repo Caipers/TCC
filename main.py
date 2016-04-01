@@ -75,9 +75,9 @@ import json
 import lib.geoPositioning
 
 # PCAP_FILE = 'pcap_files/bigger_file.PCAP'
-# PCAP_FILE = 'pcap_files/smaller_file.PCAP'
+PCAP_FILE = 'pcap_files/smaller_file.PCAP'
 # PCAP_FILE = 'pcap_files/entire_park_05_03.PCAP'
-PCAP_FILE = '/home/samuel/Downloads/telit-sniffer/bin/capture.pcap'
+# PCAP_FILE = '/home/samuel/Downloads/telit-sniffer/bin/capture.pcap'
 
 cap = capture.capture()
 # nodes = cap.fileCapture(PCAP_FILE)
