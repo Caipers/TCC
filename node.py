@@ -362,6 +362,6 @@ class node():
         f = ""
 
         for dic in self.pPreNeighbors:
-            f += str(self.nwkAdr+';'+dic['nwkAdr']+';'+str(dic['tot_in_cost'])+';'+str(dic['tot_out_cost'])+';'+str(dic['tot_pkt'])+'\n')
-
+            # f += str(self.nwkAdr+';'+dic['nwkAdr']+';'+str(dic['tot_in_cost'])+';'+str(dic['tot_out_cost'])+';'+str(dic['tot_pkt'])+'\n')
+            f += str(self.nwkAdr+';'+self.macAdr+';'+str(self.packet_total)+';'+str(self.latitude)+';'+str(self.longitude)+';'+str(self.pPreNeighbors)+'\n')
         return f
