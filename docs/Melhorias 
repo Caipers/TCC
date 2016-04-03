@@ -30,7 +30,6 @@ LISTA:
 
 
 MELHORIAS --> 19/03
-
 **************************
 * Nova tela de Estatísticas.
 **************************
@@ -82,12 +81,23 @@ Em node.py:
     Ter um quadro "Route Reply" onde você pode informar +- nessa estrutura quando houver solicitação. Vamos ver como fica.
 
 
+MELHORIAS --> 03/04/2016
+PseudoLiveCapture function:
+  Função localizada em capture.pseudoLiveCapture(self, pcapFile, logPath, refresh = 15).
+  A leitura LiveCapture é armazenada em um buffer pcapFile.
+  Os resultados são atualizados a cada tempo refresh. Gravado no arquivo logPath.
+  A solução WEB deve ler esse arquivo e pegar de lá seus dados.
 
-
-
-
-
-
-
-
-
+  O resultado tem um cara assim:
+  **BEGIN**
+  0xe63d;0x0000;86;86;86
+  0xe63d;0x9ac4;86;86;86
+  0x0000;0x9ac4;90;90;90
+  0x0000;0xe63d;90;90;90
+  0x9ac4;0x0000;89;89;89
+  0x9ac4;0xe63d;89;89;89
+  PrintCounters:
+  {"tot": 1668, "0x08": 265, "0x09": 0, "0x04": 0, "0x05": 0, "0x06": 0, "0x07": 0, "0x01": 926, "0x02": 0, "0x03": 0, "nwk_cmd_tot": 1191, "0xff": 0, "0x0a": 0}
+  PrintPCounters:
+  {"tot": 360, "0x08": 265, "0x09": 0, "0x04": 0, "0x05": 0, "0x06": 0, "0x07": 0, "0x01": 95, "0x02": 0, "0x03": 0, "0xff": 0, "0x0a": 0}
+  **END**

@@ -75,13 +75,14 @@ import json
 import lib.geoPositioning
 
 # PCAP_FILE = 'pcap_files/bigger_file.PCAP'
-PCAP_FILE = 'pcap_files/smaller_file.PCAP'
+# PCAP_FILE = 'pcap_files/smaller_file.PCAP'
 # PCAP_FILE = 'pcap_files/entire_park_05_03.PCAP'
-# PCAP_FILE = '/home/samuel/Downloads/telit-sniffer/bin/capture.pcap'
+PCAP_FILE = '/home/samuel/Downloads/telit-sniffer/bin/capture.pcap'
+logPath = "/home/samuel/TCC/logs/pseudoLiveCaptureOutput.log"
 
 cap = capture.capture()
 # nodes = cap.fileCapture(PCAP_FILE)
-cap.pseudoLiveCapture(PCAP_FILE)
+cap.pseudoLiveCapture(PCAP_FILE, logPath)
 
 
 
@@ -161,4 +162,3 @@ cap.pseudoLiveCapture(PCAP_FILE)
 
 # # if (cap.DEBUG_MODE == 1):
 # #     print "Total of packets processed of capturing =", tot_pkt
-

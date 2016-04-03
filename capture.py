@@ -65,6 +65,9 @@ class capture():
         # list of Route ID for Route Reply packets
         self.routeReplyID = []
 
+        # flag
+        self.lastOK = True
+
     def fileCapture(self, pcapFile):
         # When entering in this function, the import of node module disappers. 
         # I still do not know why.
@@ -422,7 +425,7 @@ class capture():
 
         return nodes
 
-    def pseudoLiveCapture(self, pcapFile, periodRefresh = 15):
+    def pseudoLiveCapture(self, pcapFile, logPath, refresh = 15):
         """
         Pseudo-Live Capture capturing
         Save in a file 
@@ -430,43 +433,25 @@ class capture():
         import node
 
         nodes = [] # list of nodes
-        filePath = "/home/samuel/TCC/logs/pseudoLiveCaptureOutput.log"
 
         pktCounter = 0
         print "Starting..."
 
-        # waiting first packet
-        print "Waiting first packet"
-        while True:
-            try: 
-                capture = pyshark.FileCapture(pcapFile)
-                cap = capture[pktCounter]
-                pktCounter += 1
-                print "pktCounter="+str(pktCounter)
-                capture.close()
-                break
-            except KeyError:
-                print "Waiting for the first packet"
-                time.sleep(15)
-
-        print "First packet has arrived"
-        f = file(filePath, "w")
+        f = file(logPath, "w")
 
         while True:
-            # f.truncate(0)
-            # output = "**BEGIN**\n"
-            # print "Outter while"
             capture = pyshark.FileCapture(pcapFile)
 
             while True:
-                # print "Inner while"
+
                 aux_node = None
                 try:
-                    # cap = capture[pktCounter]
-                    # pktCounter += 1
-                    # print "pktCounter="+str(pktCounter)
-            
-                    while(cap is not None):
+
+                    cap = capture[pktCounter]
+                    pktCounter += 1
+                    self.lastOK = True
+                 
+                    if(self.lastOK is True):
                         try:
                             self.pkt_total += 1
                             cmd_id = self.convStrtoFF(cap.zbee_nwk.cmd_id)
@@ -479,22 +464,12 @@ class capture():
                                 self.nwk_cmd_pkt_total += 1
                                 self.reserved_counter += 1
 
-                                # just testing, remove after.
-                                # if (pktCounter % 25 == 0):
-                                #     raise StopIteration("Testing")
-
                                 cap = capture[pktCounter]
                                 pktCounter += 1
-                                print "Not a valid command...",
-                                print "pktCounter="+str(pktCounter)
                                 continue
 
                         # exception for package that HAS NOT zbee_nwk layer
                         except AttributeError:
-                            cap = capture[pktCounter]
-                            pktCounter += 1
-                            print "It has not a zbee_nwk layer...",
-                            print "pktCounter="+str(pktCounter)
                             continue
 
                         self.nwk_cmd_pkt_total += 1
@@ -549,7 +524,7 @@ class capture():
                                 self.requestRouteID.append(rID)
                                 aux_node.addRouteRequest(str(dstAdr))
 
-                        #################################################################################
+                        ################################################################################
                         # Route Reply
                         elif (cmd_id == "0x02"):
                             self.route_reply_counter += 1
@@ -774,9 +749,7 @@ class capture():
                             self.nwk_upd_counter += 1
                             # TODO
                         
-                        cap = capture[pktCounter]
-                        pktCounter += 1
-                        print "pktCounter="+str(pktCounter)
+                        
 
                 except AttributeError:
                     print "*******BUG IN PYSHARK (AttributeError)*******"
@@ -784,41 +757,60 @@ class capture():
                     break
                 except StopIteration:
                     print "*******StopIteration*******"
+                    self.lastOK = False
+
                     # processing historical nodes
-                    f.truncate(0)
-                    output = "**BEGIN**\n"
-                    for node in nodes:
-                        totin, totout = node.processPreNeighbors()
-                        print "processPre in and out",totin, totout
-                        output += node.saveHistoricalNeighbors()
-                    output += "**END**\n"
-                    f.write(output)
-                    f.flush()
-                    # f.close()
-                    print "Reading has finished"
-                    print "Waiting for more packets"
-                    time.sleep(15)
-                    break
-                except KeyError:
-                    print "*******KeyError*******"
                     f.seek(0)
                     f.truncate()
                     output = "**BEGIN**\n"
                     for node in nodes:
-                        # print node.getNwkAdr()
-                        totin, totout = node.processPreNeighbors()
-                        # print "processPre in and out",totin, totout
+                        node.processPreNeighbors()
                         output += node.saveHistoricalNeighbors()
+                    output += "PrintCounters:"
+                    output += self.getJSONCounters()
+                    output += ""
+                    output += "PrintPCounters:"
+                    output += self.getJSONPCounters()
+                    output += ""
                     output += "**END**\n"
-                    print "output"
-                    print str(output)
-                    print "len output = ",len(output)
+
+                    print "File:"
+                    print output
+
                     f.write(output)
                     f.flush()
-                    # f.close()
-                    print "KeyError has occured"
+
+                    # print "Reading has finished"
+
                     print "Waiting for more packets"
-                    time.sleep(15)
+                    time.sleep(refresh)
+                    break
+                except KeyError:
+                    print "*******KeyError*******"
+                    self.lastOK = False
+
+                    f.seek(0)
+                    f.truncate()
+                    output = "**BEGIN**\n"
+                    for node in nodes:
+                        node.processPreNeighbors()
+                        output += node.saveHistoricalNeighbors()
+                    output += "PrintCounters:\n"
+                    output += self.getJSONCounters()
+                    output += "\n"
+                    output += "PrintPCounters:\n"
+                    output += self.getJSONPCounters()
+                    output += "\n"
+                    output += "**END**\n"
+
+                    print "File:"
+                    print output
+
+                    f.write(output)
+                    f.flush()
+
+                    print "Waiting for more packets"
+                    time.sleep(refresh)
                     break
 
             print "Restarting..."

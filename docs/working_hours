@@ -89,5 +89,7 @@ Anteriores à 13/12 -> 30h Desenvolvimento de pre-projeto.
               Apresentação:
               Iniciado criação da apresentação.
 31/03  -> 2h  Melhorias na função pseudoRealTime(), ainda precisa de mais testes.
+03/04  -> 2h  Ajustes de bugs na função pseudoRealTime() e realizado testes de validação da solução.
+              Está funcionando, a princípio.
 
 
