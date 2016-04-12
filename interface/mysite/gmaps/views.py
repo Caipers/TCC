@@ -138,3 +138,26 @@ def ajax(request):
 #def showgmapsDetail(request, zone_id):
  #   zone=PointOfInterest.objects.get(id=zone_id)
  #   return render_to_response('zonendetail.html', {"zone": zone})
+
+
+def gmapse(request):
+    zone=PointOfInterest.objects.all()
+    return render(request, 'gmaps/gmapse.html', {"zone": zone})
+
+def ajax1(request):
+    script_dir1 = os.path.dirname(__file__)
+    file_path1 = os.path.join(script_dir1, 'static/gmaps/postes2.json')    
+    #data1 = []
+    #with open(file_path) as f:
+    #    for line in f:
+    #        data1.append(json.load(line))
+    json_data = open(file_path1)
+    data2 = json.load((json_data))
+    #data2 = json.dumps(json_data)
+        #f.close()
+    #json_data.close()
+    #return HttpResponse(simplejson.dumps(data1), content_type='application/json')
+    return JsonResponse(data2,safe=False)
+#def showgmapsDetail(request, zone_id):
+ #   zone=PointOfInterest.objects.get(id=zone_id)
+ #   return render_to_response('zonendetail.html', {"zone": zone})
