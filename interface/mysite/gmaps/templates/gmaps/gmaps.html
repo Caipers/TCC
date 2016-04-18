@@ -60,8 +60,10 @@
     <script>
     //botao para voltar ao estado inicial
 
-
-
+  // var delay = 30000;
+  // setTimeout(function() {
+  //   window.location.reload(true);
+  // }, delay);
 
 
 
@@ -108,15 +110,15 @@
             icon: 'http://i63.tinypic.com/2dloubl.png'
           },
           4: {
-            name: 'Baixo Custo',
+            name: 'Custo Baixo',
             icon: 'http://i66.tinypic.com/rkugw9.png'
           },
           5: {
-            name: 'Médio Custo',
+            name: 'Custo Médio',
             icon: 'http://i63.tinypic.com/ao98o3.png'
           },
           6: {
-            name: 'Alto Custo',
+            name: 'Custo Alto',
             icon: 'http://i68.tinypic.com/a9w8m1.png'
           }         
       };
@@ -519,15 +521,15 @@ function setMarker(map) {
                       if(userPos[i][5][k].tot_out_cost == 0 && userPos[i][5][k].tot_in_cost > 0)
                       {
                         //window.alert(userPos[i][5][k].tot_out_cost);
-                        infowindow1.setContent('Distância: ' + distance.toFixed(0) + ' <br>Custo de entrada: ' + (userPos[i][5][k].tot_in_cost/userPos[i][5][k].tot_pkt).toFixed(2) + '<br>Custo de saída: -');
+                        infowindow1.setContent('Distância: ' + distance.toFixed(0) + ' <br>Custo Médio de entrada: ' + (userPos[i][5][k].tot_in_cost/userPos[i][5][k].tot_pkt).toFixed(2) + '<br>Custo Médio de saída: -');
                       }
                       else if (userPos[i][5][k].tot_out_cost > 0 && userPos[i][5][k].tot_in_cost > 0)
                       {
                         //window.alert(userPos[i][5][k].tot_out_cost);
-                        infowindow1.setContent('Distância: '+ distance.toFixed(0) + '<br>Custo de entrada: ' + (userPos[i][5][k].tot_in_cost/userPos[i][5][k].tot_pkt).toFixed(2)+ '<br>Custo de saída: '+ (userPos[i][5][k].tot_out_cost/userPos[i][5][k].tot_pkt).toFixed(2));
+                        infowindow1.setContent('Distância: '+ distance.toFixed(0) + '<br>Custo Médio de entrada: ' + (userPos[i][5][k].tot_in_cost/userPos[i][5][k].tot_pkt).toFixed(2)+ '<br>Custo de saída: '+ (userPos[i][5][k].tot_out_cost/userPos[i][5][k].tot_pkt).toFixed(2));
                       }
                       else if(userPos[i][5][k].tot_in_cost == 0 && userPos[i][5][k].tot_out_cost > 0)
-                        infowindow1.setContent('Distância: '+ distance.toFixed(0)  + '<br>Custo de entrada: - '+ '<br>Custo de saída: '+ (userPos[i][5][k].tot_out_cost/userPos[i][5][k].tot_pkt).toFixed(2));
+                        infowindow1.setContent('Distância: '+ distance.toFixed(0)  + '<br>Custo Médio de entrada: - '+ '<br>Custo Médio de saída: '+ (userPos[i][5][k].tot_out_cost/userPos[i][5][k].tot_pkt).toFixed(2));
                      
                       
 
@@ -556,7 +558,7 @@ function setMarker(map) {
                   }
                  
                 }
-                infowindow.setContent('Network Adress: ' + userPos[i][0] + '<br>' +'Mac Adress: ' + userPos[i][1] + '<br>' + ' Número de vizinhos: ' + cont1 +'<br>' + "<a href='javascript:drawChart("+i+");'>Lista de Vizinhos</a>");
+                infowindow.setContent('Endereço de Rede: ' + userPos[i][0] + '<br>' +'MEndereço MAC: ' + userPos[i][1] + '<br>' + ' Número de vizinhos: ' + cont1 +'<br>' + "<a href='javascript:drawChart("+i+");'>Lista de Vizinhos</a>");
                 infowindow.open(map, marker);
                 infowindowsM.push(infowindow);
                   };
@@ -586,12 +588,12 @@ function setMarker(map) {
                
 
                 var data = new google.visualization.DataTable();
-               data.addColumn('string', 'Network Address');
-               data.addColumn('string', 'Mac Adress');
-               data.addColumn('string', 'Average In Cost');
-               data.addColumn('string', 'Average Out Cost');
-               data.addColumn('number', 'Presence Freq. (%)');
-               data.addColumn('number', 'Distance (m)');
+               data.addColumn('string', 'Endereço de Rede');
+               data.addColumn('string', 'Endereço MAC');
+               data.addColumn('string', 'Custo Médio de Entrada');
+               data.addColumn('string', 'Custo Médio de Saída');
+               data.addColumn('number', 'Assiduidade (%)');
+               data.addColumn('number', 'Distancia (m)');
               //window.alert(userPos[i][3].length);
               //var l = 0
               distances = [];

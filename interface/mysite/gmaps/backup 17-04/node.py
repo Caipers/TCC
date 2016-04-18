@@ -48,86 +48,16 @@ class node():
         self.pPreNeighbors = [] # processed previous neighbors (List of a Dictionary)
         self.ResetedNode = False
 
-        # for route request command
-        self.routeRequestCounter = 0
-        self.routeRequestList = [] # list of dicts.
-
-        # for reply request command
-        self.routeReplyCounter = 0
-        self.routeReplyList = [] # list of dicts.
-
-        # for route record command
-        self.routeRecordCounter = 0
-        self.routeRecordList = [] # list of dicts.
-
-    def addRouteRecord(self, originator, relayCount, relayList):
-        """
-        Count how much route record and store a list.
-        """
-
-        self.routeRecordCounter += 1
-        self.packet_total += 1
-
-        routeRecordEntry = {"originator" : originator, "relayCount" : relayCount, "relayList" : relayList}
-        self.routeRecordList.append(routeRecordEntry)
-
-    def addRouteRequest(self, dstAdr):
-        """
-        Count total of RouteRequest of this node and its destinations.
-        """
-
-        self.routeRequestCounter += 1
-        self.packet_total += 1
-
-        routeRequestList = self.routeRequestList
-        for rr in routeRequestList:
-            # rr is a dict -> key = dstAdr, value = counter
-            if (rr.has_key(dstAdr) == True):
-                rr[dstAdr] += 1
-                return
-
-        # if there is not a dstAdr in the list, so append it
-        routeRequestList.append({dstAdr : 1})
-
-    def addRouteReply(self, oriAdr):
-        """
-        Count total of RouteReply of this node and its originator.
-        The responder is this node.
-        """
-
-        self.routeReplyCounter += 1
-        self.packet_total += 1
-
-        routeReplyList = self.routeReplyList
-        for rr in routeReplyList:
-            # rr is a dict -> key = oriAdr, value = counter
-            if (rr.has_key(oriAdr) == True):
-                rr[oriAdr] += 1
-                return
-
-        # if there is not a oriAdr in the list, so append it
-        routeReplyList.append({oriAdr : 1})
-
-    def addNpPreNeighbors(self):
-        """
-        Add to non-processed previous neighbors of the node.
-        List of Neighbor which is a List of List of a Dictionary
-        """
-
-        self.npPreNeighbors.append(self.getCurNeighbors())
-
     def setNwkAdr(self, nwkAdr):
         if (self.r_nwkAdr.match(nwkAdr) == None or len(nwkAdr) != 6):
             raise ValueError('Incorrect nwkAdr')
 
         self.nwkAdr = nwkAdr
-
     def setMacAdr(self, macAdr):
         if (self.r_macAdr.match(macAdr) == None or len(macAdr) != 23):
             raise ValueError('Incorrect macAdr')
 
         self.macAdr = macAdr
-
     def setPanAdr(self, panAdr):
         if (self.r_panAdr.match(panAdr) == None or len(panAdr) != 6):
             raise ValueError('Incorrect panAdr')
@@ -139,7 +69,6 @@ class node():
         Return: 
             latitude, longitude : float type 
         """
-
         # for Brazilian location both values are negative.
         if (float(latitude) > 0 or float(longitude) > 0):
             raise ValueError('Latitude or Longitude are not less than 0')
@@ -158,8 +87,7 @@ class node():
         SN has 13 decimal digits
         Return:
             SN : int type
-        """
-
+        """        
         if (len(sn) != 13):
             raise ValueError('Length of the SN is different of 13')
 
@@ -174,7 +102,13 @@ class node():
         self.curNeighbors = neighbors
         self.packet_total += 1
 
-    
+    def addNpPreNeighbors(self):
+        """
+        Add to non-processed previous neighbors of the node.
+        List of Neighbor which is a List of List of a Dictionary
+        """
+
+        self.npPreNeighbors.append(self.getCurNeighbors())
 
     def processPreNeighbors(self):
         """
@@ -243,11 +177,6 @@ class node():
 
         return -1
 
-    def isResetedNode(self):
-        return self.ResetedNode
-
-    def isCoordinator(self):
-        return self.coordinator
 
     def printCurNeighbors(self):
         """Print current neighbors in stdout"""
@@ -264,87 +193,52 @@ class node():
             print '{:<3}'.format('#' + str(k)), '{:<10}'.format(neighbor['nwkAdr']), '{:<3}'.format(neighbor['in_cost']), '{:<3}'.format(neighbor['out_cost'])
             k += 1
 
-    
+    def saveHistoricalNeighbors(self):
+        f = file('histnb.log','a')
+
+        for dic in self.pPreNeighbors:
+            f.writelines(self.nwkAdr+';'+dic['nwkAdr']+';'+str(dic['tot_in_cost'])+';'+str(dic['tot_out_cost'])+';'+str(dic['tot_pkt'])+'\n')
+
+        f.close()
+
     def resetNode(self):
         """Clear all previuos data, lets node as new one. Set True in resetedNode"""
 
-        self.nwkAdr                 = None
-        self.macAdr                 = None
-        self.panAdr                 = None
-        self.packet_total           = 0
-        self.curNeighbors           = []
-        self.npPreNeighbors         = [] 
-        self.pPreNeighbors          = []
-        self.isResetedNode          = True
-        self.routeRequestCounter    = 0
-        self.routeRequestList       = []
+        self.nwkAdr = None
+        self.macAdr = None
+        self.panAdr = None
+        self.packet_total = 0
+        self.curNeighbors = []
+        self.npPreNeighbors = [] 
+        self.pPreNeighbors = []
+        self.isResetedNode = True
 
     def getNwkAdr(self):
         return self.nwkAdr
-
     def getMacAdr(self):
         return self.macAdr
-
     def getPanAdr(self):
         return self.panAdr
-
     def getLocation(self):
         return [self.latitude, self.longitude]
-
     def getSN(self):
         return self.sn
-
     def getCurNeighbors(self):
         return self.curNeighbors
-
     def getNpPreNeighbors(self):
         return self.npPreNeighbors
-
     def getHistoricalNeighbors(self):
         return self.pPreNeighbors
-
     def getPacketTotal(self):
         return self.packet_total
-
-    def getRouteRecord(self):
-        """
-        Return total counter and a list of destinations and its counters.
-        """
-        
-        return self.routeRecordCounter, self.routeRecordList
-
-    def getRouteRequest(self):
-        """
-        Return total counter and a list of destinations and its counters.
-        """
-        
-        return self.routeRequestCounter, self.routeRequestList
-
-    def getRouteReply(self):
-        """
-        Return total counter and a list of originators and its counters.
-        """
-
-        return self.routeReplyCounter, self.routeReplyList
     def getJSONBasics(self):
         """
         Return basic information in JSON format about the node which is: nwkAdr, panAdr, macAdr, coordinator latitude
         longitude, serial number
         """
-        
         return json.dumps([self.nwkAdr, self.panAdr, self.macAdr, self.coordinator, self.latitude, self.longitude, self.sn])
     def getJSONCurNeighbors(self):
         return json.dumps([self.nwkAdr, self.curNeighbors])
-
-    def getJSONRouteRequest(self):
-        return json.dumps([self.getNwkAdr(), self.getRouteRequest()])
-
-    def getJSONRouteReply(self):
-        return json.dumps([self.getNwkAdr(), self.getRouteReply()])
-
-    def getJSONRouteRecord(self):
-        return json.dumps([self.getNwkAdr(), self.getRouteRecord()])
-
     def getJSONHistoricalNeighbors(self):
         """
         Returns:
@@ -355,13 +249,8 @@ class node():
             self.longitude Longitude of the node
             self.pPreNeighbors Processed neighbors (List of dictionaries)
         """
-
         return json.dumps([self.nwkAdr, self.macAdr, self.packet_total, self.latitude, self.longitude, self.pPreNeighbors])
-    
-    def saveHistoricalNeighbors(self):
-        f = ""
-
-        for dic in self.pPreNeighbors:
-            # f += str(self.nwkAdr+';'+dic['nwkAdr']+';'+str(dic['tot_in_cost'])+';'+str(dic['tot_out_cost'])+';'+str(dic['tot_pkt'])+'\n')
-            f += str(self.nwkAdr+';'+self.macAdr+';'+str(self.packet_total)+';'+str(self.latitude)+';'+str(self.longitude)+';'+str(self.pPreNeighbors)+'\n')
-        return f
+    def isResetedNode(self):
+        return self.ResetedNode
+    def isCoordinator(self):
+        return self.coordinator

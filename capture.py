@@ -7,9 +7,7 @@ import node
 import re
 import json
 import time
-import os
 import lib.geoPositioning
-import simplejson
 
 class capture():
     """
@@ -428,7 +426,7 @@ class capture():
 
         return nodes
 
-    def pseudoLiveCapture(self, pcapFile, logPath, refresh = 15):
+    def pseudoLiveCapture(self, pcapFile, logPath, file_path ,refresh = 15):
         """
         Pseudo-Live Capture capturing
         Save in a file 
@@ -765,57 +763,19 @@ class capture():
                     # processing historical nodes
                     f.seek(0)
                     f.truncate()
-                    output = "**BEGIN**\n"
-                    script_dir = os.path.dirname(__file__)
-                   
-                    
-                    file_path = os.path.join(script_dir, 'docs/geo_positions.csv') 
-                    geo = lib.geoPositioning.geoPositioning(file_path)
-                    file_path1 = os.path.join(script_dir, 'static/gmaps/postes1.json') 
+                    #output = "**BEGIN**\n"
                     i = 0
-                    tmp=''
-                    with open(file_path1, 'w') as outfile:
-                        outfile.write('[')
-                        lim = 0 
-                        #print "Following nodes has been processed:"
-                        for node in nodes:
-                            values = geo.getValues(node.getMacAdr())
-                            # print "Values:",values
-                            if (values is None):
-                                # print "The Location of node",node.getMacAdr(),"has not been found"
-                                pass
-                            else:
-                                lim+=1
-
-                        print lim
-                        for node in nodes:
-                            values = geo.getValues(node.getMacAdr())
-                            # print "Values:",values
-                            if (values is None):
-                                # print "The Location of node",node.getMacAdr(),"has not been found"
-                                pass
-                            else:
-                                node.setLocation(values["lat"], values["lon"])
-                                node.setSN(values["sn"])
-                                tmp = json.loads(node.getJSONHistoricalNeighbors())
-                                json.dump(tmp, outfile) 
-
-                                i += 1    
-                                if (i != 0 and i != (lim)):
-                                    
-                                    outfile.write(',')
-                                #json.dump(',',outfile)
-                                #print json.loads(node.getJSONBasics())
-                                print i
-
-                            node.processPreNeighbors()
-                            output += node.saveHistoricalNeighbors()
-                        outfile.write(']')
-                       #output += "PrintCounters:"
-                        output += self.getJSONCounters()
-                        #output += ""
-                        output += "PrintPCounters:"
-                        output += self.getJSONPCounters()
+                    nodes.processPreNeighbors
+                    for node in nodes:
+                        #node.processPreNeighbors()
+                        output += node.saveHistoricalNeighbors()
+                        i+=1
+                        print i
+                    #output += "PrintCounters:"
+                    output += self.getJSONCounters()
+                    #output += ""
+                    #output += "PrintPCounters:"
+                    output += self.getJSONPCounters()
                     #output += ""
                     #output += "**END**\n"
 
@@ -836,57 +796,31 @@ class capture():
 
                     f.seek(0)
                     f.truncate()
-                    output = "**BEGIN**\n"
-                    script_dir = os.path.dirname(__file__)
-                   
-                    file_path = os.path.join(script_dir, 'docs/geo_positions.csv') 
+                    i=0
                     geo = lib.geoPositioning.geoPositioning(file_path)
-                    file_path1 = os.path.join(script_dir, 'static/gmaps/postes1.json') 
-                    i = 0
-                    tmp=''
-                    with open(file_path1, 'w') as outfile:
-                        outfile.write('[')
-                        lim = 0 
-                        #print "Following nodes has been processed:"
-                        for node in nodes:
-                            values = geo.getValues(node.getMacAdr())
-                            # print "Values:",values
-                            if (values is None):
-                                # print "The Location of node",node.getMacAdr(),"has not been found"
-                                pass
-                            else:
-                                lim+=1
-
-                        print lim
-                        for node in nodes:
-                            values = geo.getValues(node.getMacAdr())
-                            # print "Values:",values
-                            if (values is None):
-                                # print "The Location of node",node.getMacAdr(),"has not been found"
-                                pass
-                            else:
-                                node.setLocation(values["lat"], values["lon"])
-                                node.setSN(values["sn"])
-                                tmp = json.loads(node.getJSONHistoricalNeighbors())
-                                json.dump(tmp, outfile) 
-
-                                i += 1    
-                                if (i != 0 and i != (lim)):
-                                    
-                                    outfile.write(',')
-                                #json.dump(',',outfile)
-                                #print json.loads(node.getJSONBasics())
-                                print i
-
+                    #output = "**BEGIN**\n"
+                    output = '['
+                    for node in nodes:
+                        values = geo.getValues(node.getMacAdr())
+                        if (values is None):
+                            pass
+                        else:
+                            node.setLocation(values["lat"], values["lon"])
+                            node.setSN(values["sn"])
                             node.processPreNeighbors()
-                            output += node.saveHistoricalNeighbors()
-                        outfile.write(']')
-                       #output += "PrintCounters:"
-                        output += self.getJSONCounters()
-                        #output += ""
-                        output += "PrintPCounters:"
-                        output += self.getJSONPCounters()
-                    #output += ""
+                            output += node.getJSONHistoricalNeighbors()
+                            output += ','
+                            i+=1
+                            print i
+                    #output += "PrintCounters:\n"
+                    output += self.getJSONCounters()
+                    output += ','
+                    #output += "\n"
+                    #output += "PrintPCounters:\n"
+                    output += self.getJSONPCounters()
+                    output += ']'
+
+                    #output += "\n"
                     #output += "**END**\n"
 
                     #print "File:"

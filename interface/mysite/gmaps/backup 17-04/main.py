@@ -69,101 +69,90 @@
 # OBS: Implica que o NWK_SRC tem como vizinhos todos esses nos.
 # ******************************************************************************************
 
+
+
 import pyshark
 import capture
 import json
 import lib.geoPositioning
 import os
 
-# PCAP_FILE = 'pcap_files/bigger_file.PCAP'
 # PCAP_FILE = 'pcap_files/smaller_file.PCAP'
-# PCAP_FILE = 'pcap_files/entire_park_05_03.PCAP'
-script_dir = os.path.dirname(__file__)
-PCAP_FILE = os.path.join(script_dir,'pcap_files/entire_park_05_03.PCAP')
-
-logPath = os.path.join(script_dir,'logs/pseudoLiveCaptureOutput.log')
-file_path = os.path.join(script_dir, 'docs/geo_positions.csv') 
-file_path1 = os.path.join(script_dir, 'static/gmaps/postes1.json')
+# PCAP_FILE = 'pcap_files/bigger_file.PCAP'
+PCAP_FILE = 'pcap_files/entire_park_05_03.PCAP'
 
 cap = capture.capture()
-# nodes = cap.fileCapture(PCAP_FILE)
-cap.pseudoLiveCapture(PCAP_FILE, file_path1, file_path)
+nodes = cap.fileCapture(PCAP_FILE)
 
+# f = file('nodes.log', 'w')
+script_dir = os.path.dirname(__file__)
+file_path = os.path.join(script_dir, 'docs/geo_positions.csv') 
+f = file_path
+tot_in = 0
+tot_out = 0
+tot_pkt = 0
+geo = lib.geoPositioning.geoPositioning(f)
+i = 0
 
+with open('postes.json', 'w') as outfile:
+	#json.dump(dash1,outfile)
+	outfile.write('[')
+	lim = len(nodes)  
+	print "Following nodes has been processed:"
 
-# print "Capture JSONs"
-# print str(cap.getJSONCounters())
-# print str(cap.getJSONPCounters())
+	for node in nodes:
+	    """Node is a node object"""
+	    print "Processing nodes"
+	    i += 1
 
-# f = "/home/samuel/TCC/docs/geo_positions.csv"
+	    # print "Setting node positions"
+	    values = geo.getValues(node.getMacAdr())
+	    # print "Values:",values
+	    if (values == None):
+	        # print "The Location of node",node.getMacAdr(),"has not been found"
+	        pass
+	    else:
+	        node.setLocation(values["lat"], values["lon"])
+	        node.setSN(values["sn"])
+	        # print "Node",node.getMacAdr(),"has",node.getLocation(),"and following SN",node.getSN()
 
-# tot_pkt = 0
-# geo = lib.geoPositioning.geoPositioning(f)
+	    
+	    # t_in, t_out = node.processPreNeighbors()
+	    tot_pkt += node.getPacketTotal()
+	    # tot_in += t_in
+	    # tot_out += t_out
 
+	    # print "\t",node.getPacketTotal(),'packets of node =>',node.getNwkAdr(),node.getMacAdr()
+	    # node.saveHistoricalNeighbors()
 
-# print "Processing nodes..."
-# for node in nodes:
-#     """Node is a node object"""
+	    # print "Basics of", node.getNwkAdr(),str(node.getJSONBasics())
+	    # print "Current neighbors",node.getJSONCurNeighbors()
+	    
+	    # if node.isResetedNode() == True:
+	    #     print "Node",node.getNwkAdr(),"is a reseted node"
 
-#     values = geo.getValues(node.getMacAdr())
-#     if (values == None):
-#         # print "The Location of node",node.getMacAdr(),"has not been found"
-#         pass
-#     else:
-#         node.setLocation(values["lat"], values["lon"])
-#         node.setSN(values["sn"])
+	    # **************************************************
+	    # tmp contais a 3D matrix (tmp[node][neighbors])
+	    # EXAMPLES
+	    # tmp[0] is the network address of this node
+	    # tmp[1] is the node's historical neighbors
+	    # tmp[1][0] is the first neighbor of the list of neighbors (a dictionary).
+	    # tmp[1][0]['nkwAdr'] to access the network address of the first neighbor.
+	    tmp = json.loads(node.getJSONHistoricalNeighbors())
+	    # ***************************************************
+	    
+	    json.dump(tmp, outfile)	
+	    if (i != 0 and i != lim):
+	    	outfile.write(',')
+	    #json.dump(',',outfile)
+	    #print json.loads(node.getJSONBasics())
+	    print i
+	#json.dump(dash2,outfile)
 
-    
-#     tot_pkt += node.getPacketTotal()cama
+	# print "Total of cost of incoming cost of all nodes =", tot_in
+	# print "Total of cost of outcoming cost of all nodes =", tot_out
+	outfile.write(']')
+	# print "Printing GEO list:\n"
+	# geo.printList()
+	print "Total of packets processed of capturing =", tot_pkt
 
-#     # print str(json.loads(node.getJSONRouteRequest()))
-#     # print str(json.loads(node.getJSONRouteRecord()))
-#     print str(json.loads(node.getJSONRouteReply()))
-    
-
-#     # # route record
-#     # rrc, rrl = node.getRouteRecord()
-#     # if (rrc != 0):
-#     #     print node.getNwkAdr()+"s packet counter:", rrc
-#     #     print str(rrl)
-
-#     # route request counter 
-#     # rrc, rrl = node.getRouteRequest()
-#     # if (node.getNwkAdr() == "0x0000"):
-#     #     print "Node",node.getNwkAdr(),"route requested",str(rrc),"times"
-#     #     print "Destinations:"
-#     #     print str(rrl)
-#     print 
-
-#     # if (cap.DEBUG_MODE == 1):
-#     #     rrc, rrl = node.getRouteReply()
-#     #     print "Node",node.getNwkAdr(),"reply requested",str(rrc),"times"
-#     #     print "Destinations:"
-#     #     print str(rrl)
-        
-#     # print "\t",node.getPacketTotal(),'packets of node =>',node.getNwkAdr(),node.getMacAdr()
-#     # node.saveHistoricalNeighbors()
-
-#     # print "Basics of", node.getNwkAdr(),str(node.getJSONBasics())
-#     # print "Current neighbors",node.getJSONCurNeighbors()
-    
-#     # if node.isResetedNode() == True:
-#     #     print "Node",node.getNwkAdr(),"is a reseted node"
-
-#     # **************************************************
-#     # tmp contais a 3D matrix (tmp[node][neighbors])
-#     # EXAMPLES
-#     # tmp[0] is the network address of this node
-#     # tmp[1] is the node's historical neighbors
-#     # tmp[1][0] is the first neighbor of the list of neighbors (a dictionary).
-#     # tmp[1][0]['nkwAdr'] to access the network address of the first neighbor.
-#     # ***************************************************
-
-#     # if (cap.DEBUG_MODE == 1):
-#     #     tmp = json.loads(node.getJSONHistoricalNeighbors())
-#     #     print json.loads(node.getJSONHistoricalNeighbors())
-
-# print "Processed"
-
-# # if (cap.DEBUG_MODE == 1):
-# #     print "Total of packets processed of capturing =", tot_pkt
