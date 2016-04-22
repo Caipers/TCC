@@ -125,6 +125,38 @@
 
 
 
+function reloadPage(reloadDiv,map){
+                var reloadUI = document.createElement('div');
+                reloadUI.style.backgroundColor = '#fff';
+                reloadUI.style.border = '2px solid #fff';
+                reloadUI.style.borderRadius = '3px';
+                reloadUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
+                reloadUI.style.cursor = 'pointer';
+                reloadUI.style.marginBottom = '22px';
+                reloadUI.style.textAlign = 'center';
+                reloadUI.title = 'Clique para regarregar a página';
+                reloadDiv.appendChild(reloadUI);
+
+                // Set CSS for the control interior.
+                var reloadText = document.createElement('div');
+                reloadText.style.color = 'rgb(25,25,25)';
+                reloadText.style.fontFamily = 'Roboto,Arial,sans-serif';
+                reloadText.style.fontSize = '16px';
+                reloadText.style.lineHeight = '38px';
+                reloadText.style.paddingLeft = '5px';
+                reloadText.style.paddingRight = '5px';
+                reloadText.innerHTML = 'Recarregar Página';
+                reloadUI.appendChild(reloadText);
+
+                // Setup the click event listeners: simply set the map to Chicago.
+                reloadUI.addEventListener('click', function() {
+                  window.location.reload(true);
+                });
+
+}
+
+
+
 function CenterControl(controlDiv, map) {
   $.getJSON('http://localhost:8000/gmaps/api/postes', function(userPos) {
                 // Set CSS for the control border.
@@ -899,12 +931,18 @@ function initMap() {
      //window.alert(6);
      //window.alert(postes[0][1]);
 
+    var reload = document.createElement('div');
+    var reloadpage = new reloadPage(reload, map);
+    map.controls[google.maps.ControlPosition.LEFT_TOP].push(reload);
 
     var centerControlDiv = document.createElement('div');
     var centerControl = new CenterControl(centerControlDiv, map);
+    
 
     //centerControlDiv.index = 1;
     map.controls[google.maps.ControlPosition.LEFT_TOP].push(centerControlDiv);
+
+    
  
   var legend = document.getElementById('legend');
         for (var key in icons) {
