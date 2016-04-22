@@ -426,7 +426,7 @@ class capture():
 
         return nodes
 
-    def pseudoLiveCapture(self, pcapFile, logPath, file_path ,refresh = 15):
+    def pseudoLiveCapture(self, pcapFile, logPath, logPath1 ,file_path ,refresh = 15):
         """
         Pseudo-Live Capture capturing
         Save in a file 
@@ -439,6 +439,7 @@ class capture():
         print "Starting..."
 
         f = file(logPath, "w")
+        f1 = file(logPath1, "w")
 
         while True:
             capture = pyshark.FileCapture(pcapFile)
@@ -772,50 +773,6 @@ class capture():
                         if (values is None):
                             pass
                         else:
-                            node.setLocation(values["lat"], values["lon"])
-                            node.setSN(values["sn"])
-                            node.processPreNeighbors()
-                            output += node.getJSONHistoricalNeighbors()
-                            output += ','
-                            i+=1
-                            print i
-                    #output += "PrintCounters:\n"
-                    output += self.getJSONCounters()
-                    output += ','
-                    #output += "\n"
-                    #output += "PrintPCounters:\n"
-                    output += self.getJSONPCounters()
-                    output += ']'
-
-                    #output += "\n"
-                    #output += "**END**\n"
-
-                    #print "File:"
-                    #print output
-
-                    f.write(output)
-                    f.flush()
-
-                    # print "Reading has finished"
-
-                    print "Waiting for more packets"
-                    time.sleep(refresh)
-                    break
-                except KeyError:
-                    print "*******KeyError*******"
-                    self.lastOK = False
-
-                    f.seek(0)
-                    f.truncate()
-                    i=0
-                    geo = lib.geoPositioning.geoPositioning(file_path)
-                    #output = "**BEGIN**\n"
-                    output = '['
-                    for node in nodes:
-                        values = geo.getValues(node.getMacAdr())
-                        if (values is None):
-                            pass
-                        else:
                             i+=1
                             print i
                     j=0
@@ -848,6 +805,63 @@ class capture():
                     #print output
 
                     f.write(output)
+                    f.flush()
+
+                    print "Waiting for more packets"
+                    print "Waiting for more packets"
+                    time.sleep(refresh)
+                    break
+                except KeyError:
+                    print "*******KeyError*******"
+                    self.lastOK = False
+
+                    f.seek(0)
+                    f1.seek(0)
+                    f.truncate()
+                    f1.truncate()
+                    i=0
+                    geo = lib.geoPositioning.geoPositioning(file_path)
+                    #output = "**BEGIN**\n"
+                    output1 ='['
+                    output = '['
+                    for node in nodes:
+                        values = geo.getValues(node.getMacAdr())
+                        if (values is None):
+                            pass
+                        else:
+                            i+=1
+                            print i
+                    j=0
+                    for node in nodes:
+                        values = geo.getValues(node.getMacAdr())
+                        if (values is None):
+                            pass
+                        else:
+                            node.setLocation(values["lat"], values["lon"])
+                            node.setSN(values["sn"])
+                            node.processPreNeighbors()
+                            output += node.getJSONHistoricalNeighbors()
+                            j+=1
+                            if j < i:
+                                output += ','
+                            
+                    
+                    #output += "PrintCounters:\n"
+                    output1 += self.getJSONCounters()
+                    #output += ','
+                    output1 += ","
+                    #output += "PrintPCounters:\n"
+                    output1 += self.getJSONPCounters()
+                    output1 += ']'
+
+                    #output += "\n"
+                    #output += "**END**\n"
+
+                    #print "File:"
+                    print output1
+                    f1.write(output1)
+                    f.write(output)
+                    f1.flush()
                     f.flush()
 
                     print "Waiting for more packets"
