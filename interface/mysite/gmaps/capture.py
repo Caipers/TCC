@@ -845,7 +845,7 @@ class capture():
                             if j < i:
                                 output += ','
                             
-                    
+                    output += ']'
                     #output += "PrintCounters:\n"
                     output1 += self.getJSONCounters()
                     #output += ','

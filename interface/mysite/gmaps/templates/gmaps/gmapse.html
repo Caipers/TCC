@@ -5,153 +5,77 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
-    <title>ZigMonitor Interface</title>
+    <title>Estatísticas</title>
     <style>
     html, body {
         height: 100%;
         margin: 0;
         padding: 0;
       }
-      
+ 	#table_div{
+  }
 
-      #map {
-        height: 100%;
-        
-      }
-       #legend {
-        font-family: Arial, sans-serif;
-        background: #fff;
-        padding: 10px;
-        margin: 10px;
-        border: 3px solid #000;
-      }
-      #legend h3 {
-        margin-top: 0;
-      }
-      #legend img {
-        vertical-align: middle;
-      }
-
-
-    
-      #table_div{}
-      #closeButton {
-    float:right;
-    display:inline-block;
-    padding:2px 5px;
-    background:#ccc;
-}
        
     </style>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     
   </head>
   <body>
-   
-    <div id="map"></div>
-
-
-    <a class="fragment">
-    <button id="closeButton">X</button>
-     <div id="table_div"> </div>
-     </a>
-
-    <div id="legend"><h3>Legenda</h3></div>
-    <script>
-    //botao para voltar ao estado inicial
-
-
-
-
-
-
-
-    //botao para fechar a tabela
-     document.getElementById('closeButton').addEventListener('click', function(e) {
-    /*e.preventDefault();
-    this.parentNode.style.display = 'none';*/
-    $('#table_div').slideUp();
-    $('#closeButton').hide();
-}, false);
-
-
-    google.charts.load('current', {'packages':['table']});
+  <div id="table_div"> </div>
+     
+  <script>
     
+  google.load('visualization', '1.0', {'packages':['table']});
+
+  
+//window.alert("1")
+
+  google.setOnLoadCallback(drawChart);
 
 
-function CenterControl(controlDiv, map) {
-  $.getJSON('http://localhost:8000/gmaps/api/postes', function(userPos) {
-                // Set CSS for the control border.
-                var controlUI = document.createElement('div');
-                controlUI.style.backgroundColor = '#fff';
-                controlUI.style.border = '2px solid #fff';
-                controlUI.style.borderRadius = '3px';
-                controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
-                controlUI.style.cursor = 'pointer';
-                controlUI.style.marginBottom = '22px';
-                controlUI.style.textAlign = 'center';
-                controlUI.title = 'Clique para voltar ao estado inicial';
-                controlDiv.appendChild(controlUI);
+  //drawChart();
 
-                // Set CSS for the control interior.
-                var controlText = document.createElement('div');
-                controlText.style.color = 'rgb(25,25,25)';
-                controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
-                controlText.style.fontSize = '16px';
-                controlText.style.lineHeight = '38px';
-                controlText.style.paddingLeft = '5px';
-                controlText.style.paddingRight = '5px';
-                controlText.innerHTML = 'Estado Inicial';
-                controlUI.appendChild(controlText);
+  function drawChart() {
 
-                // Setup the click event listeners: simply set the map to Chicago.
-                controlUI.addEventListener('click', function() {
-                                  
-                });
-            });
-          }
-/*Execução*/
-
-
-
-
-        function drawChart(i) {
-
-          $.getJSON('http://localhost:8000/gmaps/api1/postes', function(XXXXX) {
-            $('#table_div').slideDown();
-            $('#closeButton').show();
-              
-
-                var data = new google.visualization.DataTable();
-               data.addColumn('string', 'Network Address');
-               data.addColumn('string', 'Mac Adress');
-               data.addColumn('string', 'Average In Cost');
-               data.addColumn('string', 'Average Out Cost');
-               data.addColumn('number', 'Presence Freq. (%)');
-               data.addColumn('number', 'Distance (m)');
-              //window.alert(userPos[i][3].length);
-              //var l = 0
+          $.getJSON('http://localhost:8000/gmaps/api1/postes', function(userPos) {
             
-            }
-              /*
-              function myclick(i) {
+              
+              //window.alert(userPos[0]["0x08"]);
+              //window.alert(userPos.length);
+              //window.alert(userPos[0][3].length);
+                 // Create the data table.
+                          //window.alert('oi');
+               var data = new google.visualization.DataTable();
+               data.addColumn('string', ' ');
+               data.addColumn('number', 'Requisição de Rota (0x01)');
+               data.addColumn('number', 'Resposta de Rota (0x02)');
+               data.addColumn('number', 'Registro de Rota (0x05)');
+               data.addColumn('number', 'Estado da Ligação(0x08)');
+               data.addColumn('string', 'Total de comandos');
+               data.addColumn('number', 'Total');
 
-                var info = new google.maps.InfoWindow(),i;
-                //removeWindow();
-                 //window.alert(i);
-                  //IMPORTANTEEEEE google.maps.event.trigger(overviewMarkers[i+1], "click");
+                data.addRow(["Totais", userPos[0]["0x01"], userPos[0]["0x02"] ,userPos[0]["0x05"], userPos[0]["0x08"],String(userPos[0]["nwk_cmd_tot"]),userPos[0]["tot"]]);
+                data.addRow(["Processados", userPos[1]["0x01"], userPos[1]["0x02"], userPos[1]["0x05"] , userPos[1]["0x08"], '-' ,userPos[1]["tot"]]);
 
-                 info.setContent('<table><tr><td>1.1</td><td>1.2</td></tr><tr><td>2.1</td><td>2.2</td></tr></table>');
-                 Lat1 = -25.384553;
-                 Lon1 = -49.263350;
-                 var position1 = new google.maps.LatLng(mLat,mLon);
-                 info.setPosition(position1);
-                 info.open(map);
-                 infowindows.push(info);
-                 setWindow();
-                 
-              } */
+                 var node        = document.getElementById('table_div');
+                 var table = new google.visualization.Table(node);
+                 table.draw(data, { title: 'Estatísticas dos Pacotes Captados', width: '100%', height: '100%'});
 
+
+               
+
+          });
+
+        }
+
+
+
+   
+
+
+ 
 
 
               
