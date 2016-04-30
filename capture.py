@@ -7,6 +7,7 @@ import node
 import re
 import json
 import time
+import lib.geoPositioning
 
 class capture():
     """
@@ -425,7 +426,7 @@ class capture():
 
         return nodes
 
-    def pseudoLiveCapture(self, pcapFile, logPath, refresh = 15):
+    def pseudoLiveCapture(self, pcapFile, logPath, logPath1 ,file_path ,refresh = 15):
         """
         Pseudo-Live Capture capturing
         Save in a file 
@@ -438,6 +439,7 @@ class capture():
         print "Starting..."
 
         f = file(logPath, "w")
+        f1 = file(logPath1, "w")
 
         while True:
             capture = pyshark.FileCapture(pcapFile)
@@ -762,26 +764,50 @@ class capture():
                     # processing historical nodes
                     f.seek(0)
                     f.truncate()
-                    output = "**BEGIN**\n"
+                    i=0
+                    geo = lib.geoPositioning.geoPositioning(file_path)
+                    #output = "**BEGIN**\n"
+                    output = '['
                     for node in nodes:
-                        node.processPreNeighbors()
-                        output += node.saveHistoricalNeighbors()
-                    output += "PrintCounters:"
-                    output += self.getJSONCounters()
-                    output += ""
-                    output += "PrintPCounters:"
-                    output += self.getJSONPCounters()
-                    output += ""
-                    output += "**END**\n"
+                        values = geo.getValues(node.getMacAdr())
+                        if (values is None):
+                            pass
+                        else:
+                            i+=1
+                            print i
+                    j=0
+                    for node in nodes:
+                        values = geo.getValues(node.getMacAdr())
+                        if (values is None):
+                            pass
+                        else:
+                            node.setLocation(values["lat"], values["lon"])
+                            node.setSN(values["sn"])
+                            node.processPreNeighbors()
+                            output += node.getJSONHistoricalNeighbors()
+                            j+=1
+                            if j < i:
+                                output += ','
+                            
+                    
+                    #output += "PrintCounters:\n"
+                    #output += self.getJSONCounters()
+                    #output += ','
+                    #output += "\n"
+                    #output += "PrintPCounters:\n"
+                    #output += self.getJSONPCounters()
+                    output += ']'
 
-                    print "File:"
-                    print output
+                    #output += "\n"
+                    #output += "**END**\n"
+
+                    #print "File:"
+                    #print output
 
                     f.write(output)
                     f.flush()
 
-                    # print "Reading has finished"
-
+                    print "Waiting for more packets"
                     print "Waiting for more packets"
                     time.sleep(refresh)
                     break
@@ -790,23 +816,52 @@ class capture():
                     self.lastOK = False
 
                     f.seek(0)
+                    f1.seek(0)
                     f.truncate()
-                    output = "**BEGIN**\n"
+                    f1.truncate()
+                    i=0
+                    geo = lib.geoPositioning.geoPositioning(file_path)
+                    #output = "**BEGIN**\n"
+                    output1 ='['
+                    output = '['
                     for node in nodes:
-                        node.processPreNeighbors()
-                        output += node.saveHistoricalNeighbors()
-                    output += "PrintCounters:\n"
-                    output += self.getJSONCounters()
-                    output += "\n"
-                    output += "PrintPCounters:\n"
-                    output += self.getJSONPCounters()
-                    output += "\n"
-                    output += "**END**\n"
+                        values = geo.getValues(node.getMacAdr())
+                        if (values is None):
+                            pass
+                        else:
+                            i+=1
+                            print i
+                    j=0
+                    for node in nodes:
+                        values = geo.getValues(node.getMacAdr())
+                        if (values is None):
+                            pass
+                        else:
+                            node.setLocation(values["lat"], values["lon"])
+                            node.setSN(values["sn"])
+                            node.processPreNeighbors()
+                            output += node.getJSONHistoricalNeighbors()
+                            j+=1
+                            if j < i:
+                                output += ','
+                            
+                    output += ']'
+                    #output += "PrintCounters:\n"
+                    output1 += self.getJSONCounters()
+                    #output += ','
+                    output1 += ","
+                    #output += "PrintPCounters:\n"
+                    output1 += self.getJSONPCounters()
+                    output1 += ']'
 
-                    print "File:"
-                    print output
+                    #output += "\n"
+                    #output += "**END**\n"
 
+                    #print "File:"
+                    print output1
+                    f1.write(output1)
                     f.write(output)
+                    f1.flush()
                     f.flush()
 
                     print "Waiting for more packets"
