@@ -73,16 +73,22 @@ import pyshark
 import capture
 import json
 import lib.geoPositioning
+import os
 
 # PCAP_FILE = 'pcap_files/bigger_file.PCAP'
 # PCAP_FILE = 'pcap_files/smaller_file.PCAP'
 # PCAP_FILE = 'pcap_files/entire_park_05_03.PCAP'
-PCAP_FILE = '/home/samuel/Downloads/telit-sniffer/bin/capture.pcap'
-logPath = "/home/samuel/TCC/logs/pseudoLiveCaptureOutput.log"
+script_dir = os.path.dirname(__file__)
+PCAP_FILE = os.path.join(script_dir,'pcap_files/entire_park_05_03.PCAP')
+
+logPath = os.path.join(script_dir,'logs/pseudoLiveCaptureOutput.log')
+file_path = os.path.join(script_dir, 'docs/geo_positions.csv') 
+file_path1 = os.path.join(script_dir, 'static/gmaps/postes1.json')
+file_path2 = os.path.join(script_dir, 'static/gmaps/postes2.json')
 
 cap = capture.capture()
 # nodes = cap.fileCapture(PCAP_FILE)
-cap.pseudoLiveCapture(PCAP_FILE, logPath)
+cap.pseudoLiveCapture(PCAP_FILE, file_path1, file_path2, file_path)
 
 
 
@@ -109,7 +115,7 @@ cap.pseudoLiveCapture(PCAP_FILE, logPath)
 #         node.setSN(values["sn"])
 
     
-#     tot_pkt += node.getPacketTotal()
+#     tot_pkt += node.getPacketTotal()cama
 
 #     # print str(json.loads(node.getJSONRouteRequest()))
 #     # print str(json.loads(node.getJSONRouteRecord()))
