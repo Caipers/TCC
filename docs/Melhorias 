@@ -101,3 +101,25 @@ PseudoLiveCapture function:
   PrintPCounters:
   {"tot": 360, "0x08": 265, "0x09": 0, "0x04": 0, "0x05": 0, "0x06": 0, "0x07": 0, "0x01": 95, "0x02": 0, "0x03": 0, "0xff": 0, "0x0a": 0}
   **END**
+
+
+
+MELHORIAS --> 08/05/2016
+1) No Mapa:
+Quando clicado no botão "Estatística" abrir uma nova aba.
+
+2) Na página de Estatística:
+2.1) Colocar nomes de pacotes em Inglês.
+2.2) Na tabela com os totais dos pacotes:
+2.2.1) Alinhar central todos os dados
+2.2.2) Diminuir altura, e tentar otimizar o tamanho dos dados
+2.2.3) Remover coluna "Total de comandos"
+2.3) No gráfico de Pacotes Captados : Total:
+2.3.1) Não é mostrado os labels completos.
+2.3.2) Está mostrando Total de comandos, removê-lo.
+2.4) No gráfico de Pacotes Captados : Processados:
+2.4.1) Remover os números dos pacotes (ex: 0x01, etc)
+2.5) Nas 3 tabelas posteriores (de Pacotes):
+2.5.1) Remover as linhas onde não há informações
+2.5.2) Ajustar as linhas onde há descrição "Object".
+
