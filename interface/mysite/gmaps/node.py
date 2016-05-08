@@ -332,18 +332,18 @@ class node():
         longitude, serial number
         """
         
-        return json.dumps([self.nwkAdr, self.panAdr, self.macAdr, self.coordinator, self.latitude, self.longitude, self.sn])
+        return self.nwkAdr, self.panAdr, self.macAdr, self.coordinator, self.latitude, self.longitude, self.sn
     def getJSONCurNeighbors(self):
-        return json.dumps([self.nwkAdr, self.curNeighbors])
+        return self.nwkAdr, self.curNeighbors
 
     def getJSONRouteRequest(self):
-        return json.dumps([self.getNwkAdr(), self.getRouteRequest()])
+        return json.dumps([self.nwkAdr, self.getRouteRequest()])
 
     def getJSONRouteReply(self):
-        return json.dumps([self.getNwkAdr(), self.getRouteReply()])
+        return json.dumps([self.nwkAdr, self.getRouteReply()])
 
     def getJSONRouteRecord(self):
-        return json.dumps([self.getNwkAdr(), self.getRouteRecord()])
+        return json.dumps([self.nwkAdr, self.getRouteRecord()])
 
     def getJSONHistoricalNeighbors(self):
         """

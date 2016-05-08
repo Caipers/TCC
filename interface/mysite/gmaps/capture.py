@@ -426,7 +426,7 @@ class capture():
 
         return nodes
 
-    def pseudoLiveCapture(self, pcapFile, logPath, logPath1 ,file_path ,refresh = 15):
+    def pseudoLiveCapture(self, pcapFile, logPath, logPath1, logPath2 ,file_path ,refresh = 15):
         """
         Pseudo-Live Capture capturing
         Save in a file 
@@ -440,6 +440,7 @@ class capture():
 
         f = file(logPath, "w")
         f1 = file(logPath1, "w")
+        f2 = file(logPath2, "w")
 
         while True:
             capture = pyshark.FileCapture(pcapFile)
@@ -819,11 +820,16 @@ class capture():
                     f1.seek(0)
                     f.truncate()
                     f1.truncate()
+                    f2.seek(0)
+                    f2.truncate()
                     i=0
                     geo = lib.geoPositioning.geoPositioning(file_path)
                     #output = "**BEGIN**\n"
                     output1 ='['
                     output = '['
+                    
+
+
                     for node in nodes:
                         values = geo.getValues(node.getMacAdr())
                         if (values is None):
@@ -847,22 +853,77 @@ class capture():
                             
                     output += ']'
                     #output += "PrintCounters:\n"
+                    output2 = '['
+                    output2 += '['
+                    
+                    l=0
+
+                    for node in nodes:
+                        l+=1
+                        
+                    m=0
+
+                    for node in nodes: 
+                        m+= 1
+                        output2 +=  node.getJSONRouteRequest()
+                        if(m<l):
+                            output2 += ','
+                    
+                    output2 += ']'
+                    output2 += ','
+                    output2 += '['
+
+                    l=0
+                    for node in nodes:
+                        l+=1
+                        
+                    m=0
+
+                    for node in nodes: 
+                        m+= 1
+                        output2 +=  node.getJSONRouteReply()
+                        if(m<l):
+                            output2 += ','
+                    
+                    output2 += ']'
+                    output2 += ','
+                    output2 += '['
+                    l = 0
+                    for node in nodes:
+                        l+=1
+                        
+                    m=0
+
+                    for node in nodes: 
+                        m+= 1
+                        output2 +=  node.getJSONRouteRecord()
+                        if(m<l):
+                            output2 += ','
+
+                    output2 += ']'
+
+                    output2 += ']'
+                    
+
                     output1 += self.getJSONCounters()
                     #output += ','
                     output1 += ","
-                    #output += "PrintPCounters:\n"
                     output1 += self.getJSONPCounters()
+                    #output += "PrintPCounters:\n"
                     output1 += ']'
 
                     #output += "\n"
                     #output += "**END**\n"
 
                     #print "File:"
-                    print output1
+                    print output2
+                    f2.write(output2)
                     f1.write(output1)
                     f.write(output)
+                    f2.flush()
                     f1.flush()
                     f.flush()
+                    
 
                     print "Waiting for more packets"
                     time.sleep(refresh)

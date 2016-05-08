@@ -58,11 +58,23 @@ def ajax1(request):
     #        data1.append(json.load(line))
     json_data = open(file_path1)
     data2 = json.load((json_data))
+    return JsonResponse(data2,safe=False)
+
+
+def ajax2(request):
+    script_dir2 = os.path.dirname(__file__)
+    file_path2 = os.path.join(script_dir2, 'static/gmaps/postes3.json')    
+    #data1 = []
+    #with open(file_path) as f:
+    #    for line in f:
+    #        data1.append(json.load(line))
+    json_data = open(file_path2)
+    data3 = json.load((json_data))
     #data2 = json.dumps(json_data)
         #f.close()
     #json_data.close()
     #return HttpResponse(simplejson.dumps(data1), content_type='application/json')
-    return JsonResponse(data2,safe=False)
+    return JsonResponse(data3,safe=False)
 #def showgmapsDetail(request, zone_id):
  #   zone=PointOfInterest.objects.get(id=zone_id)
  #   return render_to_response('zonendetail.html', {"zone": zone})

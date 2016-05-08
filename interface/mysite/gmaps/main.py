@@ -85,10 +85,10 @@ logPath = os.path.join(script_dir,'logs/pseudoLiveCaptureOutput.log')
 file_path = os.path.join(script_dir, 'docs/geo_positions.csv') 
 file_path1 = os.path.join(script_dir, 'static/gmaps/postes1.json')
 file_path2 = os.path.join(script_dir, 'static/gmaps/postes2.json')
-
+file_path3 = os.path.join(script_dir, 'static/gmaps/postes3.json')
 cap = capture.capture()
 # nodes = cap.fileCapture(PCAP_FILE)
-cap.pseudoLiveCapture(PCAP_FILE, file_path1, file_path2, file_path)
+cap.pseudoLiveCapture(PCAP_FILE, file_path1, file_path2, file_path3 , file_path)
 
 
 

@@ -14,7 +14,10 @@
       }
  	#table_div{
   }
-
+  #table_div1{
+  }
+  #table_div2{
+  }
        
     </style>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
@@ -23,16 +26,30 @@
     
   </head>
   <body>
-  <div id="table_div"> </div>
+  <div id="table_div" style="width: 100%; height: 200px;"> </div>
+  <div style="position:relative;width:100%">
+        <div id="table_div1" style="position:absolute;left:0px;top:0px;width: 800px; height: 300px;"></div>
+    </div>
+  <!-- <div id="table_div1" style="width: 900px; height: 500px;"> </div> -->
+   <!-- <div id="table_div2" style="width: 900px; height: 500px;"> </div> -->
+    <div style="position:relative;width:100%">
+        <div id="table_div2" style="position:absolute;right:0px;top:0px;width: 800px; height: 300px;"></div>
+    </div>
+    <div style="position:relative;width:100%">
+        <div id="table_div3" style="position:absolute;bottom:0px;top:350px;width: 100%; height: 1000px;"></div>
+    </div>
      
   <script>
     
-  google.load('visualization', '1.0', {'packages':['table']});
+  google.load('visualization', '1.0', {'packages':['table', 'corechart']});
+  //google.charts.load('current', {'packages':['corechart']})
 
   
 //window.alert("1")
-
+  google.setOnLoadCallback(drawChart1);
+  google.setOnLoadCallback(drawChart2);
   google.setOnLoadCallback(drawChart);
+  google.setOnLoadCallback(drawChart3);
 
 
   //drawChart();
@@ -56,7 +73,7 @@
                data.addColumn('string', 'Total de comandos');
                data.addColumn('number', 'Total');
 
-                data.addRow(["Totais", userPos[0]["0x01"], userPos[0]["0x02"] ,userPos[0]["0x05"], userPos[0]["0x08"],String(userPos[0]["nwk_cmd_tot"]),userPos[0]["tot"]]);
+                data.addRow(["Total", userPos[0]["0x01"], userPos[0]["0x02"] ,userPos[0]["0x05"], userPos[0]["0x08"],String(userPos[0]["nwk_cmd_tot"]),userPos[0]["tot"]]);
                 data.addRow(["Processados", userPos[1]["0x01"], userPos[1]["0x02"], userPos[1]["0x05"] , userPos[1]["0x08"], '-' ,userPos[1]["tot"]]);
 
                  var node        = document.getElementById('table_div');
@@ -67,9 +84,104 @@
                
 
           });
+        }
+
+
+
+        function drawChart1() {
+
+          $.getJSON('http://localhost:8000/gmaps/api1/postes', function(userPos) {
+            
+             
+             var data = new google.visualization.DataTable();
+            
+              data.addColumn('string', 'Tipo');
+              data.addColumn('number', 'Número');
+            
+
+             data.addRow(["Requisição de Rota (0x01)",userPos[0]["0x01"]]);
+             data.addRow(["Resposta de Rota (0x02)",userPos[0]["0x02"]]);
+             data.addRow(["Registro de Rota (0x05)",userPos[0]["0x05"]]);
+             data.addRow(["Estado da Ligação(0x08)",userPos[0]["0x08"]]);
+             data.addRow(["Total de comandos",userPos[0]["nwk_cmd_tot"]]);
+             //data.addRow([ String(userPos[0]["0x05"]),userPos[0]["0x08"],String(userPos[0]["nwk_cmd_tot"])]);
+
+             var node        = document.getElementById('table_div1');
+             var table = new google.visualization.PieChart(node);
+             table.draw(data, {title: 'Estatísticas dos Pacotes Captados : Total', 'is3d': true,});
+
+
+               
+
+          });
 
         }
 
+
+        function drawChart2() {
+
+          $.getJSON('http://localhost:8000/gmaps/api1/postes', function(userPos) {
+            
+             
+             var data = new google.visualization.DataTable();
+            
+              data.addColumn('string', 'Tipo');
+              data.addColumn('number', 'Número');
+              
+              
+             
+
+             data.addRow(["Requisição de Rota (0x01)",userPos[1]["0x01"]]);
+             data.addRow(["Resposta de Rota (0x02)",userPos[1]["0x02"]]);
+             data.addRow(["Registro de Rota (0x05)",userPos[1]["0x05"]]);
+             data.addRow(["Estado da Ligação(0x08)",userPos[1]["0x08"]]);
+             data.addRow(["Total de comandos",userPos[1]["nwk_cmd_tot"]]);
+             //data.addRow([ String(userPos[0]["0x05"]),userPos[0]["0x08"],String(userPos[0]["nwk_cmd_tot"])]);
+
+             var node        = document.getElementById('table_div2');
+             var table = new google.visualization.PieChart(node);
+             table.draw(data, {title: 'Estatísticas dos Pacotes Captados : Processados', is3d: true,});
+
+
+               
+
+          });
+
+        }
+
+
+        function drawChart3() {
+
+          $.getJSON('http://localhost:8000/gmaps/api2/postes', function(userPos) {
+            
+             //window.alert(userPos[3]);
+             var data = new google.visualization.DataTable();
+            
+             data.addColumn('string', 'Pacotes de Requisição de Rota (Nó, Número de Pacotes)');
+             data.addColumn('string', 'Pacotes de Resposta de Rota (Nó, Número de Pacotes)');
+             data.addColumn('string', 'Pacotes de Registro de Rota (Nó, Número de Pacotes)');
+             
+             //window.alert(userPos[0].length);
+             
+             for (var i = 0 ; i <= userPos[0].length - 1; i++) {
+               
+              data.addRow([String(userPos[0][i]),String(userPos[1][i]),String(userPos[2][i])]);
+
+             }
+
+             var node        = document.getElementById('table_div3');
+             var table = new google.visualization.Table(node);
+              table.draw(data, { title: 'Estatísticas dos Pacotes Captados', width: '100%', height: '100%'});
+
+
+               
+
+          });
+
+        }
+
+
+      
 
 
    
