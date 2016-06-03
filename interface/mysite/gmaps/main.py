@@ -77,10 +77,9 @@ import os
 
 # PCAP_FILE = 'pcap_files/bigger_file.PCAP'
 # PCAP_FILE = 'pcap_files/smaller_file.PCAP'
-# PCAP_FILE = 'pcap_files/entire_park_05_03.PCAP'
+PCAP_FILE = 'pcap_files/entire_park_05_03.PCAP'
 script_dir = os.path.dirname(__file__)
-PCAP_FILE = os.path.join(script_dir,'pcap_files/entire_park_05_03.PCAP')
-
+#PCAP_FILE = '/home/lucas/Downloads/telit-sniffer/bin/capture.pcap'
 logPath = os.path.join(script_dir,'logs/pseudoLiveCaptureOutput.log')
 file_path = os.path.join(script_dir, 'docs/geo_positions.csv') 
 file_path1 = os.path.join(script_dir, 'static/gmaps/postes1.json')

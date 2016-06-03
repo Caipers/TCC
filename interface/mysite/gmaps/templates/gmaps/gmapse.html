@@ -26,7 +26,7 @@
     
   </head>
   <body>
-  <div id="table_div" style="width: 100%; height: 200px; text-align: center !important;"> </div>
+  <div id="table_div" style="width: 100%; height: 100px; text-align: center !important;"> </div>
   <div style="position:relative;width:100%">
         <div id="table_div1" style="position:absolute;left:0px;top:0px;width: 800px; height: 300px;"></div>
     </div>
@@ -36,7 +36,7 @@
         <div id="table_div2" style="position:absolute;right:0px;top:0px;width: 800px; height: 300px;"></div>
     </div>
     <div style="position:relative;width:100%">
-        <div id="table_div3" style="position:absolute;bottom:0px;top:350px;width: 100%; height: 1000px;  text-align: center !important;"></div>
+        <div id="table_div3" style="position:absolute;bottom:0px;top:350px;width: 100%; height: 600px;  text-align: center !important;"></div>
     </div>
      
   <script>
@@ -66,15 +66,15 @@
                           //window.alert('oi');
                var data = new google.visualization.DataTable();
                data.addColumn('string', ' ');
-               data.addColumn('number', 'Route Request');
-               data.addColumn('number', 'Route Reply');
-               data.addColumn('number', 'Route Record');
-               data.addColumn('number', 'Link Status');
+               data.addColumn('string', 'Route Request');
+               data.addColumn('string', 'Route Reply');
+               data.addColumn('string', 'Route Record');
+               data.addColumn('string', 'Link Status');
                //data.addColumn('string', 'Total de comandos');
-               data.addColumn('number', 'Total');
+               data.addColumn('string', 'Total');
 
-                data.addRow(["Total", userPos[0]["0x01"], userPos[0]["0x02"] ,userPos[0]["0x05"], userPos[0]["0x08"],userPos[0]["tot"]]);
-                data.addRow(["Processados", userPos[1]["0x01"], userPos[1]["0x02"], userPos[1]["0x05"] , userPos[1]["0x08"], userPos[1]["tot"]]);
+                data.addRow(["Total", String(userPos[0]["0x01"]), String(userPos[0]["0x02"]) ,String(userPos[0]["0x05"]), String(userPos[0]["0x08"]),String(userPos[0]["tot"])]);
+                data.addRow(["Processados", String(userPos[1]["0x01"]), String(userPos[1]["0x02"]), String(userPos[1]["0x05"]) ,String(userPos[1]["0x08"]), String(userPos[1]["tot"])]);
 
                  var node        = document.getElementById('table_div');
                  var table = new google.visualization.Table(node);

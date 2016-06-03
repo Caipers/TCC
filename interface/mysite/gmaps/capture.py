@@ -426,7 +426,7 @@ class capture():
 
         return nodes
 
-    def pseudoLiveCapture(self, pcapFile, logPath, logPath1, logPath2 ,file_path ,refresh = 15):
+    def pseudoLiveCapture(self, pcapFile, logPath, logPath1, logPath2 ,file_path ,refresh = 1):
         """
         Pseudo-Live Capture capturing
         Save in a file 
@@ -485,6 +485,8 @@ class capture():
                         # finds a node if exists, or create a new node, or reset a node if node changes its PAN.
                         index = self.indexNode(nwkAdr, nodes)
                         if (index == -1): # node does not exist
+                            print "nwk_adr new node="+nwkAdr
+                            import node
                             aux_node = node.node(nwkAdr, macAdr, panAdr)
                             nodes.append(aux_node)
                         else: # node exists
@@ -754,10 +756,124 @@ class capture():
                         
                         
 
-                except AttributeError:
-                    print "*******BUG IN PYSHARK (AttributeError)*******"
-                    print self.printCounters()
-                    break
+                # except AttributeError:
+                #     print "*******AttributeError*******"
+                #     self.lastOK = False
+                #     print self.getCounters()
+                #     print "\npcounters"
+                #     print self.getPCounters()
+                #     f.seek(0)
+                #     f1.seek(0)
+                #     f.truncate()
+                #     f1.truncate()
+                #     f2.seek(0)
+                #     f2.truncate()
+                #     i=0
+                #     geo = lib.geoPositioning.geoPositioning(file_path)
+                #     #output = "**BEGIN**\n"
+                #     output1 ='['
+                #     output = '['
+                    
+
+
+                #     for node in nodes:
+                #         values = geo.getValues(node.getMacAdr())
+                #         if (values is None):
+                #             pass
+                #         else:
+                #             i+=1
+                #             print i
+                #     j=0
+                #     for node in nodes:
+                #         values = geo.getValues(node.getMacAdr())
+                #         if (values is None):
+                #             pass
+                #         else:
+                #             node.setLocation(values["lat"], values["lon"])
+                #             node.setSN(values["sn"])
+                #             node.processPreNeighbors()
+                #             output += node.getJSONHistoricalNeighbors()
+                #             j+=1
+                #             if j < i:
+                #                 output += ','
+                            
+                #     output += ']'
+                #     #output += "PrintCounters:\n"
+                #     output2 = '['
+                #     output2 += '['
+                    
+                #     l=0
+
+                #     for node in nodes:
+                #         l+=1
+                        
+                #     m=0
+
+                #     for node in nodes: 
+                #         m+= 1
+                #         output2 +=  node.getJSONRouteRequest()
+                #         if(m<l):
+                #             output2 += ','
+                    
+                #     output2 += ']'
+                #     output2 += ','
+                #     output2 += '['
+
+                #     l=0
+                #     for node in nodes:
+                #         l+=1
+                        
+                #     m=0
+
+                #     for node in nodes: 
+                #         m+= 1
+                #         output2 +=  node.getJSONRouteReply()
+                #         if(m<l):
+                #             output2 += ','
+                    
+                #     output2 += ']'
+                #     output2 += ','
+                #     output2 += '['
+                #     l = 0
+                #     for node in nodes:
+                #         l+=1
+                        
+                #     m=0
+
+                #     for node in nodes: 
+                #         m+= 1
+                #         output2 +=  node.getJSONRouteRecord()
+                #         if(m<l):
+                #             output2 += ','
+
+                #     output2 += ']'
+
+                #     output2 += ']'
+                    
+
+                #     output1 += self.getJSONCounters()
+                #     #output += ','
+                #     output1 += ","
+                #     output1 += self.getJSONPCounters()
+                #     #output += "PrintPCounters:\n"
+                #     output1 += ']'
+
+                #     #output += "\n"
+                #     #output += "**END**\n"
+
+                #     #print "File:"
+                #     print output2
+                #     f2.write(output2)
+                #     f1.write(output1)
+                #     f.write(output)
+                #     f2.flush()
+                #     f1.flush()
+                #     f.flush()
+                    
+
+                #     print "Waiting for more packets"
+                #     time.sleep(refresh)
+                #     break
                 except StopIteration:
                     print "*******StopIteration*******"
                     self.lastOK = False

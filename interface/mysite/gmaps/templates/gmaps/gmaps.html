@@ -80,7 +80,7 @@
     google.charts.load('current', {'packages':['table']});
     var flagdraw =0;
     var arrayLine =[];
-    var overviewMarkers = [];
+    var overviewMarkers = [], gMarkers = [],indMarkers = [],mMarkers = [],wMarkers = [],selMarkers = [];
     var infowindows = [];
     var infowindowsM = [];
     var distances = [];
@@ -227,17 +227,19 @@ function CenterControl(controlDiv, map) {
                       map.setCenter(myLatLng);
 
                       //reseta a legenda
-
-                      for (var i = 5; i<=7;i++) {
-                        
-                        {
-                          
-                     
-                        legend.removeChild(legend.childNodes[(5)]);
-                         
-                        }
-                        
-                      }
+                      if(flagmark ==1)
+                      {
+	                      for (var i = 5; i<=7;i++) {
+	                        
+	                        {
+	                          
+	                     
+	                        legend.removeChild(legend.childNodes[(5)]);
+	                         
+	                        }
+	                        
+	                      }
+                  	  }
                       flagmark = 0;
                       flagdraw = 0;
                     
@@ -269,6 +271,12 @@ function CenterControl(controlDiv, map) {
 /*Execução*/
 
 function setMarker(map) {
+
+
+	
+
+
+
    $('#closeButton').hide();
 
     $.getJSON('http://localhost:8000/gmaps/api/postes', function(userPos) {
@@ -288,17 +296,19 @@ function setMarker(map) {
             var myLatLng = {lat: -25.384455, lng: -49.266728};
 
             //reseta a legenda
-
-                    for (var i = 5; i<=7;i++) {
-                      
-                      {
-                        
-                   
-                      legend.removeChild(legend.childNodes[(5)]);
-                       
-                      }
-                      
-                    }
+            		if(flagmark ==1)
+                    {
+	                    for (var i = 5; i<=7;i++) {
+	                      
+	                      {
+	                        
+	                   
+	                      legend.removeChild(legend.childNodes[(5)]);
+	                       
+	                      }
+	                      
+	                    }
+                	}
                     flagmark = 0;
                     flagdraw = 0;
                   
@@ -372,11 +382,30 @@ function setMarker(map) {
                   map:map,
                   icon: icon,
               });
+
+              if(userPos[i][5].length < 1 )
+              {
+              	indMarkers.push(marker);
+
+              }
+              if(userPos[i][5].length >= 1 &&  userPos[i][5].length < 3)
+              {
+              	wMarkers.push(marker);
+
+              }
+              else if(userPos[i][5].length >= 3 && userPos[i][5].length < 9 )
+              {
+              	mMarkers.push(marker);
+              }
+              else if(userPos[i][5].length > 9 )
+              {
+              	gMarkers.push(marker);
+              }
           
 
           overviewMarkers.push(marker);
 
-
+          
 
 
         google.maps.event.addListener(marker, 'click', (function (marker, i) {
@@ -459,6 +488,7 @@ function setMarker(map) {
                       }
                     }
                   }
+
 
 
 
@@ -622,7 +652,7 @@ function setMarker(map) {
                   }
                  
                 }
-                infowindow.setContent('Endereço de Rede: ' + userPos[i][0] + '<br>' +'MEndereço MAC: ' + userPos[i][1] + '<br>' + ' Número de vizinhos: ' + cont1 +'<br>' + "<a href='javascript:drawChart("+i+");'>Lista de Vizinhos</a>");
+                infowindow.setContent('Endereço de Rede: ' + userPos[i][0] + '<br>' +'Endereço MAC: ' + userPos[i][1] + '<br>' + ' Número de vizinhos: ' + cont1 +'<br>' + "<a href='javascript:drawChart("+i+");'>Lista de Vizinhos</a>");
                 infowindow.open(map, marker);
                 infowindowsM.push(infowindow);
                   };
@@ -631,7 +661,195 @@ function setMarker(map) {
               */
 
            }
-            
+
+            	cont = 0;
+
+	              //Seleciona nós por estado
+				var newIcon = {url: 'http://i64.tinypic.com/34srt6g.png', scaledSize: new google.maps.Size(50,50),};
+				var flag2;
+		  		legend.childNodes[1].addEventListener('click', function() {
+		  			setLines(null); 
+			        setWindowM(null);
+			        setWindow(null);
+			        setaniMarkers(null);
+			        $('#table_div').slideUp();
+			        $('#closeButton').hide();
+			        if(flagmark ==1)
+                    {
+	                    for (var i = 5; i<=7;i++) {
+	                      
+	                      {
+	                        
+	                   
+	                      legend.removeChild(legend.childNodes[(5)]);
+	                       
+	                      }
+	                      
+	                    }
+                	}
+                    flagmark = 0;
+		  			
+		  			for (var l = 0, length = userPos.length; l <  length; l++) {
+                        if(userPos[l][5].length < 1 )
+                        {
+                        status = newIcon;
+                        }
+                        if(userPos[l][5].length >= 1 &&  userPos[l][5].length < 3)
+                        {
+                        status = newIcon;
+                        }
+                        else if(userPos[l][5].length >= 3 && userPos[l][5].length < 9 )
+                        {
+                        status = newIcon;
+                        }
+                        else if(userPos[l][5].length > 9 )
+                        {
+                        	u++;
+                        status = 'http://i68.tinypic.com/30cyt53.png';
+                        }
+                       
+		                  overviewMarkers[l].setIcon(status);
+              		}
+		  			
+		  		});
+		  		 u=0;
+		  		legend.childNodes[2].addEventListener('click', function() {
+		  			setLines(null); 
+			        setWindowM(null);
+			        setWindow(null);
+			        setaniMarkers(null);
+			        $('#table_div').slideUp();
+			        $('#closeButton').hide();
+			        if(flagmark ==1)
+                    {
+	                    for (var i = 5; i<=7;i++) {
+	                      
+	                      {
+	                        
+	                   
+	                      legend.removeChild(legend.childNodes[(5)]);
+	                       
+	                      }
+	                      
+	                    }
+                	}
+                    flagmark = 0;
+		  			for (var l = 0, length = userPos.length; l <  length; l++) {
+	                  if(userPos[l][5].length < 1 )
+	                  {
+	                  status = newIcon;
+	                  }
+	                  if(userPos[l][5].length >= 1 &&  userPos[l][5].length < 3)
+	                  {
+	                  status = newIcon;
+	                  }
+	                  else if(userPos[l][5].length >= 3 && userPos[l][5].length < 9 )
+	                  {
+	                  status = 'http://i68.tinypic.com/10zqzhh.jpg';
+	                  u++;
+	                  }
+	                  else if(userPos[l][5].length > 9 )
+	                  {
+	                  status = newIcon;
+	                  }
+	                  	  
+		                  overviewMarkers[l].setIcon(status);
+	                }
+		  			
+		  		});
+		  		 u=0;
+		  		legend.childNodes[3].addEventListener('click', function() {
+		  			setLines(null); 
+			        setWindowM(null);
+			        setWindow(null);
+			        setaniMarkers(null);
+			        $('#table_div').slideUp();
+			        $('#closeButton').hide();
+			        if(flagmark ==1)
+                    {
+	                    for (var i = 5; i<=7;i++) {
+	                      
+	                      {
+	                        
+	                   
+	                      legend.removeChild(legend.childNodes[(5)]);
+	                       
+	                      }
+	                      
+	                    }
+                	}
+                    flagmark = 0;
+		  			for (var l = 0, length = userPos.length; l <  length; l++) {
+		                  if(userPos[l][5].length < 1 )
+		                  {
+		                  	status = newIcon;
+		                  }
+		                  if(userPos[l][5].length >= 1 &&  userPos[l][5].length < 3)
+		                  {
+		                  status = 'http://i63.tinypic.com/mj8kz4.png';
+		                  u++;
+		                  }
+		                  else if(userPos[l][5].length >= 3 && userPos[l][5].length < 9 )
+		                  {
+		                  status = newIcon;
+		                  }
+		                  else if(userPos[l][5].length > 9 )
+		                  {
+		                  status = newIcon;
+		                  }
+		                 
+		                  overviewMarkers[l].setIcon(status);
+	                }
+		  			
+		  		});
+		  		 u=0;
+		  		 cont =0;
+		  		legend.childNodes[4].addEventListener('click', function() {
+		  			setLines(null); 
+			        setWindowM(null);
+			        setWindow(null);
+			        setaniMarkers(null);
+			        $('#table_div').slideUp();
+			        $('#closeButton').hide();
+			        if(flagmark ==1)
+                    {
+	                    for (var i = 5; i<=7;i++) {
+	                      
+	                      {
+	                        
+	                   
+	                      legend.removeChild(legend.childNodes[(5)]);
+	                       
+	                      }
+	                      
+	                    }
+                	}
+                    flagmark = 0;
+		  			for (var l = 0, length = userPos.length; l <  length; l++) {
+		                  if(userPos[l][5].length < 1 )
+		                  {
+		                  	status = 'http://i63.tinypic.com/2dloubl.png';
+		                  	u++;
+		                  }
+		                  if(userPos[l][5].length >= 1 &&  userPos[l][5].length < 3)
+		                  {
+		                  status = newIcon;
+		                  }
+		                  else if(userPos[l][5].length >= 3 && userPos[l][5].length < 9 )
+		                  {
+		                  status = newIcon;
+		                  }
+		                  else if(userPos[l][5].length > 9 )
+		                  {
+		                  status = newIcon;
+		                  }
+		                  
+		                  overviewMarkers[l].setIcon(status);
+	                }
+		  		});
+
+           
+
           });
         }       
 
@@ -971,21 +1189,20 @@ function initMap() {
                     var icon = type.icon;
                     var div = document.createElement('div');
                     div.innerHTML = '<img src="' + icon + '"> ' + name;
+                    
                     legend.appendChild(div);
                   }
         }
    map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(legend);
 
-  
+  		
 
-
- 
-
-      
+  		
+    
   setMarker(map);
   //setLinks(map);
-
-   
+  	 
+		  	
 }
 
 
