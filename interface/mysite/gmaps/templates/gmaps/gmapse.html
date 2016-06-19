@@ -35,8 +35,14 @@
     <div style="position:relative;width:100%">
         <div id="table_div2" style="position:absolute;right:0px;top:0px;width: 800px; height: 300px;"></div>
     </div>
-    <div style="position:relative;width:100%">
-        <div id="table_div3" style="position:absolute;bottom:0px;top:350px;width: 100%; height: 600px;  text-align: center !important;"></div>
+    <div style="position:relative;width:33%">
+        <div id="table_div3" style="position:absolute;bottom:0px;top:350px;width: 100%; height: 100px;  text-align: center !important;"></div>
+    </div>
+    <div style="position:absolute;right;width:33%">
+        <div id="table_div4" style="position:absolute;left:540px;top:350px;width: 100%; height: 200px;  text-align: center !important;"></div>
+    </div>
+      <div style="position:absolute;right;width:33%">
+        <div id="table_div5" style="position:absolute;left:1080px;top:350px;width: 100%; height: 100px;  text-align: center !important;"></div>
     </div>
      
   <script>
@@ -44,12 +50,14 @@
   google.load('visualization', '1.0', {'packages':['table', 'corechart']});
   //google.charts.load('current', {'packages':['corechart']})
 
-  
+var listaprint = [];
 //window.alert("1")
   google.setOnLoadCallback(drawChart1);
   google.setOnLoadCallback(drawChart2);
   google.setOnLoadCallback(drawChart);
   google.setOnLoadCallback(drawChart3);
+  google.setOnLoadCallback(drawChart4);
+  google.setOnLoadCallback(drawChart5);
 
 
   //drawChart();
@@ -158,25 +166,27 @@
              var data = new google.visualization.DataTable();
             
              data.addColumn('string', 'Pacotes Route Request');
-             data.addColumn('string', 'Pacotes Route Reply');
-             data.addColumn('string', 'Pacotes Route Record');
+             //data.addColumn('string', 'Pacotes Route Reply');
+             //data.addColumn('string', 'Pacotes Route Record');
              
              //window.alert(userPos[0].length);
              //if ( userPos[0][0][1][0] == 0)
              //window.alert(userPos[0][4][1][1][0].relayList);
              for (var i = 0 ; i <= userPos[0].length - 1; i++) {
-              if (userPos[0][i][1][0] != 0 || userPos[1][i][1][0] != 0 || userPos[2][i][1][0] || 0)
-              data.addRow([String(userPos[0][i][0]),String(userPos[1][i][0]),String(userPos[2][i][0])]);
+              if (userPos[0][i][1][0] != 0)
+              data.addRow([String(userPos[0][i][0])]);
 
              }
                  var node        = document.getElementById('table_div3');
                  var table = new google.visualization.Table(node);
 
-                          function selectHandler() {
+                          /*function selectHandler() {
                               var selectedItem = table.getSelection()[0];
                               //setaniMarkers(null);
                               if (selectedItem) 
                               {
+                              	 var row = selectedItem.row;
+                              	 var col = selectedItem.column;
                                 /*var value = data.getValue(selectedItem.row,0);
                                 for (var k = 0, length = userPos[0].length - 1; k < length ; k++) {
                                       if(userPos[0][k][0]==value)
@@ -184,16 +194,54 @@
                                        
                                         for (j = 0, ength = userPos[0].length - 1 ) 
                                         sellrows.push(...);
-                                      }*/
-                                      window.alert(selectedItem);
+                                      }
+                                      window.alert(row+','+col);
                                 }
                                 //selflag = 1;
                               
                           }
-                          google.visualization.events.addListener(table, 'select', selectHandler);
+                          google.visualization.events.addListener(table, 'select', selectHandler);*/
+
+                google.visualization.events.addListener(table, 'ready', function() {
+				document.querySelector('#table_div3 tbody').addEventListener('click', function(e) {
+				  var cell = e.srcElement || e.target,
+				    column = null;
+				  if (table.getSelection().length ) {
+				    for (var i = 0; i < cell.parentNode.childNodes.length; ++i) {
+				      if (cell.parentNode.childNodes[i] === cell) {
+				        column = (i+1) - 1;
+				        break;
+				      }
+
+				   	}
+
+				    if (column !== null) {
+
+				      var selection = table.getSelection();
+				      row1 = selection[selection.length - 1].row;
+				      var str = data.getValue(selection[selection.length - 1].row,column);
+				      listaprint = [];
+				      for (var i = userPos[0].length - 1; i >= 0; i--) {
+				      	if (userPos[0][i][0] == str) 
+				      	{
+				      		for (var j = 0; j <= Object.keys(userPos[0][i][1][1]).length - 1; j++) {
+				      			listaprint.push(Object.keys(userPos[0][i][1][1][j]));
+				      		}
+				      		
+
+				      		window.alert("Endereço do Nó: "+userPos[0][i][0]+"\nNúmero de Pacotes: "+userPos[0][i][1][0]+"\nNós: "+listaprint);
+
+				      	}
+				      }
+				      
+
+				      }
+				  }
+				});
+				});
 
             
-              table.draw(data, { title: 'Estatísticas dos Pacotes Captados', width: '100%', height: '100%'});
+              table.draw(data, { title: 'Estatísticas dos Pacotes Route Request', width: '100%', height: '100%'});
 
 
                
@@ -202,7 +250,190 @@
 
         }
 
+       function drawChart4() {
 
+          $.getJSON('http://localhost:8000/gmaps/api2/postes', function(userPos) {
+            
+             //window.alert(userPos[3]);
+             var data = new google.visualization.DataTable();
+            
+             //data.addColumn('string', 'Pacotes Route Request');
+             data.addColumn('string', 'Pacotes Route Reply');
+             //data.addColumn('string', 'Pacotes Route Record');
+             
+             //window.alert(userPos[0].length);
+             //if ( userPos[0][0][1][0] == 0)
+             //window.alert(userPos[0][4][1][1][0].relayList);
+             for (var i = 0 ; i <= userPos[0].length - 1; i++) {
+              if (userPos[1][i][1][0] != 0)
+              data.addRow([String(userPos[1][i][0])]);
+
+             }
+                 var node        = document.getElementById('table_div4');
+                 var table = new google.visualization.Table(node);
+
+                          /*function selectHandler() {
+                              var selectedItem = table.getSelection()[0];
+                              //setaniMarkers(null);
+                              if (selectedItem) 
+                              {
+                              	 var row = selectedItem.row;
+                              	 var col = selectedItem.column;
+                                /*var value = data.getValue(selectedItem.row,0);
+                                for (var k = 0, length = userPos[0].length - 1; k < length ; k++) {
+                                      if(userPos[0][k][0]==value)
+                                      {
+                                       
+                                        for (j = 0, ength = userPos[0].length - 1 ) 
+                                        sellrows.push(...);
+                                      }
+                                      window.alert(row+','+col);
+                                }
+                                //selflag = 1;
+                              
+                          }
+                          google.visualization.events.addListener(table, 'select', selectHandler);*/
+
+                google.visualization.events.addListener(table, 'ready', function() {
+				document.querySelector('#table_div4 tbody').addEventListener('click', function(e) {
+				  var cell = e.srcElement || e.target,
+				    column = null;
+				  if (table.getSelection().length ) {
+				    for (var i = 0; i < cell.parentNode.childNodes.length; ++i) {
+				      if (cell.parentNode.childNodes[i] === cell) {
+				        column = (i+1) - 1;
+				        break;
+				      }
+
+				   	}
+
+				    if (column !== null) {
+				       var selection = table.getSelection();
+				      row1 = selection[selection.length - 1].row;
+				      var str = data.getValue(selection[selection.length - 1].row,column);
+				      listaprint = [];
+				      for (var i = userPos[1].length - 1; i >= 0; i--) {
+				      	if (userPos[1][i][0] == str) 
+				      	{
+				      		for (var j = 0; j <= Object.keys(userPos[1][i][1][1]).length - 1; j++) {
+				      			listaprint.push(Object.keys(userPos[1][i][1][1][j]));
+				      		}
+				      		
+
+				      		window.alert("Endereço do Nó: "+userPos[1][i][0]+"\nNúmero de Pacotes: "+userPos[1][i][1][0]+"\nNós: "+listaprint);
+
+				      	}
+				      }
+				      
+
+				      }
+				  }
+				});
+				});
+
+            
+              table.draw(data, { title: 'Estatísticas dos Pacotes Route Reply', width: '100%', height: '100%'});
+
+
+               
+
+          });
+
+        }
+
+        function drawChart5() {
+
+          $.getJSON('http://localhost:8000/gmaps/api2/postes', function(userPos) {
+            
+             //window.alert(userPos[3]);
+             var data = new google.visualization.DataTable();
+            
+             //data.addColumn('string', 'Pacotes Route Request');
+             data.addColumn('string', 'Pacotes Route Record');
+             //data.addColumn('string', 'Pacotes Route Record');
+             
+             //window.alert(userPos[0].length);
+             //if ( userPos[0][0][1][0] == 0)
+             //window.alert(userPos[0][4][1][1][0].relayList);
+             for (var i = 0 ; i <= userPos[0].length - 1; i++) {
+              if (userPos[2][i][1][0] != 0)
+              data.addRow([String(userPos[2][i][0])]);
+
+             }
+                 var node        = document.getElementById('table_div5');
+                 var table = new google.visualization.Table(node);
+
+                          /*function selectHandler() {
+                              var selectedItem = table.getSelection()[0];
+                              //setaniMarkers(null);
+                              if (selectedItem) 
+                              {
+                              	 var row = selectedItem.row;
+                              	 var col = selectedItem.column;
+                                /*var value = data.getValue(selectedItem.row,0);
+                                for (var k = 0, length = userPos[0].length - 1; k < length ; k++) {
+                                      if(userPos[0][k][0]==value)
+                                      {
+                                       
+                                        for (j = 0, ength = userPos[0].length - 1 ) 
+                                        sellrows.push(...);
+                                      }
+                                      window.alert(row+','+col);
+                                }
+                                //selflag = 1;
+                              
+                          }
+                          google.visualization.events.addListener(table, 'select', selectHandler);*/
+
+                google.visualization.events.addListener(table, 'ready', function() {
+				document.querySelector('#table_div5 tbody').addEventListener('click', function(e) {
+				  var cell = e.srcElement || e.target,
+				    column = null;
+				  if (table.getSelection().length ) {
+				    for (var i = 0; i < cell.parentNode.childNodes.length; ++i) {
+				      if (cell.parentNode.childNodes[i] === cell) {
+				        column = (i+1) - 1;
+				        break;
+				      }
+
+				   	}
+
+				    if (column !== null) {
+				       var selection = table.getSelection();
+				      row1 = selection[selection.length - 1].row;
+				      var str = data.getValue(selection[selection.length - 1].row,column);
+				      listaprint = [];
+				      var msg = [];
+				      for (var i = userPos[2].length - 1; i >= 0; i--) {
+				      	if (userPos[2][i][0] == str) 
+				      	{
+				      		
+				      		
+				      		msg.push("Endereço do Nó: "+userPos[2][i][0]+"\nNúmero de Pacotes: "+userPos[2][i][1][0]+"\nRotas("+userPos[2][i][1][1].length+"):");
+				      		for (var j = 0; j <= userPos[2][i][1][1].length - 1; j++) {
+				      			msg.push("\n\nOriginador: "+userPos[2][i][1][1][j].originator+"\nNúmero de Passos: "+userPos[2][i][1][1][j].relayCount+"\nLista de Nós da Rota: "+userPos[2][i][1][1][j].relayList);
+				      		}
+				      		
+				      		window.alert(msg);
+
+				      	}
+				      }
+				      
+
+				      }
+				  }
+				});
+				});
+
+            
+              table.draw(data, { title: 'Estatísticas dos Pacotes Route Record', width: '100%', height: '100%'});
+
+
+               
+
+          });
+
+        }
       
 
 
