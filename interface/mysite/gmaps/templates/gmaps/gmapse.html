@@ -39,7 +39,7 @@
         <div id="table_div3" style="position:absolute;bottom:0px;top:350px;width: 100%; height: 100px;  text-align: center !important;"></div>
     </div>
     <div style="position:absolute;right;width:33%">
-        <div id="table_div4" style="position:absolute;left:540px;top:350px;width: 100%; height: 200px;  text-align: center !important;"></div>
+        <div id="table_div4" style="position:absolute;left:540px;top:350px;width: 100%; height: 430px;  text-align: center !important;"></div>
     </div>
       <div style="position:absolute;right;width:33%">
         <div id="table_div5" style="position:absolute;left:1080px;top:350px;width: 100%; height: 100px;  text-align: center !important;"></div>
@@ -225,11 +225,13 @@ var listaprint = [];
 				      	if (userPos[0][i][0] == str) 
 				      	{
 				      		for (var j = 0; j <= Object.keys(userPos[0][i][1][1]).length - 1; j++) {
-				      			listaprint.push(Object.keys(userPos[0][i][1][1][j]));
+				      			listaprint.push("\n");
+				      			listaprint.push(Object.keys(userPos[0][i][1][1][j])); //virgulas
+
 				      		}
 				      		
 
-				      		window.alert("Endereço do Nó: "+userPos[0][i][0]+"\nNúmero de Pacotes: "+userPos[0][i][1][0]+"\nNós: "+listaprint);
+				      		window.alert("Nó originador: "+userPos[0][i][0]+"\nNós responder: "+listaprint+"\nNúmero de pacotes: "+userPos[0][i][1][0]);
 
 				      	}
 				      }
@@ -320,7 +322,7 @@ var listaprint = [];
 				      		}
 				      		
 
-				      		window.alert("Endereço do Nó: "+userPos[1][i][0]+"\nNúmero de Pacotes: "+userPos[1][i][1][0]+"\nNós: "+listaprint);
+				      		window.alert("Nó responder: "+userPos[1][i][0]+"\nNó originator: "+listaprint+"\nNúmero de pacotes: "+userPos[1][i][1][0]);
 
 				      	}
 				      }
@@ -409,9 +411,9 @@ var listaprint = [];
 				      	{
 				      		
 				      		
-				      		msg.push("Endereço do Nó: "+userPos[2][i][0]+"\nNúmero de Pacotes: "+userPos[2][i][1][0]+"\nRotas("+userPos[2][i][1][1].length+"):");
+				      		msg.push("Endereço do nó: "+userPos[2][i][0]+"\nNúmero de pacotes: "+userPos[2][i][1][0]+"\nRotas("+userPos[2][i][1][1].length+"): ");
 				      		for (var j = 0; j <= userPos[2][i][1][1].length - 1; j++) {
-				      			msg.push("\n\nOriginador: "+userPos[2][i][1][1][j].originator+"\nNúmero de Passos: "+userPos[2][i][1][1][j].relayCount+"\nLista de Nós da Rota: "+userPos[2][i][1][1][j].relayList);
+				      			msg.push("\n\nOriginador: "+userPos[2][i][1][1][j].originator+"\nNúmero de passos: "+userPos[2][i][1][1][j].relayCount+"\nLista de nós da rota: "+userPos[2][i][1][1][j].relayList);
 				      		}
 				      		
 				      		window.alert(msg);
