@@ -53,7 +53,7 @@
 
     <a class="fragment">
     <button id="closeButton">X</button>
-     <div id="table_div"> </div>
+     <div id="table_div" style=" ;text-align: center !important; "> </div>
      </a>
 
     <div id="legend"><h3>Legenda</h3></div>
@@ -615,15 +615,15 @@ function setMarker(map) {
                       if(userPos[i][5][k].tot_out_cost == 0 && userPos[i][5][k].tot_in_cost > 0)
                       {
                         //window.alert(userPos[i][5][k].tot_out_cost);
-                        infowindow1.setContent('Distância: ' + distance.toFixed(0) + ' <br>Custo Médio de entrada: ' + (userPos[i][5][k].tot_in_cost/userPos[i][5][k].tot_pkt).toFixed(2) + '<br>Custo Médio de saída: -');
+                        infowindow1.setContent('Distância: ' + distance.toFixed(0) + ' <br>Custo médio de entrada: ' + (userPos[i][5][k].tot_in_cost/userPos[i][5][k].tot_pkt).toFixed(2) + '<br>Custo médio de saída: -');
                       }
                       else if (userPos[i][5][k].tot_out_cost > 0 && userPos[i][5][k].tot_in_cost > 0)
                       {
                         //window.alert(userPos[i][5][k].tot_out_cost);
-                        infowindow1.setContent('Distância: '+ distance.toFixed(0) + '<br>Custo Médio de entrada: ' + (userPos[i][5][k].tot_in_cost/userPos[i][5][k].tot_pkt).toFixed(2)+ '<br>Custo de saída: '+ (userPos[i][5][k].tot_out_cost/userPos[i][5][k].tot_pkt).toFixed(2));
+                        infowindow1.setContent('Distância: '+ distance.toFixed(0) + '<br>Custo médio de entrada: ' + (userPos[i][5][k].tot_in_cost/userPos[i][5][k].tot_pkt).toFixed(2)+ '<br>Custo médio de saída: '+ (userPos[i][5][k].tot_out_cost/userPos[i][5][k].tot_pkt).toFixed(2));
                       }
                       else if(userPos[i][5][k].tot_in_cost == 0 && userPos[i][5][k].tot_out_cost > 0)
-                        infowindow1.setContent('Distância: '+ distance.toFixed(0)  + '<br>Custo Médio de entrada: - '+ '<br>Custo Médio de saída: '+ (userPos[i][5][k].tot_out_cost/userPos[i][5][k].tot_pkt).toFixed(2));
+                        infowindow1.setContent('Distância: '+ distance.toFixed(0)  + '<br>Custo médio de entrada: - '+ '<br>Custo médio de saída: '+ (userPos[i][5][k].tot_out_cost/userPos[i][5][k].tot_pkt).toFixed(2));
                      
                       
 
@@ -652,7 +652,7 @@ function setMarker(map) {
                   }
                  
                 }
-                infowindow.setContent('Endereço de Rede: ' + userPos[i][0] + '<br>' +'Endereço MAC: ' + userPos[i][1] + '<br>' + ' Número de vizinhos: ' + cont1 +'<br>' + "<a href='javascript:drawChart("+i+");'>Lista de Vizinhos</a>");
+                infowindow.setContent('Endereço de Rede: ' + userPos[i][0] + '<br>' +'Endereço MAC: ' + userPos[i][1] + '<br>' + ' Número de vizinhos: ' + cont1 +'<br>' + "<a href='javascript:drawChart("+i+");'>Lista de vizinhos</a>");
                 infowindow.open(map, marker);
                 infowindowsM.push(infowindow);
                   };
@@ -870,12 +870,12 @@ function setMarker(map) {
                
 
                 var data = new google.visualization.DataTable();
-               data.addColumn('string', 'Endereço de Rede');
+               data.addColumn('string', 'Endereço de rede');
                data.addColumn('string', 'Endereço MAC');
-               data.addColumn('string', 'Custo Médio de Entrada');
-               data.addColumn('string', 'Custo Médio de Saída');
-               data.addColumn('number', 'Assiduidade (%)');
-               data.addColumn('number', 'Distancia (m)');
+               data.addColumn('string', 'Custo médio de entrada');
+               data.addColumn('string', 'Custo médio de saída');
+               data.addColumn('string', 'Assiduidade (%)');
+               data.addColumn('string', 'Distancia (m)');
               //window.alert(userPos[i][3].length);
               //var l = 0
               distances = [];
@@ -949,19 +949,19 @@ function setMarker(map) {
                           {
                             //window.alert(userPos[i][5][k].tot_out_cost);
                               data.addRow([
-                            userPos[i][5][k].nwkAdr, userPos[j][1] , String((userPos[i][5][k].tot_in_cost/userPos[i][5][k].tot_pkt).toFixed(2)), '-',100*userPos[i][5][k].tot_pkt/userPos[i][2], distance
+                            userPos[i][5][k].nwkAdr, userPos[j][1] , String((userPos[i][5][k].tot_in_cost/userPos[i][5][k].tot_pkt).toFixed(2)), '-',String((100*userPos[i][5][k].tot_pkt/userPos[i][2]).toFixed(2)), String((distance).toFixed(2))
                             ]);
                           }
                           else if (userPos[i][5][k].tot_out_cost > 0 && userPos[i][5][k].tot_in_cost > 0)
                           { 
                             data.addRow([
-                          userPos[i][5][k].nwkAdr, userPos[j][1] , String((userPos[i][5][k].tot_in_cost/userPos[i][5][k].tot_pkt).toFixed(2)), String((userPos[i][5][k].tot_out_cost/userPos[i][5][k].tot_pkt).toFixed(2)),100*userPos[i][5][k].tot_pkt/userPos[i][2], distance
+                          userPos[i][5][k].nwkAdr, userPos[j][1] , String((userPos[i][5][k].tot_in_cost/userPos[i][5][k].tot_pkt).toFixed(2)), String((userPos[i][5][k].tot_out_cost/userPos[i][5][k].tot_pkt).toFixed(2)),String((100*userPos[i][5][k].tot_pkt/userPos[i][2]).toFixed(2)), String((distance).toFixed(2))
                           ]);
                           }
                           else if(userPos[i][5][k].tot_in_cost == 0 && userPos[i][5][k].tot_out_cost > 0)
                           {
                               data.addRow([
-                              userPos[i][5][k].nwkAdr, userPos[j][1] , '-', String((userPos[i][5][k].tot_out_cost/userPos[i][5][k].tot_pkt).toFixed(2)),100*userPos[i][5][k].tot_pkt/userPos[i][2], distance
+                              userPos[i][5][k].nwkAdr, userPos[j][1] , '-', String((userPos[i][5][k].tot_out_cost/userPos[i][5][k].tot_pkt).toFixed(2)),String((100*userPos[i][5][k].tot_pkt/userPos[i][2]).toFixed(2)), String((distance).toFixed(2))
                               ]);
                           }    
                         }
