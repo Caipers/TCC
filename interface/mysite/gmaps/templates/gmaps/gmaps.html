@@ -34,7 +34,10 @@
 
 
     
-      #table_div{}
+      #table_div{
+align: center !important;
+}
+
       #closeButton {
     float:right;
     display:inline-block;
@@ -53,7 +56,7 @@
 
     <a class="fragment">
     <button id="closeButton">X</button>
-     <div id="table_div" style=" ;text-align: center !important; "> </div>
+     <div id="table_div" style=" ;text-align: center !important;  display: block ; margin: 0 auto;"> </div>
      </a>
 
     <div id="legend"><h3>Legenda</h3></div>
@@ -874,8 +877,8 @@ function setMarker(map) {
                data.addColumn('string', 'Endereço MAC');
                data.addColumn('string', 'Custo médio de entrada');
                data.addColumn('string', 'Custo médio de saída');
-               data.addColumn('string', 'Assiduidade (%)');
-               data.addColumn('string', 'Distancia (m)');
+               data.addColumn('number', 'Assiduidade (%)');
+               data.addColumn('number', 'Distancia (m)');
               //window.alert(userPos[i][3].length);
               //var l = 0
               distances = [];
@@ -949,19 +952,19 @@ function setMarker(map) {
                           {
                             //window.alert(userPos[i][5][k].tot_out_cost);
                               data.addRow([
-                            userPos[i][5][k].nwkAdr, userPos[j][1] , String((userPos[i][5][k].tot_in_cost/userPos[i][5][k].tot_pkt).toFixed(2)), '-',String((100*userPos[i][5][k].tot_pkt/userPos[i][2]).toFixed(2)), String((distance).toFixed(2))
+                            userPos[i][5][k].nwkAdr, userPos[j][1] , String((userPos[i][5][k].tot_in_cost/userPos[i][5][k].tot_pkt).toFixed(2)), '-',Math.round(100*userPos[i][5][k].tot_pkt/userPos[i][2])*100 /100, Math.round(distance * 100) / 100
                             ]);
                           }
                           else if (userPos[i][5][k].tot_out_cost > 0 && userPos[i][5][k].tot_in_cost > 0)
                           { 
                             data.addRow([
-                          userPos[i][5][k].nwkAdr, userPos[j][1] , String((userPos[i][5][k].tot_in_cost/userPos[i][5][k].tot_pkt).toFixed(2)), String((userPos[i][5][k].tot_out_cost/userPos[i][5][k].tot_pkt).toFixed(2)),String((100*userPos[i][5][k].tot_pkt/userPos[i][2]).toFixed(2)), String((distance).toFixed(2))
+                          userPos[i][5][k].nwkAdr, userPos[j][1] , String((userPos[i][5][k].tot_in_cost/userPos[i][5][k].tot_pkt).toFixed(2)), String((userPos[i][5][k].tot_out_cost/userPos[i][5][k].tot_pkt).toFixed(2)),Math.round(100*userPos[i][5][k].tot_pkt/userPos[i][2])*100/100, Math.round(distance * 100) / 100
                           ]);
                           }
                           else if(userPos[i][5][k].tot_in_cost == 0 && userPos[i][5][k].tot_out_cost > 0)
                           {
                               data.addRow([
-                              userPos[i][5][k].nwkAdr, userPos[j][1] , '-', String((userPos[i][5][k].tot_out_cost/userPos[i][5][k].tot_pkt).toFixed(2)),String((100*userPos[i][5][k].tot_pkt/userPos[i][2]).toFixed(2)), String((distance).toFixed(2))
+                              userPos[i][5][k].nwkAdr, userPos[j][1] , '-', String((userPos[i][5][k].tot_out_cost/userPos[i][5][k].tot_pkt).toFixed(2)),Math.round(100*userPos[i][5][k].tot_pkt/userPos[i][2])*100/100, Math.round(distance * 100) / 100
                               ]);
                           }    
                         }
